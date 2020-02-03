@@ -1,0 +1,51 @@
+{% load static %}
+
+<link href="{% static "css/template_vaxign_top.css" %}" rel="stylesheet" type="text/css" />
+
+<div class="vaxign_top_container">
+
+    <div class="violin_logo">
+        <a href="/index.php">
+            <img src="{% static "images/VIOLIN-Logo-2008-07-30.jpg" %}" alt="VIOLIN Logo" width="160" height="90" border="0" />
+        </a>
+    </div>
+    
+    <div class="vaxign_banner">
+        <a href="/vaxign2">
+            <img src="{% static "images/Vaxign_banner.gif" %}" alt="Vaxign Banner" width="320" height="90" border="0"/>
+        </a>
+    </div>
+
+</div>
+
+<div class="violin_top_search_bar" style=">
+
+    <form action="/searchWeb.php" method="post" id="webSearch" style="margin-left:10px;">
+	    Search:
+	    <select name="searchEngine" id="webSearch_searchEngine">
+	        <option value="vaxquery">Vaxquery</option>
+	        <option value="vo">VO Browser</option>
+			<option value="vaxgen">Vaxgen</option>
+			<option value="litesearch">Litesearch</option><option value="vaxmesh">Vaxmesh</option>
+			<option value="---">-----------------------</option>
+			<option value="pubmed">PubMed</option>
+			<option value="google">Google</option>
+			<option value="ncbi_protein">NCBI Protein</option>
+			<option value="ncbi_nucleotide">NCBI Nucleotide</option>
+			<option value="ncbi_genome">NCBI Genome</option>
+			<option value="ncbi_gene">NCBI Gene</option>
+	    </select>
+	    for
+		<input size="40" name="keywords" />
+		<input type="submit" value="GO" name="submit" />
+		<input type="reset" value="Clear" name="clear" />
+	    <a href="/vaxquery/query_help.php">Help</a>
+    </form>
+
+</div>
+
+{% if 'searchEngine' in request.session %}
+<script type="text/javascript">
+	document.getElementById('webSearch_searchEngine').value = "{{ request.session.searchEngine }}";
+</script>
+{% endif %}

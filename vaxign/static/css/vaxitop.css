@@ -1,0 +1,188 @@
+h3 {
+    font-family: arial, verdana, sans-serif;
+    font-size: 16px;
+    color:#990000;
+    margin-bottom:16px;
+    margin-top:18px;
+    padding-bottom:0px;
+    padding-top:0px;
+    font-weight:bold;
+    line-height:unset;
+}
+
+.vaxitop_container {
+    font-size:14px !important;
+    padding-bottom:20px;
+}
+
+.vaxitop_container table {
+    border:1px solid #999966;
+    margin:0px 20px 20px 20px;
+    padding:8px 2px;
+    width: -webkit-calc(100vw - 200px);
+    width:    -moz-calc(100vw - 200px);
+    width:         calc(100vw - 200px);
+}
+
+.vaxitop_container table tr td.header {
+    background-color:#F8FAFA;
+    border-right:1px solid #DFEBFF; 
+    border-bottom:1px solid #DFEBFF;
+    font-weight: bold;
+    font-size: 12px;
+    color: #112233;
+}
+
+.vaxitop_container table tr td.content {
+    font-weight: bold;
+    font-size: 12px;
+    color: #112233;
+}
+
+.vaxitop_container table tr td select {
+    font-size: 12px;
+}
+
+.selection_container {
+	border:1px solid #999966;
+	padding:8px 2px;
+    margin:20px;
+    overflow-y:scroll;
+    width: -webkit-calc(100vw - 200px);
+    width:    -moz-calc(100vw - 200px);
+    width:         calc(100vw - 200px);
+    height:15vh;
+    margin-left:20px;
+    margin-right:20px;
+    margin-bottom:20px;
+}
+
+.selected_allele {
+	font-size: 12px;
+	font-weight: bold;
+	padding: 5px;
+	margin: 2px 1px;
+	background-color: #F8FAFA;
+	border:1px solid #999966;
+	display: inline-block;
+}
+
+button.btn {
+	padding: 0px;
+    background-color: #F8FAFA;
+    border: 0px;
+}
+
+a.button {
+    margin:auto;
+    border:1px solid #999966;
+    background-color: #F5FAF7;
+    padding: 2px 2px;
+    text-color:black;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 2px 1px;
+    cursor: pointer;
+}
+
+a.large {
+    font-size:14px;
+    font-weight:bold;
+    padding:2px;
+    align:center;
+}
+
+tr.header td {
+    background-color:#A5C3D6;
+    border-right:1px solid #DFEBFF; 
+    border-bottom:1px solid #DFEBFF;
+    font-weight: bold;
+    font-size: 12px;
+    color: #112233;
+}
+
+tr.content td {
+    border-right:1px solid #DFEBFF; 
+    border-bottom:1px solid #DFEBFF;
+    font-size: 12px;
+    font-family: arial, verdana, sans-serif;
+    padding: 10px;
+}
+
+.topright {
+  float: right;
+  cursor: pointer;
+  font-size: 28px;
+}
+
+.dataTables_wrapper {
+    width: -webkit-calc(100vw - 200px);
+    width:    -moz-calc(100vw - 200px);
+    width:         calc(100vw - 200px);
+}
+
+.vaxitop_export {
+    width: 45vw !important;
+}
+
+.vaxitop_page {
+    width: 50vw !important;
+}
+
+
+.dataTables_filter {
+    text-align: left !important;
+    float: left !important;
+    margin-left:20px;
+    font-size:14px;
+    font-family: arial, verdana, sans-serif;
+    font-weight:bold;
+    padding-top:5px;
+}
+
+.export{
+    float: right;
+    margin-top:10px;
+}
+
+.clear{
+    clear:both;
+}
+
+.dt-button {
+    font-size: 12px !important;
+    padding: 3px !important;
+    margin-top: 3px !important;
+    margin-left: 3px !important;
+    margin-right: 0px !important;
+}
+
+.export_label {
+    float: right;
+    border-right: 50px;
+    font-weight: bold;
+}
+
+.loading {
+    background: url('../images/spinner.gif') no-repeat center center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
+}
+
+td.details-control {
+    background: url('../images/open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.details td.details-control {
+    background: url('../images/close.png') no-repeat center center;
+}
+
+.details-control-header {
+    background: #A5C3D6 !important;	
+}

@@ -1,0 +1,23 @@
+div.vaxign_top_container {
+	clear:both;
+	min-width:755px;
+	line-height:14px !important;
+}
+
+div.violin_logo {
+	float:left;
+	width:160px;
+}
+
+div.vaxign_banner {
+	text-align:center;
+}
+
+div.violin_top_search_bar {
+	background:#ffcc33;
+	padding:2px 0px 2px 0px;
+	min-width:708px; clear:both;
+	background-image:url(../images/search_bar_bg.gif);
+	text-align:center;
+	line-height:14px !important;
+}

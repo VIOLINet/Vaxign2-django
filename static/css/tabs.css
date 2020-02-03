@@ -1,0 +1,112 @@
+/* Horizontal Tab */
+.htabs {
+    margin:auto;
+    border: 1px solid #ccc;
+    width: 85%;
+}
+.htab {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+}
+
+.htab button {
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	transition: 0.3s;
+	font-size: 16px;
+}
+
+.htab button:hover {
+	background-color: #ddd;
+}
+
+.htab button.active {
+	background-color: #ccc;
+}
+
+.htabcontent {
+	display: none;
+	padding: 6px 12px;
+	-webkit-animation: fadeEffect 1s;
+	animation: fadeEffect 1s;
+}
+
+/* Vertical Tab */
+.vtabs {
+	margin-left: 20px;
+    border: 1px solid #ccc;
+    width: 85%;
+    height: -webkit-calc(100vh - 200px);
+    height:    -moz-calc(100vh - 200px);
+    height:         calc(100vh - 200px);
+}
+
+.vtab {
+	float: left;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+	width: 200px;
+    box-sizing: border-box;
+    display: block;
+    height: -webkit-calc(100vh - 200px);
+    height:    -moz-calc(100vh - 200px);
+    height:         calc(100vh - 200px);: 70vh;
+}
+
+.vtab button {
+	display: block;
+	background-color: inherit;
+	color: black;
+	padding: 22px 16px;
+	width: 100%;
+	border: none;
+	outline: none;
+	text-align: left;
+	cursor: pointer;
+	transition: 0.3s;
+	font-size: 16px;
+}
+
+.vtab button:hover {
+	background-color: #ddd;
+}
+
+.vtab button.active {
+	background-color: #ccc;
+}
+
+.vtabcontent {
+	float: left;
+	padding: 0px 12px;
+	border: 1px solid #ccc;
+	border-left: none;
+    box-sizing: border-box;
+    display: block;
+    overflow: scroll;
+    width: -webkit-calc(100% - 200px);
+    width:    -moz-calc(100% - 200px);
+    width:         calc(100% - 200px);
+    height: -webkit-calc(100vh - 200px);
+    height:    -moz-calc(100vh - 200px);
+    height:         calc(100vh - 200px);
+}
+
+.vtabcontent table {
+	width:90%;
+}
+
+/* Fade in tabs */
+@-webkit-keyframes fadeEffect {
+	from {opacity: 0;}
+	to {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+	from {opacity: 0;}
+	to {opacity: 1;}
+}

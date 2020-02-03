@@ -1,0 +1,130 @@
+h3.header {
+	font-family: arial, verdana, sans-serif;
+	font-size: 16px;
+	color:#990000;
+	margin-bottom:16px;
+	margin-top:18px;
+	padding-bottom:0px;
+	padding-top:0px;
+}
+
+div.home_container {
+    margin:6px 10px 16px 16px;
+    padding-top:10px;
+}
+
+table.projects {
+    border:1px solid #999966;
+    font-size: 14px;
+}
+
+table.projects tr.header1 {
+    height:30px;
+    text-align:center;
+    background-color:#DDDDDD;
+    padding:10px;
+}
+
+table.projects tr.option2 td.left {
+    background-color:#F8FAFA;
+    border-right:1px solid #DFEBFF; 
+    border-bottom:1px solid #DFEBFF;
+    font-weight: bold;
+    color: #112233;
+    padding:10px;
+}
+
+table.projects tr.option2 td.right {
+    border-right:1px solid #DFEBFF; 
+    border-bottom:1px solid #DFEBFF;
+    font-family: arial, verdana, sans-serif;
+    padding:10px;
+}
+
+
+table.projects tr td.top {
+    background-color:#F8FAFA;
+    border-right:1px solid #DFEBFF; 
+    border-bottom:1px solid #DFEBFF;
+    font-weight: bold;
+    font-size: 12px;
+    color: #112233;
+}
+
+table.results tr td.bottom {
+   
+}
+
+tr.header td {
+    background-color:#FAEEE4;
+    border-right:1px solid #DFEBFF; 
+    border-bottom:1px solid #DFEBFF;
+    font-weight: bold;
+    font-size: 12px;
+    color: #112233;
+}
+
+tr.content td {
+    border-right:1px solid #DFEBFF; 
+    border-bottom:1px solid #DFEBFF;
+    font-size: 12px;
+    font-family: arial, verdana, sans-serif;
+    padding: 10px;
+}
+
+.dataTables_filter {
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.dataTables_wrapper {
+    max-width: -webkit-calc(100vw - 200px);
+    max-width:    -moz-calc(100vw - 200px);
+    max-width:         calc(100vw - 200px);
+}
+
+a.button {
+	margin:auto;
+	border:1px solid #999966;
+	background-color: #F5FAF7;
+	padding: 2px 2px;
+	text-color:black;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 12px;
+	margin: 2px 1px;
+	cursor: pointer;
+}
+
+a.large {
+	width: 220px;
+	font-size:14px;
+	font-weight:bold;
+	padding:8px;
+}
+
+.caret{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+
+.dropdown-btn {
+    vertical-align: top;
+    height: 20px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.awesomplete ul {
+	max-height:100px;
+	overflow-y:auto;
+	overflow-x:hidden;
+}

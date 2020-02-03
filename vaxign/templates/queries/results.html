@@ -1,0 +1,417 @@
+{% load static %}
+{% load replace %}
+{% load mathfilters %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tabs.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fc-3.3.0/fh-3.1.6/rr-1.2.6/sc-2.0.1/sl-1.3.1/datatables.min.css"/>
+<link href="{% static "css/vaxign_results.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fc-3.3.0/fh-3.1.6/rr-1.2.6/sc-2.0.1/sl-1.3.1/datatables.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_results.js" %}"></script>
+<script type="text/javascript">
+$( document ).ready( function () {
+    $('#query_results').DataTable( {
+        "lengthMenu":[25, 50, 100, 250, 500, 750, 1000],
+        buttons: [
+                  'copy',
+                  'csv',
+                  'excel',
+                  {extend : 'pdfHtml5',
+                      title : function() {
+                          return "Vaxign Vaccine Design";
+                      },
+                      orientation : 'landscape',
+                      pageSize : 'LEGAL',
+                      text : 'PDF',
+                      titleAttr : 'PDF'
+                  } ],
+        columnDefs: [ {
+            className: 'select-checkbox',
+            targets: 0,
+        } ],
+        select: {
+        	style: 'multi',
+        },
+        fixedHeader: true,
+        "dom": 'f<"export"B><"clear">tlip',
+        "fnPreDrawCallback":function(){
+            $("#loading").show();
+        },
+        "fnDrawCallback":function(){
+            $("#loading").hide();
+        },
+        "fnInitComplete":function(){
+            $("#query_results").show();
+            $("#export_label").show();
+            $("#loading").hide();
+        },
+    } );
+
+
+    var table = $('#query_results').DataTable();
+    table.on( 'select', function ( e, dt, type, indexes ) {
+        if ( type === 'row' ) {
+            var selected = table.rows('.selected').data().length;
+            if (selected > 0 ) {
+                $('#export_label').html("Export <span class='highlight1'>"+selected+"</span> Selected Records");
+            } else {
+                $('#export_label').html("Export All Records");
+            };
+        }
+    } );
+    table.on( 'deselect', function ( e, dt, type, indexes ) {
+        if ( type === 'row' ) {
+            var selected = table.rows('.selected').data().length;
+            if (selected > 0 ) {
+                $('#export_label').html("Export <span class='highlight1'>"+selected+"</span> Selected Records");
+            } else {
+                $('#export_label').html("Export All Records");
+            };
+        }
+    } );
+    
+    $(".filter_toggle").click( function() {
+        if ($(this).find( ".filter_show" ).css('display') == 'none' ) {
+             $(this).find( ".filter_hide" ).hide();
+             $(this).find( ".filter_show" ).show();
+             $(".filter_content").show();
+        } else {
+            $(this).find( ".filter_hide" ).show();
+            $(this).find( ".filter_show" ).hide();
+            $(".filter_content").hide();
+        }
+    } );
+    
+    
+} );
+</script>
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="results_container">
+        
+                <h3 align="center">Vaxign: Vaccine Target Prediction and Design</h3>
+                
+                <div id="loading" class="loading"></div>
+                
+                <p> Found {{ results|length }} protein(s). </p>
+                
+                <div class="error">
+{% for message in messages %}
+                    {{ message }}
+{% endfor %}
+                </div>
+
+{% if not query_detail.c_included_analyses.count == 1 or 'vaxign_ml' not in query_detail.c_included_analyses %}
+                <div class="htabs">
+                
+	                <div class="htab">
+	                    <button class="htablinks" onclick="openHTab(event, 'filter')">
+	                       <img height="26em" src="{% static "images/filter.png" %}" style="vertical-align:middle;padding-bottom:4px;"/> 
+	                       Filter Results
+                        </button>
+	                    <button class="htablinks" onclick="openHTab(event, 'analysis')">
+		                    <img height="26em" src="{% static "images/analysis.png" %}" style="vertical-align:middle;padding-bottom:4px;"/> 
+		                    Analysis
+	                    </button>
+	                </div>
+	                
+	                <div id="filter" class="htabcontent">
+	                
+		                <span onclick="closeHTab(event, 'filter');" class="topright">&times</span>
+		                
+		                <table>
+	
+		                    <form id="form" name="form" method="post" enctype="multipart/form-data" novalidate>
+						
+{% csrf_token %}
+
+                                <tr class="header1 filter_content">
+                                    <td colspan="2">
+                                        <input name="Submit" type="submit" id="Submit" value="Submit"/>
+                                    </td>
+                                </tr>
+		                        
+		                        <!-- choose subcellular localization -->    
+		                        <tr class="option2 filter_content">
+		                            <td class="left">
+		                                1. Select Subcellular Localization
+		                            </td>
+		                            
+		                            <td class="right">
+{{ form.localization }}
+		                            </td>
+		                        </tr>
+		                        
+		                        <!-- choose transmembrane helix -->    
+		                        <tr class="option2 filter_content">
+		                            <td class="left"> 2.  Number of Transmembrane Helices</td>
+		                            <td class="right">
+{{ form.tmhmm_PredHel_opt }}
+{{ form.tmhmm_PredHel_value }}
+{{ form.tmhmm_PredHel_check }}
+		                                (Check to include this filter) </td>
+		                        </tr>
+		
+		                        <!-- choose adhesin probability -->    
+		                        <tr class="option2 filter_content">
+		                            <td class="left">3.  Adhesin Probability (0-1.0) </td>
+		                            <td class="right">
+{{ form.spaan_score_opt }}
+{{ form.spaan_score_value }}
+{{ form.spaan_score_check }}
+		                                (Check to include this filter) </td>
+		                        </tr>
+		                        
+		                        <!-- choose orthologs -->    
+		                        <tr class="option2 filter_content">
+		                            <td class="left">
+		                                <div class="tooltip">
+		                                    4. Have Orthologs in  <img height="12em" src="{% static "images/exclamation.png" %}">
+		                                    <span class="tooltiptext">Tips:</br>To select (or unselect) individual genomes, press Ctrl key and then select.</br>For genome selection in continuous order, you can also use Shift key.</span>
+		                                </div>
+		                            </td>
+		                            <td class="right">
+                                        <select name="have_orthologs" id="id_have_orthologs" multiple="" onchange="chk_opt('id_have_orthologs', 'id_have_no_orthologs'); show_selected_no('id_have_orthologs', 'have_num_orthologs_label');" size="10">
+{% for ortholog_id, ortholog_name in orthologs.items %}
+                                            <option value="{{ ortholog_id }}" 
+{% if ortholog_id in form.data.have_orthologs %}
+                                            selected 
+{% endif %}
+                                            >{{ ortholog_name }}</option>
+{% endfor %}
+                                        </select>
+		                                <br />
+		                                selected <span id="have_num_orthologs_label" class="highlight1">{{ form.data.have_orthologs|length }}</span> genomes
+		                            </td>
+		                        </tr>
+		                        
+		                        <!-- exclude orthologs -->    
+		                        <tr class="option2 filter_content">
+		                            <td class="left">
+		                                <div class="tooltip">
+		                                    5.Exclude Proteins having Orthologs<br />in Any of Selected Genome(s)  <img height="12em" src="{% static "images/exclamation.png" %}">
+		                                    <span class="tooltiptext">Tips:</br>To select (or unselect) individual genomes, press Ctrl key and then select.</br>For genome selection in continuous order, you can also use Shift key.</span>
+		                                </div>
+		                                
+		                            </td>
+		                            
+		                            <td class="right">
+                                        <select name="have_no_orthologs" id="id_have_no_orthologs" multiple="" onchange="chk_opt('id_have_no_orthologs', 'id_have_orthologs'); show_selected_no('id_have_no_orthologs', 'have_num_no_orthologs_label');" size="10">
+{% for ortholog_id, ortholog_name in orthologs.items %}
+                                            <option value="{{ ortholog_id }}" 
+{% if ortholog_id in form.data.have_no_orthologs %}
+                                            selected 
+{% endif %}
+                                            >{{ ortholog_name }}</option>
+{% endfor %}
+                                        </select>
+		                                <br />
+		                                selected <span id="have_num_no_orthologs_label" class="highlight1">{{ form.data.have_no_orthologs|length }}</span> genomes
+		                            </td>
+		                        </tr>
+		                        
+		                        <!-- human similarity -->    
+		                        <tr class="option2 filter_content">
+		                            <td class="left">6. Similarity to Human Proteins </td>
+		                            <td class="right">
+{{ form.human_alignment }}
+		                            </td>
+		                        </tr>
+		                        
+		                        <!-- mouse similarity -->   
+		                        <tr class="option2 filter_content">
+		                            <td class="left">7.  Similarity to Mouse Proteins</td>
+		                            <td class="right">
+{{ form.mouse_alignment }}
+		                            </td>
+		                        </tr>
+		                        
+		                        <!-- pig similarity -->   
+		                        <tr class="option2 filter_content">
+		                            <td class="left">8.  Similarity to Pig Proteins</td>
+		                            <td class="right">
+{{ form.pig_alignment }}
+		                        </tr>
+                        
+                            </form>
+                            
+                        </table>
+                        
+                    </div>
+	
+	                
+	                <div id="analysis" class="htabcontent">
+	                
+                        <span onclick="closeHTab(event, 'analysis');" class="topright">&times</span>
+	                   
+						<ul>
+						    <li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/ortholog" target="_blank">Show Ortholog Table</a></li>
+						</ul>
+	                </div>
+	                
+                </div>
+{% endif %}
+                
+                <label id="export_label" class="export_label" style="display:none;">Export All Records</label>
+                
+                <table id="query_results" class="display results" data-page-length='25' style="display:none;">
+                
+                    <thead>
+					    <tr class="header">
+					        <td>#</td>
+					        <td>Protein Accession</td>
+                            <td>Protein Name</td>
+					        <td>Gene Accession</td>
+                            <td>Gene Symbol</td>
+                            <td>Locus Tag</td>
+                            
+{% if 'vaxign_ml' in query_detail.c_included_analyses %}
+                            <td>Vaxign&#8209;ML Score</td>
+{% endif %}
+
+{% if 'psort' in query_detail.c_included_analyses %}
+					        <td>Localization(Probability)</td>
+{% endif %}
+
+{% if 'spaan' in query_detail.c_included_analyses %}
+					        <td>Adhesin Probability</td>
+{% endif %}
+					        
+{% if 'tmhmm' in query_detail.c_included_analyses %}
+					        <td>Trans-membrane Helices</td>
+{% endif %}
+					        
+{% if 'blasth' in query_detail.c_included_analyses %}
+					        <td>Similar Human Protein</td>
+{% endif %}
+					        
+{% if 'blastm' in query_detail.c_included_analyses %}
+					        <td>Similar Mouse Protein</td>
+{% endif %}
+					        
+{% if 'blastp' in query_detail.c_included_analyses %}
+					        <td>Similar Pig Protein</td>
+{% endif %}
+					    </tr>
+					</thead>
+					<tbody>
+{% for record in results %}
+                        <tr class="content">
+                            <td><label style="float:right">{{ forloop.counter }}</label></td>
+                            
+{% if record.c_protein_accession is not None and record.c_protein_accession != '' %}
+                            <td><a href="/vaxign2/query/{{ query_detail.c_query_id }}/protein/{{ record.c_sequence_id }}" target="_blank">{{ record.c_protein_accession }}</a></td>
+{% else %}
+                            <td><a href="/vaxign2/query/{{ query_detail.c_query_id }}/protein/{{ record.c_sequence_id }}" target="_blank">{{ record.c_sequence_acc }}</a></td>
+{% endif %}
+                            <td>
+{% replace search="^(.*?) OS=(.*?) GN=(\w+) PE=\d+ SV=\d+" replacement="\1 [\2]" %}
+{% replace search="\[[^\[\]]+\]$" replacement="" %}
+                            {{ record.c_note }}
+{% endreplace %}
+{% endreplace %}
+                            </td>
+                            
+                            <td>
+{% if record.c_gene_id is not None and record.c_gene_id != '' %}
+                                <a href="http://www.ncbi.nlm.nih.gov/gene/{{ record.c_gene_id }}">{{ record.c_gene_id }}</a>
+{% endif %}
+                            
+                            <td>{{ record.c_gene_symbol|default_if_none:"" }}</td>
+                            
+                            <td>{{ record.c_locus_tag|default_if_none:"" }}</td>
+{% if 'vaxign_ml' in query_detail.c_included_analyses %}
+                            <td>{{ record.c_vaxign_ml_score|floatformat:1|default_if_none:"" }}</td>
+{% endif %}                            
+                            
+{% if 'psort' in query_detail.c_included_analyses %}
+                            <td>
+{% if record.c_final_localization is not None and record.c_final_localization != '' %}
+{% if record.c_final_localization == 'CytoplasmicMembrane' %}
+                                Cytoplasmic Membrane
+{% elif record.c_final_localization == 'OuterMembrane' %}
+                                Outer Membrane
+{% else %}
+                                {{ record.c_final_localization }}
+{% endif %}
+                                (Prob.={{ record.c_final_score|div:10|floatformat:2 }})
+{% endif %}
+                            </td>
+{% endif %}
+                            
+{% if 'spaan' in query_detail.c_included_analyses %}
+                            <td>{{ record.c_spaan|floatformat:3|default_if_none:"" }}</td>
+{% endif %}
+                            
+{% if 'tmhmm' in query_detail.c_included_analyses %}
+                            <td>{{ record.c_tmhmm_predhel|default_if_none:"" }}</td>
+{% endif %}
+
+{% if 'blasth' in query_detail.c_included_analyses %}
+                            <td><a href="/vaxign2/query/{{ query_id }}/protein/{{ record.c_sequence_id }}/blast/human" target="_blank">{{ record.human_alignment|default_if_none:"-" }}</a></td>
+{% endif %}
+                            
+{% if 'blastm' in query_detail.c_included_analyses %}
+                            <td><a href="/vaxign2/query/{{ query_id }}/protein/{{ record.c_sequence_id }}/blast/mouse" target="_blank">{{ record.mouse_alignment|default_if_none:"-" }}</td>
+{% endif %}
+                            
+{% if 'blastp' in query_detail.c_included_analyses %}
+                            <td><a href="/vaxign2/query/{{ query_id }}/protein/{{ record.c_sequence_id }}/blast/pig" target="_blank">{{ record.pig_alignment|default_if_none:"-" }}</td>
+{% endif %}
+                            
+                        </tr>
+{% endfor %}
+					</tbody>
+                
+                </table>
+        
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

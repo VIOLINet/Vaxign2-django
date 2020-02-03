@@ -1,0 +1,187 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_home.js" %}"></script>
+<script type="text/javascript">
+$( document ).ready( function () {
+	$(".optional_toggle").click( function() {
+		if ($(this).find( ".optional_show" ).css('display') == 'none' ) {
+		     $(this).find( ".optional_hide" ).hide();
+		     $(this).find( ".optional_show" ).show();
+		     $(".optional_content").show();
+		} else {
+			$(this).find( ".optional_hide" ).show();
+            $(this).find( ".optional_show" ).hide();
+            $(".optional_content").hide();
+		}
+	} );
+	$("#id_organism").change( function () {
+		if ($("#id_organism").val() == 'bacteria') {
+			$("#id_bacteria_strain").show();
+			$("#vaxignml_row").show();
+		} else {
+			$("#id_bacteria_strain").hide();
+			$("#vaxignml_row").hide();
+		}
+	} );
+} );
+</script>
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+	        <div class="home_container">
+	        
+                <h3 align="center">Welcome to Vaxign-ML!</h3>
+
+                <p class="desc">
+                    Vaxign-ML (Vaxign - Machine Learning) is a machine learning-based vaccine candidate prediction and analysis system based on the principle of reverse vaccinology.
+                    Vaxign-ML standalone version is available in <a href="https://hub.docker.com/r/e4ong1031/vaxign-ml">Docker</a>. Source code is avaiable in <a href="https://github.com/VIOLINet/Vaxign-ML-docker">GitHub</a>
+                    Please see the <a href="/vaxign2/docs#vaxign-ml">Vaxign Documentation</a> for tutorial or more information.
+                </p>
+                
+                <form class="dynamic_container" id="form" name="form" method="post" enctype="multipart/form-data" 
+{% if not form.non_field_errors %}
+                target="_blank" 
+{% endif %}
+                novalidate style="width:50%;margin-left:20px;">
+{% csrf_token %}
+                
+                    <h3 class="style2" style="margin-left:20px;"> Vaxign-ML Query: </h3>
+                
+                    <table>
+                    
+                        <tr class="header1">
+                            <td colspan="2">
+                                <strong>Input  Protein Sequence(s)</strong>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                <span>Protein Sequence(s):</span>
+                                </br>
+                                <span style="font-weight:normal; margin-left:24px;">
+                                    (Examples: Gram- <em>B. abortus</em> <a href="javascript:setSequence(sequence1, format1);">SodC</a>, 
+                                    Gram+ <em>Bacillus anthracis</em> <a href="javascript:setSequence(sequence2, format2);"> PA</a>, 
+                                    <a href="javascript:setSequence(sequence3, format3);">62317454</a>, 
+                                    or <a href="javascript:setSequence(sequence4, format4);">YP_016495.2</a>)
+                                    </span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                            Sequence Format
+{{ form.sequence_type }}
+
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+{{ form.sequence }}
+
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                            File Upload
+{{ form.sequence_file }}
+
+                            </td>
+                        </tr>
+
+                        <tr class="option1">
+                            <td>
+                                Select Pathogen Organism Type:
+                                <input type="hidden" name="organism" id="id_organism" value="bacteria"></input>
+                                <select name="bacteria_strain" id="id_bacteria_strain">
+                                    <option disabled selected value> -- Select Pathogen Type -- </option>
+                                    <option value="--positive">Gram+ bacteria</option>
+                                    <option value="--negative">Gram- bacteria</option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr class="header1">
+                            <td>
+                                <input name="Submit" type="submit" id="Submit" value="Submit"/ style="font-size:14px;font-weight:bold;">
+                                <span class="tdData"><a href="docs">help</a></span>
+                                <span class="highlight1">
+{{ form.non_field_errors }}
+                                </span>
+                            </td>
+                        </tr>
+                        
+                    </table>
+
+                </form>
+                
+                </div>
+                
+                <p class="desc"><img src="{% static "images/red-glass_s.jpg" %}" alt="Link To:" width="16" height="16" /> <strong>Citing Vaxign:</strong></br>
+                He Y, Xiang Z, Mobley HLT. Vaxign: the first web-based vaccine design   program   for reverse vaccinology and an application for vaccine   development.<em>J Biomed Biotechnol</em>. 2010;2010:297505. Epub 2010 Jul [PMID:<a href="http://www.ncbi.nlm.nih.gov/pubmed/20671958">20671958</a>] [<a href="http://www.hindawi.com/journals/jbb/2010/297505.html">Journal   Link</a>]
+                </p>
+
+                <p class="desc"><img src="{% static "images/red-glass_s.jpg" %}" alt="Link To:" width="16" height="16" /> <strong>Citing the original Vaxign proceeding:</strong></br>
+                Xiang Z,  He Y. 2009. <a href="http://www.sciencedirect.com/science?_ob=MImg&amp;_imagekey=B986S-4X20NYP-4-1&amp;_cdi=59134&amp;_user=99318&amp;_pii=S1877282X09000368&amp;_orig=browse&amp;_coverDate=12/31/2009&amp;_sk=999989998&amp;view=c&amp;wchp=dGLbVlz-zSkzV&amp;md5=e3b73eeeaa24bd60e9a111d075a257c4&amp;ie=/sdarticle.pdf">Vaxign: a web-based vaccine target design program   for reverse vaccinology</a>.<em> Procedia in Vaccinology. </em><a href="http://www.sciencedirect.com/science?_ob=PublicationURL&amp;_cdi=59134&amp;_pubType=J&amp;_auth=y&amp;_acct=C000007678&amp;_version=1&amp;_urlVersion=0&amp;_userid=99318&amp;md5=864f3629df593777ade19938d06c3126&amp;jchunk=1#1">Volume 1, Issue 1</a>, Pages 23-29. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </p>
+                
+                <p class="desc"><img src="{% static "images/red-glass_s.jpg" %}" alt="Link To:" width="16" height="16" /> <strong>Related Vaxign Publications:</strong></br>
+                1. Xiang Z, He Y. <a href="http://www.biomedcentral.com/1471-2105/14/S4/S2">Genome-wide prediction of vaccine targets for human herpes simplex viruses using Vaxign reverse vaccinology</a>. <em>BMC Bioinformatics</em>.  2013, 14(Suppl 4):S2 (8 March 2013). PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/23514126">23514126</a>; PMCID: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3599071/">PMC3599071</a>. 
+                </p>
+                
+                <p class="desc" style="font-weight:bold;">Please see the <a href="docs/index.php">Vaxign Documentation</a> for more information. </br></br>
+                Please <a href="../contact_us.php">contact us</a> if you would like to have  your favorite genome(s) included in our <a href="stats.php">precomputed Vaxign database</a>.  Your <a href="../contact_us.php">suggestions and comments</a> are welcome. Thank you.
+                </p>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

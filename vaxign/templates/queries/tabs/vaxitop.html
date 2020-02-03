@@ -1,0 +1,179 @@
+{% load static %}
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tabs.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fc-3.3.0/fh-3.1.6/rr-1.2.6/sc-2.0.1/sl-1.3.1/datatables.min.css"/>
+<link href="{% static "css/vaxitop.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fc-3.3.0/fh-3.1.6/rr-1.2.6/sc-2.0.1/sl-1.3.1/datatables.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxitop.js" %}"></script>
+<script type="text/javascript">
+function format ( d ) {
+	var sequence = "{{ sequence }}";
+    return '<div style="word-wrap:break-word;width:50vw;">'+  sequence.substring(0,d.start-1) + '<mark>' + sequence.substring(d.start-1, d.end) + '</mark>' + sequence.substring(d.end) + '</div>';
+}
+
+$( document ).ready( function () {
+    var vtable = $('#vaxitop_results').DataTable( {
+        "lengthMenu":[25, 50, 100, 250, 500, 750, 1000],
+        buttons: [
+	        'copy',
+	        'csv',
+	        'excel',
+	        {extend : 'pdfHtml5',
+	            title : function() {
+	                return "Vaxign Vaccine Design\nVaxitop MHC-I and MHC-II Epitope Prediction";
+	            },
+	            pageSize : 'LEGAL',
+	            text : 'PDF',
+	            titleAttr : 'PDF'
+        } ],
+        "columns": [
+            {"data": "index"},
+            {"data": "epitope"},
+            {"data": "allele"},
+            {"data": "p_value"},
+            {"data": "length"},
+            {"data": "start"},
+            {"data": "end"},
+            {
+                 "class":          "details-control",
+                 "orderable":      false,
+                 "data":           null,
+                 "defaultContent": ""
+             },
+        ],
+        select: {
+            style: 'multi',
+            selector: 'td:not(:last-child)',
+        },
+        fixedHeader: true,
+        "dom": 'f<"export vaxitop_export"B><"clear">tli<"vaxitop_page"p>',
+        "language": {
+            "emptyTable": "Please select allele(s) to display."
+        },
+        "fnPreDrawCallback":function(){
+            $("#loading").show();
+        },
+        "fnDrawCallback":function(){
+            $("#loading").hide();
+        },
+    } );
+});
+
+$(document).on('click', '.btn', function() {
+    $(this).parent().remove();
+} );
+</script>
+
+<div class="vaxitop_container">
+
+	<span style="margin-left:20px;"><strong>Selected Allele(s):</strong></span>
+	<div id="selection_container" class="selection_container" style="width:50vw;margin:20px;"></div>
+	
+	<table style="margin-bottom:20px;width:50vw;">
+	    <tr>
+	        <td class="header" width="20%">Host</td>
+	        <td class="header" width="20%">MHC Class</td>
+	        <td class="header" width="30">MHC Allele</td>
+	        <td class="header" width="20%">Epitope Length</td>
+	        <td rowspan="2" width="10%"><a class="button" href="javascript:add_allele();">&nbsp;Add Allele&nbsp;</a></td>
+	    </tr>
+	    
+	    <tr>
+	        <td>
+	            <select id="mhc_species" onchange="change_option_host();">
+	                <option value="human">Human</option>
+	                <option value="mouse">Mouse</option>
+	                <option value="rhesus macaque">Macaque</option>
+	            </select>
+	        </td>
+	        <td>
+	            <select id="mhc_class" onchange="change_option_class();">
+	                <option value="I">MHC-I</option>
+	                <option value="II">MHC-II</option>
+	            </select>
+	        </td>
+	        <td>
+	            <select id="mhc_allele" onchange="change_option_allele();">
+	                <option value="any">Any Allele</option>
+	            </select>
+	        </td>
+	        <td>
+	            <select id="epitope_length">
+	                <option value="any">Any Length</option>
+	            </select>
+	        </td>
+	    </tr>
+	    
+	    <tr>
+	        <td class="content">
+	        Frequently used alleles:
+	        </td>
+	        <td class="content" colspan="4">
+	        <ul style="padding-top:5px;">
+                <li>
+				    Human Supertype Alleles
+				    <div class="tooltip">
+				        <a href="https://help.iedb.org/hc/en-us/articles/114094151851" target="_blank"><img height="16em" src="{% static "images/question.png" %}">  </a>
+				        <span class="tooltiptext" style="margin-left:-125px;">Supertype alleles are defined based on similar binding pocket profiles and represent a wide range of MHC-I or MHC-II alleles that share very similar antigen binding characteristics (Lund et al., 2004; Sidney et al., 2008)</span>
+				    </div>
+				    <a href="javascript:add_option('Human MHC-I Supertype Alleles');">&nbsp;[MHC-I]&nbsp;</a>
+				    <a href="javascript:add_option('Human MHC-II Supertype Alleles');">&nbsp;[MHC-II]&nbsp;</a>
+				    <a href="javascript:add_option('Human MHC-I & MHC-II Supertype Alleles');">&nbsp;[MHC-I & MHC-II]&nbsp;</a>
+				</li>
+				<li>Human Reference Alleles
+				    <div class="tooltip">
+				        <a href="https://help.iedb.org/hc/en-us/articles/114094151851" target="_blank"><img height="16em" src="{% static "images/question.png" %}">  </a>
+				        <span class="tooltiptext" style="margin-left:-125px;">IEDB recommended alleles which cover a wide range of human genetic variation in MHC-I and MHC-II HLA alleles, thereby represents the majority of the world population.</br>Click here for more detail</span>
+				    </div>
+				    <a href="javascript:add_option('Human MHC-I Reference Alleles');">&nbsp;[MHC-I]&nbsp;</a>
+				    <a href="javascript:add_option('Human MHC-II Reference Alleles');">&nbsp;[MHC-II]&nbsp;</a>
+				    <a href="javascript:add_option('Human MHC-I & MHC-II Reference Alleles');">&nbsp;[MHC-I & MHC-II]&nbsp;</a>
+				</li>
+	        </ul>
+	        </td>
+	    </tr>
+	    
+	    <tr>
+	        <td colspan="5" style="text-align:center;"><a class="button large" href="javascript:refresh_table('{{ query_id }}', '{{ sequence_id }}');">&nbsp;Show Vaxitop Results&nbsp;</a></td>
+	    </tr>
+	</table>
+	
+	<div id="vaxitop_results_container">
+	    
+	    <div id="loading" class="loading" style="display:none;"></div>
+	    
+	    <span style="margin-left:20px;color:#333;margin-bottom:5px;"><strong>Set P&#8209;value cutoff: </strong><input type="text" id="p_val_cut" name="p_val_cut"></span>
+	    
+	    <table id="vaxitop_results" class="display results" data-page-length='25' style="width:50vw !important;">
+	    
+	        <thead>
+	            <tr class="header">
+	                <td width="5%">#</td>
+	                <td width="20%">Epitope</td>
+	                <td width="30%">MHC Allele</td>
+	                <td width="10">P&#8209;value</td>
+	                <td width="8%">Length</td>
+	                <td width="8%">Start</td>
+	                <td width="8%">End</td>
+	                <td class="details-control-header" width="6%">Location</td>
+	            </tr>
+	        </thead>
+	        
+	    </table>
+	
+	</div>
+</div>
+
+<script type="text/javascript">
+change_option_class();
+</script>

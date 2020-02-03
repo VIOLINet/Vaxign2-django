@@ -1,0 +1,86 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_projects.css" %}" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="home_container">
+                <h3 class="header"><strong>Edit Project Profile</strong></h3>
+                
+                <form id="form" name="form" method="post" novalidate>
+{% csrf_token %}
+{% for hidden_field in form.hidden_fields %}
+                    {{ hidden_field }}
+{% endfor %}
+
+{% for field in form.visible_fields %}
+					<div class="form-group">
+                        {{ field.label_tag }}
+                        {% render_field field class="form-control" %}
+{% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+{% endif %}
+					</div>
+{% endfor %}
+
+{% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+{% for error in form.non_field_errors %}
+                        {{ error }}
+{% endfor %}
+                    </div>
+{% endif %}
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

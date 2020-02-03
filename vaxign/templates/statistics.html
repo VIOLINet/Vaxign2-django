@@ -1,0 +1,100 @@
+{% load static %}
+{% load replace %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_home.js" %}"></script>
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+	        <div class="home_container">
+	        
+	        <h3 align="center">Vaxign Statistics</h3>
+	        
+	        <p class="desc">Currently, Vaxign includes 400 precomputed genomes. The following table provides the detail of these genomes.</p>
+            <p class="desc">You can click on each row of the table to obtain detailed statistical information about this pathogen, including the names of different strains,  RefSeq accession number of each genome (if available), and number of proteins analyzed using Vaxign.</p>
+            
+            <table border="0" align="center" cellpadding="3" cellspacing="1" width="100%">
+            
+                <tr align="center">
+					<td bgcolor="#AAAAAA" class="styleLeftColumn">Index </td>
+					<td bgcolor="#AAAAAA" class="styleLeftColumn">Pathogen Name</td>
+					<td bgcolor="#AAAAAA" class="styleLeftColumn">No. of Strain (or RefSeq Accession) </td>
+					<td bgcolor="#AAAAAA" class="styleLeftColumn">No. of proteins </td>
+                </tr>
+
+{% for query_id, record in results.items %}
+{% if query_id == record.0 %}
+				<tr onclick="javascript:showStatsTable(this)" class="{% replace search=" " replacement="_" %}{{ record.0 }}{% endreplace %}">
+					<td align="center"  class="styleLeftColumn">{{ record.1 }}</td>
+					<td style="padding-left:45px"  class="styleLeftColumn">{{ record.2 }}</td>
+					<td align="center"  class="styleLeftColumn">{{ record.3 }}</td>
+					<td align="center"  class="styleLeftColumn">{{record.4 }}</td>
+				</tr>
+{% else %}
+                <tr class="{% replace search=" " replacement="_" %}{{ record.0 }}{% endreplace %}_detail hide" style="background-color:{{ record.5 }};">
+                    <td align="center"  class="styleLeftColumn" style="color:blue;font-style:italic">({{ record.1 }})</td>
+                    <td style="padding-left:25px"  class="smallContent"><a href="/vaxign2/query/{{ query_id }}/results" target="_blank">{{ record.2 }}</a></td>
+                    <td align="padding-left:10px"  class="smallContent">{{ record.3|default_if_none:"" }}</td>
+                    <td align="center"  class="smallContent">{{record.4 }}</td>
+                </tr>
+{% endif %}
+{% endfor %}
+
+                <tr>
+					<td align="center" bgcolor="#DDDDDD" class="styleLeftColumn">Total</td>
+					<td align="center" bgcolor="#DDDDDD" class="smallContent">{{ group_count }}</td>
+					<td align="center" bgcolor="#DDDDDD" class="smallContent">{{ genome_count }}</td>
+					<td align="center" bgcolor="#DDDDDD" class="smallContent">{{ total_count }}</td>
+                </tr>
+
+            </table>
+            
+            </div>
+            
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

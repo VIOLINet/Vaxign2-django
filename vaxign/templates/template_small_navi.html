@@ -1,0 +1,9 @@
+
+{% if request.session.is_admin %}
+<a href="/admin/index.php" style="font-size:80%">Admin</a> | 
+{% endif %}
+<a href="/users/tasks.php" style="font-size:80%">Data Submission/Review</a> | 
+<a href="/litesearch/emailalert/subscribe.php" style="font-size:80%">My Email Alert</a> | 
+<a href="/users/change_pass.php" style="font-size:80%">My Password</a> | 
+<a href="/users/edit_profile.php" style="font-size:80%">My Profile</a> | 
+<a href="/users/logout.php?redirect=/vaxign2/logout" style="font-size:80%">Logout</a> 

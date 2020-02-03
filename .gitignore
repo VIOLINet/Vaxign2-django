@@ -1,0 +1,20 @@
+# Vaxign2 files
+debug.log
+models.py
+vaxign/__init__.py
+vaxign2/__init__.py
+
+# Python Virtual Environment
+ENV
+
+# Python compiled files
+*.pyc
+*.pyo
+
+# Vaxign2 Environment Variable (contain sensitive information)
+vaxign2/env.py
+
+# Vaxign PHP scripts
+vaxign-php
+# Vaxitop scripts
+vaxitop

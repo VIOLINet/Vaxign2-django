@@ -1,0 +1,140 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.css"/>
+<link href="{% static "css/vaxign_projects.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script type="text/javascript">
+$( document ).ready( function () {
+    $('#projects').DataTable( {
+        "lengthMenu":[10, 20, 50, 75, 100],
+        fixedHeader: true,
+        "dom": 'f<"clear">tlip',
+        "fnPreDrawCallback":function(){
+            $("#loading").show();
+        },
+        "fnDrawCallback":function(){
+            $("#loading").hide();
+        },
+        "fnInitComplete":function(){
+            $("#projects").show();
+            $("#loading").hide();
+        },
+    } );
+    
+    
+} );
+</script>
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="home_container">
+
+                <h3>Project: {{ project.c_vaxign_projectname }}</h3>
+                
+                <table class="projects" style="min-width:70%;">
+                
+                    <tr class="header1">
+                        <td colspan="2">Query ID: {{ query.c_query_id }}</td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Organism</td>
+                        <td class="right">{{ query.organism }}</td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Included Basic Analysis</td>
+                        <td class="right">
+                            <ul style="list-style-type:none;padding-left:0px;">
+{% for analysis in query.basic_analyses %}
+                                <li>{{ analysis }}</li>
+{% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Included Vaxign-ML Analysis?</td>
+                        <td class="right">
+{% if query.vaxign_ml %}
+                            Yes
+{% else %}
+                            No
+{% endif %}
+                        </td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Included Vaxitop Analysis?</td>
+                        <td class="right">
+{% if query.mhc_i and query.mhc_ii %}
+                            Vaxitop MHC-I & MHC-II Epitopes
+{% elif query.mhc_i %}
+                            Vaxitop MHC-I Epitopes
+{% elif query.mhc_ii %}
+                            Vaxitop MHC-II Epitopes
+{% else %}
+                            No
+{% endif %}
+                        </td>
+                    </tr>
+                    
+                    <tr class="header1">
+                        <td colspan="2">
+                            <a class="button" href="/vaxign2/project/{{ project.c_vaxign_projectid }}">&nbsp;Go Back&nbsp;</a>
+                        </td>
+                    </tr>
+                    
+                </table>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

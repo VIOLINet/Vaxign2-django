@@ -1,0 +1,500 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tabs.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_home.js" %}"></script>
+<script type="text/javascript">
+$( document ).ready( function () {
+	$(".optional_toggle").click( function() {
+		if ($(this).find( ".optional_show" ).css('display') == 'none' ) {
+		     $(this).find( ".optional_hide" ).hide();
+		     $(this).find( ".optional_show" ).show();
+		     $(".optional_content").show();
+		} else {
+			$(this).find( ".optional_hide" ).show();
+            $(this).find( ".optional_show" ).hide();
+            $(".optional_content").hide();
+		}
+	} );
+} );
+</script>
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+	        <div class="home_container">
+	
+	        <!-- header -->
+	
+				<h3 align="center">Welcome to Vaxign: Vaccine Design!</h3>
+		        
+		        <p class="desc">Vaxign (Vaccine Design) is a  vaccine target prediction and analysis system based on the principle of reverse vaccinology. </br>
+		        Two methods in Vaxign are: </br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1)  <strong>Dynamic Analysis</strong>:  allow sequence input and dynamic Vaxign execution and result  visualization.</br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2)  <strong>Precompute Query</strong>: provide precomputed Vaxign results for users to explore</p>
+		        
+		        <div class="htabs">
+                <div class="htab">
+                    <button class="htablinks" onclick="openHTab(event, 'dynamic')" 
+{% if vaxign_option == 'dynamic' %}
+                id="defaultOpen"
+{% endif %}
+                    >Dynamic Analysis</button>
+                    <button class="htablinks" onclick="openHTab(event, 'precompute')" 
+{% if vaxign_option == 'precompute' %}
+                    id="defaultOpen"
+{% endif %}
+                    >Precompute Query</button>
+                </div>
+                <!-- Start dynamic query -->
+                <div id="dynamic" class="htabcontent">
+                
+                <form class="dynamic_container" id="form1" name="form1" method="post" enctype="multipart/form-data" 
+{% if not form1.non_field_errors %}
+                target="_blank" 
+{% endif %}
+                novalidate>
+{% csrf_token %}
+                    <p class="desc">
+                    This program allows users to input a protein sequence(s) and set up parameters. The Vaxign web server will  dynamically calculate the possibilities of using the protein(s) as vaccine target(s) using the  automatic Vaxign pipeline. It is noted that lengthy  computational time may be expected.</br>
+                    </p>
+            
+                    <table>
+                    
+                        <tr class="header1">
+                            <td colspan="2">
+                                <strong>Input  Protein Sequence(s)</strong>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                <span>Protein Sequence(s):</span>
+                                </br>
+                                <span style="font-weight:normal; margin-left:24px;">
+                                    (Examples: Gram- <em>B. abortus</em> <a href="javascript:setSequence(sequence1, format1);">SodC</a>, 
+                                    Gram+ <em>Bacillus anthracis</em> <a href="javascript:setSequence(sequence2, format2);"> PA</a>, 
+                                    <a href="javascript:setSequence(sequence3, format3);">62317454</a>, 
+                                    or <a href="javascript:setSequence(sequence4, format4);">YP_016495.2</a>)
+                                    </span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                Sequence Format
+                                <select name="sequence_type" id="id_sequence_type">
+								    <option value="protein_fasta">Protein Sequence (FASTA Format)</option>
+								    <option value="protein_gi">NCBI Protein ID</option>
+								    <option value="protein_refseq">NCBI Protein Refseq</option>
+								    <option value="gene_id">NCBI Gene ID</option>
+{% if request.session.is_admin %}
+                                    <option value="bioproject_id">NCBI Bioproject ID</option>
+{% endif %}
+								    <option value="protein_fasta_url">Protein Sequence (FASTA File Link)</option>
+								</select>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+{{ form1.sequence }}
+
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                            File Upload
+{{ form1.sequence_file }}
+
+                            </td>
+                        </tr>
+                        
+                        
+                        
+                        
+                        <tr class="header1">
+                            <td colspan="2">
+                                <strong>Set up Parameters</strong>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                Select Pathogen Organism Type:
+{{ form1.organism }}
+{{ form1.bacteria_strain }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                Include Basic Vaxign Analyses: 
+                                [<a href="javascript:selectDefaultAnalysis();">Default</a>] 
+                                [<a href="javascript:selectAllAnalysis(true);">Select all</a>] 
+                                [<a href="javascript:selectAllAnalysis(false);">Unselect all</a>]
+{{ form1.basic_analysis }}
+                            </td>
+                        </tr>
+                        
+                        <tr id="vaxignml_row" class="option1">
+                            <td>
+                                Include Vaxign-ML Analysis? 
+                                <div class="tooltip">
+                                    <a href="/vaxign2/docs#vaxign-ml"><img height="16em" src="{% static "images/question.png" %}">  </a>
+                                    <span class="tooltiptext" style="margin-left:-125px;">Vaxign-ML is a machine learning-based reverse vaccinology prediction program.</br></br>
+                                    For detail about Vaxign-ML, please click here.</span>
+                                </div>
+                                
+{{ form1.vaxignml_analysis }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                Include Vaxitop Analysis?
+                                <div class="tooltip">
+                                    <a href="/vaxign2/docs#vaxign-ml"><img height="16em" src="{% static "images/question.png" %}">  </a>
+                                    <span class="tooltiptext" style="margin-left:-125px;">Vaxign-ML is the an MHC Class I and II binding epitope prediction program.</br></br>
+                                    For detail about Vaxitop, please click here.</span>
+                                </div>
+{{ form1.vaxitop_analysis }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        
+                        
+                        <tr class="header1">
+                            <td colspan="2">
+                                <strong>Submit a Job</strong>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                <pre>Submission Note:</pre>
+{{ form1.note }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                Notify via Email: 
+{{ form1.email }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="header1">
+                            <td>
+                                <input name="Submit1" type="submit" id="Submit1" value="Submit"/ style="font-size:14px;font-weight:bold;">
+                                <span class="tdData"><a href="docs">help</a></span>
+                                <span class="highlight1">
+{{ form1.non_field_errors }}
+                                </span>
+                            </td>
+                        </tr>
+                        
+                    </table>
+
+                </form>
+                <!-- End dynamic -->
+                </div>
+                
+                <!-- Start pre-computed query -->
+                <div id="precompute" class="htabcontent">
+                
+                <form class="precompute_container" id="form2" name="form2" method="post" enctype="multipart/form-data" 
+{% if not form2.non_field_errors %}
+                target="_blank" 
+{% endif %}
+                novalidate>
+{% csrf_token %}
+                    <p class="desc">Query from <a href="stats.php">&gt; 350 genomes</a> precomputed Vaxign results.</br></br>
+                    A user can either select a genome(s) for all possible vaccine targets based on desired parameters, or query a protein sequence(s) from a genome to find possible vaccine vaccine target(s).</br>
+                    </p>
+            
+                    <table>
+                    
+                        <!-- select genome and protein -->
+                        <tr class="header1">
+                            <td colspan="2">
+                                <strong> Select a Genome <span class="highlight1">(Required)</span> </strong>
+                                <div class="tooltip">
+                                    <a href="/vaxign2/tutorial"><img height="16em" src="{% static "images/question.png" %}">  </a>
+                                    <span class="tooltiptext" style="margin-left:-125px;">Click here for tutorial</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- choose genome group as c_species_short -->                 
+                        <tr class="option2">
+                            <td class="left">
+                                Select a Genome Group <span class="highlight1">(Required)</span>
+                            </td>
+                            
+                            <td class="right">
+                                <select name="group_name" id="id_group_name" onchange="reloadGenomes('/vaxign2/api/t_vaxign_query/group/'+this.value);" >
+                                    <option value="" disabled selected>Please select a Genome Group</option>
+{% for genome_group in genome_groups_count %}
+                                    <option value="{{ genome_group.0 }}">{{ genome_group.0 }} ({{ genome_group.1 }})</option>
+{% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <!-- choose genomes as individual c_query_id with c_species_name -->                    
+                        <tr class="option2">
+                            <td class="left">
+                                Select a Genome <span class="highlight1">(Required)</span>
+                            </td>
+                            <td class="right">
+                                <select name="query_id" id="id_query_id" onchange="reloadOptions('/vaxign2/api/t_vaxign_query/ortholog/exclude/'+this.value, 'id_have_orthologs', 'id_have_no_orthologs');" disabled>
+                                    <option value="" disabled selected>Please select a Genome</option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr class="header1">
+                            <td colspan="2">
+                                <strong>  Choose a Protein (Optional) </strong>
+                            </td>
+                        </tr>
+                        
+                        <!-- input sequence ID(s) -->    
+                        <tr class="option2">
+                            <td class="left">Sequence ID(s)</td>
+                            <td class="right">
+{{ form2.query_seq_id_type }}
+                               (One ID per line, or use comma, tab-delimited format)<br />
+{{ form2.query_seq_ids }}
+                                <label for="fileField"><br /></label>
+                                Or load IDs from file 
+{{ form2.query_seq_ids_file }}
+                            </td>
+                        </tr>
+                        
+                        <!-- input keyword -->    
+                        <tr class="option2">
+                            <td class="left">Keywords</td>
+                            <td class="right">
+{{ form2.keywords_type }}
+{{ form2.keywords }}
+                        </tr>
+
+                        <!-- select sorting -->    
+<!--
+                        <tr class="option2">
+                            <td class="left"> Sort by</td>
+                            <td class="right">
+                                <select name="orderby" >
+                                    <option value="c_protein_accession" selected="selected">NCBI Protein RefSeq</option>
+                                    <option value="c_protein_gi">NCBI Protein GI</option>
+                                    <option value="c_gene_symbol">Gene Symbol</option>
+                                    <option value="c_Final_Localization">Loalization</option>
+                                    <option value="c_Final_Score">Loalization Probability</option>
+                                    <option value="c_SPAAN">Adhesin Probability</option>
+                                    <option value="c_note">Protein Note</option>
+                                </select>
+                                
+                                <select name="order">
+                                  <option value="ASC" selected>Ascending</option>
+                                  <option value="DESC">Descending</option>
+                                </select>
+                           </td>
+                        </tr>
+-->
+    
+                        <!-- filtering option -->
+                        <tr class="header1 optional_toggle">
+                            <td colspan="2" style="text-align:center;">
+                                <strong> Set up Filter (Optional) </strong>
+                                <img class="optional_hide" src="{% static "images/desc.gif" %}" alt="hide" height="10em" style="vertical-align:middle;"></img>
+                                <img class="optional_show" src="{% static "images/asc.gif" %}" alt="show" height="10em" style="vertical-align:middle;display:none;"></img>
+                            </td>
+                        </tr>
+                        
+                        <!-- choose subcellular localization -->    
+                        <tr class="option2 optional_content">
+                            <td class="left">
+                                1. Select Subcellular Localization
+                            </td>
+                            
+                            <td class="right">
+{{ form2.localization }}
+                            </td>
+                        </tr>
+                        
+                        <!-- choose transmembrane helix -->    
+                        <tr class="option2 optional_content">
+                            <td class="left"> 2.  Number of Transmembrane Helices</td>
+                            <td class="right">
+{{ form2.tmhmm_PredHel_opt }}
+{{ form2.tmhmm_PredHel_value }}
+{{ form2.tmhmm_PredHel_check }}
+                                (Check to include this filter) </td>
+                        </tr>
+
+                        <!-- choose adhesin probability -->    
+                        <tr class="option2 optional_content">
+                            <td class="left">3.  Adhesin Probability (0-1.0) </td>
+                            <td class="right">
+{{ form2.spaan_score_opt }}
+{{ form2.spaan_score_value }}
+{{ form2.spaan_score_check }}
+                                (Check to include this filte) </td>
+                        </tr>
+                        
+                        <!-- choose orthologs -->    
+                        <tr class="option2 optional_content">
+                            <td class="left">
+                                <div class="tooltip">
+                                    4. Have Orthologs in  <img height="12em" src="{% static "images/exclamation.png" %}">
+                                    <span class="tooltiptext">Tips:</br>To select (or unselect) individual genomes, press Ctrl key and then select.</br>For genome selection in continuous order, you can also use Shift key.</span>
+                                </div>
+                            </td>
+                            <td class="right">
+{{ form2.have_orthologs }}
+                                <br />
+                                selected <span id="have_num_orthologs_label" class="highlight1">0</span> genomes
+                            </td>
+                        </tr>
+                        
+                        <!-- exclude orthologs -->    
+                        <tr class="option2 optional_content">
+                            <td class="left">
+                                <div class="tooltip">
+                                    5.Exclude Proteins having Orthologs<br />in Any of Selected Genome(s)  <img height="12em" src="{% static "images/exclamation.png" %}">
+                                    <span class="tooltiptext">Tips:</br>To select (or unselect) individual genomes, press Ctrl key and then select.</br>For genome selection in continuous order, you can also use Shift key.</span>
+                                </div>
+                                
+                            </td>
+                            
+                            <td class="right">
+{{ form2.have_no_orthologs }}
+                                <br />
+                                selected <span id="have_num_no_orthologs_label" class="highlight1">0</span> genomes
+                            </td>
+                        </tr>
+                        
+                        <!-- human similarity -->    
+                        <tr class="option2 optional_content">
+                            <td class="left">6. Similarity to Human Proteins </td>
+                            <td class="right">
+{{ form2.human_alignment }}
+                            </td>
+                        </tr>
+                        
+                        <!-- mouse similarity -->   
+                        <tr class="option2 optional_content">
+                            <td class="left">7.  Similarity to Mouse Proteins</td>
+                            <td class="right">
+{{ form2.mouse_alignment }}
+                            </td>
+                        </tr>
+                        
+                        <!-- pig similarity -->   
+                        <tr class="option2 optional_content">
+                            <td class="left">8.  Similarity to Pig Proteins</td>
+                            <td class="right">
+{{ form2.pig_alignment }}
+                        </tr>
+
+<!-- 
+                        <tr>
+                            <td bgcolor="#F8FAFA" class="styleLeftColumn">9.  MHC class I and II epitope prediction</td>
+                            <td class="tdData"><strong style="margin-left:40px">Note:</strong> This function is available after initial protein filtering</td>
+                        </tr>
+ -->
+                        
+                        <tr class="header1">
+                            <td colspan="2">
+                                <input name="Submit2" type="submit" id="Submit2" value="Submit"/ style="font-size:14px;font-weight:bold;">
+                                <span class="tdData"><a href="docs">help</a></span>
+                                <span class="highlight1">
+{{ form2.non_field_errors }}
+                                </span>
+                            </td>
+                        </tr>
+
+                    </table>
+                </form>
+                <!-- End pre-computed query -->
+                </div>
+                </div>
+            
+                <p class="desc"><img src="{% static "images/red-glass_s.jpg" %}" alt="Link To:" width="16" height="16" /> <strong>Citing Vaxign:</strong></br>
+                He Y, Xiang Z, Mobley HLT. Vaxign: the first web-based vaccine design   program   for reverse vaccinology and an application for vaccine   development.<em>J Biomed Biotechnol</em>. 2010;2010:297505. Epub 2010 Jul [PMID:<a href="http://www.ncbi.nlm.nih.gov/pubmed/20671958">20671958</a>] [<a href="http://www.hindawi.com/journals/jbb/2010/297505.html">Journal   Link</a>]
+                </p>
+
+                <p class="desc"><img src="{% static "images/red-glass_s.jpg" %}" alt="Link To:" width="16" height="16" /> <strong>Citing the original Vaxign proceeding:</strong></br>
+                Xiang Z,  He Y. 2009. <a href="http://www.sciencedirect.com/science?_ob=MImg&amp;_imagekey=B986S-4X20NYP-4-1&amp;_cdi=59134&amp;_user=99318&amp;_pii=S1877282X09000368&amp;_orig=browse&amp;_coverDate=12/31/2009&amp;_sk=999989998&amp;view=c&amp;wchp=dGLbVlz-zSkzV&amp;md5=e3b73eeeaa24bd60e9a111d075a257c4&amp;ie=/sdarticle.pdf">Vaxign: a web-based vaccine target design program   for reverse vaccinology</a>.<em> Procedia in Vaccinology. </em><a href="http://www.sciencedirect.com/science?_ob=PublicationURL&amp;_cdi=59134&amp;_pubType=J&amp;_auth=y&amp;_acct=C000007678&amp;_version=1&amp;_urlVersion=0&amp;_userid=99318&amp;md5=864f3629df593777ade19938d06c3126&amp;jchunk=1#1">Volume 1, Issue 1</a>, Pages 23-29. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </p>
+                
+                <p class="desc"><img src="{% static "images/red-glass_s.jpg" %}" alt="Link To:" width="16" height="16" /> <strong>Related Vaxign Publications:</strong></br>
+                1. Xiang Z, He Y. <a href="http://www.biomedcentral.com/1471-2105/14/S4/S2">Genome-wide prediction of vaccine targets for human herpes simplex viruses using Vaxign reverse vaccinology</a>. <em>BMC Bioinformatics</em>.  2013, 14(Suppl 4):S2 (8 March 2013). PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/23514126">23514126</a>; PMCID: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3599071/">PMC3599071</a>. 
+                </p>
+                
+			    <p class="desc" style="font-weight:bold;">Please see the <a href="docs/index.php">Vaxign Documentation</a> for more information. </br></br>
+			    Please <a href="../contact_us.php">contact us</a> if you would like to have  your favorite genome(s) included in our <a href="stats.php">precomputed Vaxign database</a>.  Your <a href="../contact_us.php">suggestions and comments</a> are welcome. Thank you.
+			    </p>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+<script type="text/javascript">
+document.getElementById("defaultOpen").click();
+</script>
+
+</body>

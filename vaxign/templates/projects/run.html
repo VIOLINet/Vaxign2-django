@@ -1,0 +1,348 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.base.min.css"/>
+<link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_projects.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_home.js" %}"></script>
+<script type="text/javascript">
+$( document ).ready( function () {
+    $('#projects').DataTable( {
+        "lengthMenu":[10, 20, 50, 75, 100],
+        fixedHeader: true,
+        "dom": 'f<"clear">tlip',
+        "fnPreDrawCallback":function(){
+            $("#loading").show();
+        },
+        "fnDrawCallback":function(){
+            $("#loading").hide();
+        },
+        "fnInitComplete":function(){
+            $("#projects").show();
+            $("#loading").hide();
+        },
+    } );
+    
+    $('#id_group_name').change( function() {
+        var group_name = $('#id_group_name').val();
+        var genome_name = $('#id_genome_name').val();
+        if (group_name!='') {
+            dojo.xhrGet({
+                url: "/vaxign2/api/t_vaxign_query/group/"+group_name,
+                handleAs: "json",
+                load: function(data){
+                    var flag = false;
+                    for(i=0; i<data.length; i++) {
+                        if (data[i].c_species_name==genome_name) flag = true;
+                    };
+                    if (flag) $('#genome_name_error').text("Genome name is duplicated in the selected genome group.");
+                    else $('#genome_name_error').text("");
+                },
+                error: function(data) {
+                    alert("An error occurred: " + data);
+                },
+                timeout:5000,
+            });
+        }
+    });
+    
+    $('#id_genome_name').change( function() {
+    	var group_name = $('#id_group_name').val();
+    	var genome_name = $('#id_genome_name').val();
+    	if (group_name!='') {
+    		dojo.xhrGet({
+                url: "/vaxign2/api/t_vaxign_query/group/"+group_name,
+                handleAs: "json",
+                load: function(data){
+                	var flag = false;
+                	for(i=0; i<data.length; i++) {
+                        if (data[i].c_species_name==genome_name) flag = true;
+                    };
+                    if (flag) $('#genome_name_error').text("Genome name is duplicated in the selected genome group.");
+                    else $('#genome_name_error').text("");
+                },
+                error: function(data) {
+                    alert("An error occurred: " + data);
+                },
+                timeout:5000,
+            });
+    	}
+    });
+} );
+</script>
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="home_container">
+
+                <div style="width:70%;">
+                    <h3>Project: {{ project.c_vaxign_projectname }}</h3>
+                    <span style="float:right;"><a href="/vaxign2/project/{{ project.c_vaxign_projectid }}">Click here</a> to go back.</span>
+                </div>
+                
+                <form class="dynamic_container" id="form" name="form" method="post" enctype="multipart/form-data" novalidate>
+{% csrf_token %}
+            
+                    <table style="margin:unset;width:70%;">
+                    
+                        <tr class="header1">
+                            <td colspan="2">
+                                <strong>Input  Protein Sequence(s)</strong>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                <span>Protein Sequence(s):</span>
+                                </br>
+                                <span style="font-weight:normal; margin-left:24px;">
+                                    (Examples: Gram- <em>B. abortus</em> <a href="javascript:setSequence(sequence1, format1);">SodC</a>, 
+                                    Gram+ <em>Bacillus anthracis</em> <a href="javascript:setSequence(sequence2, format2);"> PA</a>, 
+                                    <a href="javascript:setSequence(sequence3, format3);">62317454</a>, 
+                                    or <a href="javascript:setSequence(sequence4, format4);">YP_016495.2</a>)
+                                    </span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                Sequence Format
+                                <select name="sequence_type" id="id_sequence_type">
+                                    <option value="protein_fasta">Protein Sequence (FASTA Format)</option>
+                                    <option value="protein_gi">NCBI Protein ID</option>
+                                    <option value="protein_refseq">NCBI Protein Refseq</option>
+                                    <option value="gene_id">NCBI Gene ID</option>
+{% if request.session.is_admin %}
+                                    <option value="bioproject_id">NCBI Bioproject ID</option>
+{% endif %}
+                                    <option value="protein_fasta_url">Protein Sequence (FASTA File Link)</option>
+                                </select>
+
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+{{ form.sequence }}
+
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                            File Upload
+{{ form.sequence_file }}
+
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                <div class="tooltip">Genome Group Name: 
+                                    <img height="16em" src="{% static "images/question.png" %}"></img>
+                                    <span class="tooltiptext" style="margin-left:-125px;">
+                                    Example:</br>
+                                    Brucella is the genome group</br>
+                                    Brucella abortus 2308 strain is the genome</br></br>
+                                    Please select from existing Vaxign genome group,</br>or type in a new genome group name.
+                                    </span>
+                                </div>
+                                <div id="group_name">
+                                    {{ form.group_name }}
+                                    <button class="dropdown-btn" type="button"> <span class="caret"></span></button>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                <div class="tooltip">Genome Name: 
+                                    <img height="16em" src="{% static "images/question.png" %}"></img>
+                                    <span class="tooltiptext" style="margin-left:-125px;">
+                                    Example:</br>
+                                    Brucella is the genome group</br>
+                                    Brucella abortus 2308 strain is the genome</br></br>
+                                    Please type in a new genome name.
+                                    </span>
+                                </div>
+                                <div id="genome_name">{{ form.genome_name }} <span id="genome_name_error" class="darkred" style="font-size:10px;"></span></div>
+                            </td>
+                        </tr>
+                        
+                        
+                        <tr class="header1">
+                            <td colspan="2">
+                                <strong>Set up Parameters</strong>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                Select Pathogen Organism Type:
+{{ form.organism }}
+{{ form.bacteria_strain }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                Include Basic Vaxign Analyses: 
+                                [<a href="javascript:selectDefaultAnalysis();">Default</a>] 
+                                [<a href="javascript:selectAllAnalysis(true);">Select all</a>] 
+                                [<a href="javascript:selectAllAnalysis(false);">Unselect all</a>]
+{{ form.basic_analysis }}
+                            </td>
+                        </tr>
+                        
+                        <tr id="vaxignml_row" class="option1">
+                            <td>
+                                Include Vaxign-ML Analysis? 
+                                <div class="tooltip">
+                                    <a href="/vaxign2/docs#vaxign-ml"><img height="16em" src="{% static "images/question.png" %}">  </a>
+                                    <span class="tooltiptext" style="margin-left:-125px;">Vaxign-ML is a machine learning-based reverse vaccinology prediction program.</br></br>
+                                    For detail about Vaxign-ML, please click here.</span>
+                                </div>
+                                
+{{ form.vaxignml_analysis }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                Include Vaxitop Analysis?
+                                <div class="tooltip">
+                                    <a href="/vaxign2/docs#vaxign-ml"><img height="16em" src="{% static "images/question.png" %}">  </a>
+                                    <span class="tooltiptext" style="margin-left:-125px;">Vaxign-ML is the an MHC Class I and II binding epitope prediction program.</br></br>
+                                    For detail about Vaxitop, please click here.</span>
+                                </div>
+{{ form.vaxitop_analysis }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        
+                        
+                        <tr class="header1">
+                            <td colspan="2">
+                                <strong>Submit a Job</strong>
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1">
+                            <td>
+                                <pre>Submission Note:</pre>
+{{ form.note }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="option1" style="display:none;">
+                            <td>
+                                Notify via Email: 
+{{ form.email }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="header1">
+                            <td>
+                                <input name="Submit1" type="submit" id="Submit1" value="Submit"/ style="font-size:14px;font-weight:bold;">
+                                <span class="tdData"><a href="docs">help</a></span>
+                                <span class="highlight1">
+{{ form.non_field_errors }}
+                                </span>
+                            </td>
+                        </tr>
+                        
+                    </table>
+
+                </form>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+<script type="text/javascript">
+var ajax = new XMLHttpRequest();
+ajax.open("GET", "/vaxign2/api/t_vaxign_query/group", true);
+ajax.onload = function() {
+    var json = JSON.parse(ajax.responseText)
+    var data = []
+    for (var i=0; i<json.length; i++) {
+        data[i] = json[i].c_species_short;
+    }
+    var group_name_select = new Awesomplete(document.querySelector("#group_name input"), {
+    	list: data,
+    	minChars:0,
+    	maxItems:data.length,
+   	});
+    Awesomplete.$('.dropdown-btn').addEventListener("click", function() {
+        if (group_name_select.ul.childNodes.length === 0) {
+            group_name_select.minChars = 0;
+            group_name_select.evaluate();
+        }
+        else if (group_name_select.ul.hasAttribute('hidden')) {
+            group_name_select.open();
+        }
+        else {
+            group_name_select.close();
+        }
+    });
+};
+ajax.send();
+</script>
+
+</body>

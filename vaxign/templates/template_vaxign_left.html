@@ -1,0 +1,43 @@
+{% load static %}
+
+<link href="{% static "css/template_vaxign_left.css" %}" rel="stylesheet" type="text/css" />
+
+<div class="vaxign_left_container" >
+	<dl>
+		<dt class="topnav"><a href="/vaxign2">Vaxign Home</a></dt>
+		
+        <dt class="topnav"><a href="/vaxign2/stats">Statistics</a></dt>
+        
+{% if 'c_user_name' not in request.session %}
+
+        <dt class="topnav">
+            <a href="/users/register.php?redirect=/vaxign2/login">Register</a> or <a href="/users/login.php?redirect=/vaxign2/login">Login</a>
+        </dt>
+
+{% endif %}
+        
+        <dt class="topnav"><a href="/vaxign2/project">My Analysis</a></dt>
+        
+        <dt class="topnav">Methods </dt>
+        <dt class="topnav2"><a class="topnav2a" href="/vaxign2/dynamic">Dynamic Analysis </a></dt>
+        <dt class="topnav2"><a class="topnav2a" href="/vaxign2/precompute">Precompute Query </a></dt>
+        
+        <dt class="topnav">Modules</dt>
+        <dt class="topnav2"><a class="topnav2a" href="/vaxign2/vaxitop">Vaxitop</a></dt>
+        <dt class="topnav2"><a class="topnav2a" href="/vaxign2/vaxign-ml">Vaxign-ML</a></dt>
+
+		<dt class="topnav"><a href="/vaxign2/updates">Updates</a></dt>
+		<dt class="topnav"><a href="/vaxign2/docs">Documentation</a></dt>
+		<dt class="topnav"><a href="/vaxign2/tutorial">Tutorial</a></dt>
+		<dt class="topnav"><a href="/vaxign2/faqs">FAQs</a></dt>
+		<dt class="topnav"><a href="/vaxign2/disclaimer">Disclaimer</a></dt>
+
+        <dt class="topnav"><a href="/contact_us.php">Contact Us</a></dt>
+    </dl>
+</div>
+
+<div class="umms_logo" style="text-align:center">
+    <a href="http://www.med.umich.edu/" target="_blank">
+        <img src="{% static "images/UMMSLogoCs2.gif" %}" alt="UMMS Logo" width="100" height="73"/>
+    </a>
+</div>

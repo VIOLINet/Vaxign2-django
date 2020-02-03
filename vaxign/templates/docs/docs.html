@@ -1,0 +1,183 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="home_container">
+            
+
+    <h3 align="center">The Vaxign  Documentation</h3>
+    <p>&nbsp;</p>
+    <p><strong><em>Note:</em></strong> Vaxign and Yongqun &quot;Oliver&quot; He have been cited in news: <strong> <a href="http://www.nature.com/nrd/journal/v11/n3/full/nrd3679.html">Reverse vaccinology on the cusp</a></strong> by Dan Jones. <em>Nat Rev Drug Discov</em>. 2012 Feb 10;11(3):175-6. doi: 10.1038/nrd3679. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22322255">22322255</a>. Please click  <a href="#paperscitingvaxign"><strong>HERE</strong></a> to find more papers that have cited Vaxign. </p>
+    <p>In the post-genomic era, strategies of vaccine development have progressed dramatically from traditional Pasteur’s principles of isolating, inactivating and injecting the causative agent of an infectious disease, to reverse vaccinology that starts from bioinformatics analysis of the genome information. Vaxign is the first web-based vaccine design software program freely available for the purpose of facilitating reverse vaccinology. Here we provide some relevant documentation about Vaxign: </p>
+    <p><strong>Table of Contents:</strong></p>
+    <ol>
+      <li><a href="#vaxignpublications">Vaxign Publications</a></li>
+      <li><a href="#pipeline">Vaxign Pipeline for Vaccine Target Prediction</a></li>
+      <li><a href="#vaxign-ml">Vaxign-ML Pipeline for machine learning-based Vaccine Target Prediction</a></li>
+      <li><a href="#usedprograms">Open-Source Software Programs/Databases used in Vaxign and their Licenses</a></li>
+      <li><a href="#parameters">Parameters/Options for Consideration and Filteration </a></li>
+      <li><a href="#vaxitop">Introduction of Vaxitop</a></li>
+      <li><a href="#references">Selected Relevant References</a></li>
+      <li><a href="#paperscitingvaxign">Selected  Papers that have Cited Vaxign</a></li>
+      <li><a href="#links">Useful web links</a></li>
+    </ol>
+    <p>--------------------------------------------------------</p>
+    <p class="style1"><span id="vaxignpublications">Vaxign Publications</span>:   </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;He Y, Xiang Z, Mobley HLT. Vaxign: the first web-based vaccine design   program   for reverse vaccinology and an application for vaccine   development. <em>Journal of   Biomedicine and Biotechnology. </em> Volume 2010 (2010), Article ID 297505, 15 pages. [PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20671958">20671958</a>] (<strong>Note: </strong>this paper introduces the Vaxign program and a<em> </em>use case of how to use Vaxign for uropathogenic <em>E. coli</em> vaccine target prediction. Please use this paper as your formal  Vaxign citation.)</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Xiang Z, He Y. <a href="http://www.biomedcentral.com/1471-2105/14/S4/S2">Genome-wide prediction of vaccine targets for human herpes simplex viruses using Vaxign reverse vaccinology</a>. <em>BMC Bioinformatics</em>.  2013, 14(Suppl 4):S2 (8 March 2013). PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/23514126">23514126</a>; PMCID: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3599071/">PMC3599071</a>. (<strong>Note: </strong>this paper introduces some progresses made in Vaxign up to the end of 2012. You can also use this paper as your formal  Vaxign citation.)</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Xiang Z,  He Y. 2009. <a href="http://www.sciencedirect.com/science?_ob=MImg&amp;_imagekey=B986S-4X20NYP-4-1&amp;_cdi=59134&amp;_user=99318&amp;_pii=S1877282X09000368&amp;_orig=browse&amp;_coverDate=12/31/2009&amp;_sk=999989998&amp;view=c&amp;wchp=dGLbVlz-zSkzV&amp;md5=e3b73eeeaa24bd60e9a111d075a257c4&amp;ie=/sdarticle.pdf">Vaxign: a web-based vaccine target design program   for reverse vaccinology</a>.<em> Procedia in Vaccinology. </em><a href="http://www.sciencedirect.com/science?_ob=PublicationURL&amp;_cdi=59134&amp;_pubType=J&amp;_auth=y&amp;_acct=C000007678&amp;_version=1&amp;_urlVersion=0&amp;_userid=99318&amp;md5=864f3629df593777ade19938d06c3126&amp;jchunk=1#1">Volume 1, Issue 1</a>, Pages 23-29. (<strong>Note: </strong>this paper was presented in the ISV vaccine meeting in 2008. It first introduces our Vaxign program and provides some use case study results.) </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;He Y, Xiang Z. Bioinformatics analysis of <em>Brucella</em> vaccines and vaccine targets using VIOLIN. <em>Immunome Research</em>. 2010 Sep 27;6 Suppl 1:S5.   PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20875156" target="_blank">20875156</a>.        PMCID: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2946783/?tool=pubmed">PMC2946783</a>. (<strong>Note: </strong>this paper introduces a<em> </em>use case of how to use Vaxign for <em>Brucella</em> vaccine target prediction)</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp; He Y. <a href="http://books.google.com/books?id=iJpHCvZNiLcC&amp;pg=PA91&amp;source=gbs_toc_r&amp;cad=3#v=onepage&amp;q&amp;f=false">Genome-based computational vaccine discovery by reverse vaccinology</a> (Chapter 5); in book: Immunomic Discovery of Adjuvants and Candidate Subunit Vaccines, edited by Darren R. Flower, Yvonne Perrie. Publisher: Springer, New York, 2013. ISBN-13: 978-1461450696. ISBN 978-1-4614-5070-2 (eBook). Links in: <a href="http://books.google.com/books/about/Immunomic_Discovery_of_Adjuvants_and_Can.html?id=iJpHCvZNiLcC">Google eBook</a>, and <a href="http://www.amazon.com/Immunomic-Discovery-Adjuvants-Candidate-Immunomics/dp/1461450691/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1373831081&amp;sr=1-1&amp;keywords=Immunomic+Discovery+of+Adjuvants+and+Candidate+Subunit+Vaccines">Amazon book</a>. </p>
+    <p>&nbsp;&nbsp;&nbsp;<em>&nbsp;&nbsp;Papers that cited Vaxign through collaboration with the Vaxign team:</em></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;McNamara L, He Y, Yang Z. Using epitope predictions to evaluate efficacy   and population coverage of the Mtb72f vaccine for tuberculosis. <em>BMC   Immunology</em>. 2010 Mar 30;11(1):18.  [PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20353587">20353587</a>] [<a href="http://www.biomedcentral.com/1471-2172/11/18/abstract">Journal   Link</a>]</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ma J, He Y, Hu B, Luo ZQ. Genome sequence of an environmental isolate of the bacterial pathogen <em>Legionella pneumophila</em>. <em>Genome Announc</em>. 2013 Jun 27;1(3). PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/23792742">23792742</a>. PMCID: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3675512/">PMC3675512</a>.</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>More papers that have cited Vaxign. Please check</em> <a href="#references">HERE</a>. </p>
+    <p class="style1"><span id="pipeline">Vaxign Pipeline for Vaccine Target  Prediction</span>:  </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vaxign includes a pipeline of software programs to predict possible vaccine targets based on various vaccine design criteria using microbial genomic and protein sequences as input data. The predicted features in the Vaxign pipeline include antigen sublocation, adhesion, epitope binding to MHC class I and class II, and sequence similarities to human, mouse and/or pig proteins. This pipeline integrates both existing open source tools and an internally developed program (Vaxitope) with user-friendly web interfaces. Vaxign predicts vaccine  targets based on protein sequences at a genome level or using individual protein sequences. This pipeline includes the following steps:</p>
+    <ol>
+        <li>Subcellular  localization: Surface-exposed proteins such as  outer membrane proteins (esp. adhesins) and secreted proteins are usually ideal  targets for vaccine developments. Non-surface proteins such as  cytoplasmic/inner membrane proteins may not be good targets for vaccine development.   </li>
+        <li>Topology and Transmembrane helices:    It is very difficult to clone, express, and purify proteins with more than one transmembrane spanning  region. Therefore, it might be better to ignore those proteins with multiple  transmembrane spaaning regions in the first place. </li>
+        <li>Adhesin  probability: Adhesins are often good vaccine targets. </li>
+        <li>Epitope  prediction: This step predicts both MHC class I and class II binding  epitopes using   Vaxitope, an internally developed program.  </li>
+        <li>Similarity to host genome sequences: A vaccine candidate with similar sequence to the host (e.g., human, mouse, pig) is likely to cause autoimmunity in the host. </li>
+        </ol>  
+    <p class="style1"><span id="vaxign-ml">Vaxign-ML Pipeline for machine learning-baesd Vaccine Target Prediction</span>:  </p>
+      <p>Vaxign-ML is a supervised machine learning classification to predict protective antigens. To identify the best machine learning method with optimized conditions, 5 machine learning algorithms (logistic regression, support vector machine, k-nearest neighbors, random forest, and extreme gradient boosting) were tested with biological and physiochemical features extracted from the Protegen database. Nested five-fold cross-validation and leave-one-pathogen-out validation were used to ensure unbiased performance assessment and the capability to predict vaccine candidates for a new emerging pathogen. The best performing model, Vaxign-ML (extreme gradient boosting trained on all Protegen data), was compared to three publicly available reverse vaccinology programs with a high-quality benchmark dataset, and showed superior performance in predicting protective antigens.</p>
+      <p>(Paper in preparation)</p>
+      <p>Vaxign-ML standalone version is available in <a href="https://hub.docker.com/r/e4ong1031/vaxign-ml">Docker</a>. Source code is avaiable in <a href="https://github.com/VIOL
+INet/Vaxign-ML-docker">GitHub</a> </p>
+      <p>Installation:</br>(Docker version >=1.13.1, API version >=1.26)</br></br>$ docker pull e4ong1031/vaxign-ml:v1.0</br>$ wget https://raw.githubusercontent.com/VIOLINet/Vaxign-ML-docker/master/VaxignML.sh</br>$ chmod a+x VaxignML.sh</br>$ ./VaxignML.sh [INPUT_FASTA] [OUTPUT_DIRECTORY] [ORGANISM_TYPE]</br></br>(You may need root privilege to run docker commands)</p>
+
+
+    <p class="style1" id="lic"><span id="usedprograms">Open-Source Software Programs/Databases used in Vaxign and their Licenses</span>:</p>
+    <ol>
+      <li><a href="http://www.psort.org/psortb/">PSORTb</a>:  PSORTb (v.2.0) is probably the most precise bacterial localization prediction   tool. PSORTb is under             the <a href="http://www.gnu.org/licenses/gpl.txt" target="_blank">GNU General   Public             Licence</a> (GNU GPL). </li>
+      <li><a href="http://www.cbs.dtu.dk/services/TMHMM-2.0/">TMHMM</a>: Prediction of transmembrane helices in proteins. TMHMM is uder <a href="http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?tmhmm">Academic Software License Agreement</a>.</li>
+      <li><a href="http://www.ncbi.nlm.nih.gov/pubmed/15374866">SPAAN</a>: Prediction of adhesins and adhesin-like proteins. According to the <a href="http://www.ncbi.nlm.nih.gov/pubmed/15374866">SPAAN publication</a>, the SPAAN  program is freely available.</li>
+      <li><a href="http://blast.ncbi.nlm.nih.gov/Blast.cgi">BLAST</a>: NCBI sequence similarity alignment and analysis program. BLAST is a <a href="http://www.ncbi.nlm.nih.gov/Ftp/">USA NCBI program </a> within the public domain. </li>
+      <li><a href="http://www.immuneepitope.org/">IEDB: </a>The Immune Epitope Database and Analysis Resource. The immune epitope data obtained from IEDB is used for training Vaxitope, our epitope prediction program. Please check the IEDB <a href="http://www.immuneepitope.org/terms_of_use.php">Term of Use</a>. </li>
+      </ol>
+    <p class="style1" id="parameters">Parameters/Options for Consideration and Filteration:</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our automatic Vaxign pipeline allows users to select and/or modify the following parameters:  </p>
+    <ol>
+      <li>Subcellular  localization: Please select the localizations you wish to include. Default setting includes (1) Cell Wall, (2) Cytoplasmic, (3) Cytoplasmic Membrane, (4) Extracellular, (5) Out Membrane, (6) Periplasmic, (7) Unknown, and (8) Any Localization (default choice). Please see more details in the <a href="http://www.psort.org/documentation/index.html#output" target="_blank"> PSORTb help page</a>. </li>
+      <li>Transmembrane helices: Please enter maximum number of transmembrane helices. Default value is 1  (<a href="http://www.cbs.dtu.dk/services/TMHMM-2.0/TMHMM2.0.guide.html#output" target="_blank">link to TMHMM help page</a>). </li>
+      <li>Adhesin  probability: Please specify the minimum value of adhesin. Default value is 0.51 (<a href="http://bioinformatics.oxfordjournals.org/cgi/content/full/21/4/483" target="_blank">Sachdeva et al.</a>). </li>
+      <li>No similarity to human proteins: Check this option if you wish to exclude any protein that shows any similarity to a human protein.</li>
+      <li>No similarity to mouse proteins: Check this option if you wish to exclude any protein that shows any similarity to  a mouse protein.</li>
+      <li>No similarity to pig proteins: Check this option if you wish to exclude any protein that shows any similarity to  a pig protein.</li>
+      </ol>
+
+    <p class="style1" id="vaxitop">Introduction of Vaxitop:  </p>
+    
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vaxitop (previously named Vaxitope, now changed to Vaxitop to avoid name conflict) e is an MHC Class I and II binding epitope prediction tool developed in <a href="http://www.hegroup.org/aboutUs/Oliver.html">Dr. Yonggqun &quot;Oliver&quot; He</a>'s laboratory. Vaxitope is a position specific scoring matrice (<a href="http://en.wikipedia.org/wiki/Position-specific_scoring_matrix">PSSM</a>)-based epitope prediction program. Vaxitop relies on statistical <em>P</em> value (instead of a percentage or top number)  as the  cutoff. Our studies indicate that the <em>P</em> value of 0.05 provides a  cutoff with high and balanced sensitivity and specificity. Vaxitop also allows genome-wide query on different MHC host species. To evaluate the performance of Vaxitope, a <a href="http://en.wikipedia.org/wiki/Receiver_operating_characteristic">receiver operating characteristic (ROC)</a> curve  was generated using HLA A*0201 specific PSSM. The result is shown below. The value of the Area Under the ROC Curve (AUC)  of 0.929 for predicting the epitopes for the allele HLA A*0201 with the length of 9 amino acids. The positive and negative  testing dataset was obtained from <a href="http://www.immuneepitope.org/">IEDB</a>. The positive HLA A*0201 aelle  epitopes were used to calculate the True Positive Rate (Sensitivity). The  negative peptides for the allele with the same lenghth were used to calculate the  False Postive Rate (1-Specificity). We have recently updated our program. The performance of our 2012 version has been improved compared to the original 2009 version (as shown below). In addition, we have installed IEDB MHC Class I and II epitope prediciton programs in our systems, and allow a user to compare our Vaxitop-predicted results with the results from the IEDB tools. </p>
+<table border="0">
+  <tr>
+    <td align="center">AUC=0.929 (2009 data)</td>
+    <td align="center">AUC=0.971 (2012 data)</td>
+  </tr>
+  <tr>
+    <td><img src="{% static "vaxitop/roc.JPG" %}" alt="ROC" width="492" height="494" /></td>
+    <td><img src="{% static "vaxitop/ROC20120920.JPG" %}" width="484" height="481" /></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The <a href="/vaxign2/aucs"><strong>ROC AUCs for predicting epitopes specific for other alleles with different lengths </strong></a> are also calculated and  provided for users' reference. Overall, Vaxitop is a very specific and sensitive method for both MHC Class I and II binding epitope prediction. </p>
+<p class="style1" id="references">Selected References:    </p>
+    
+    <ol>
+      <li>Rappuoli R. <a href="http://www.ncbi.nlm.nih.gov/pubmed/11050440">Reverse vaccinology</a>. <em>Curr Opin Microbiol</em>. 2000 Oct;3(5):445-50. Review. PMID: 11050440. <br />
+      </li>
+      <li>Gardy JL, Laird MR, Chen F, Rey S, Walsh CJ, Ester M, Brinkman FS. <a href="http://www.ncbi.nlm.nih.gov/pubmed/15501914">PSORTb v.2.0: expanded prediction of bacterial protein subcellular localization and insights gained from comparative proteome analysis</a>. <em>Bioinformatic</em>. 2005 Mar 1;21(5):617-23. PMID: 15501914. </li>
+      <li>Käll L, Krogh A, Sonnhammer EL. <a href="http://www.ncbi.nlm.nih.gov/pubmed/15961464">An HMM posterior decoder for sequence feature prediction that includes homology information</a>. <em>Bioinformatics</em>. 2005 Jun;21 Suppl 1:i251-7. PMID: 15961464.</li>
+      <li>Sachdeva G, Kumar K, Jain P, Ramachandran S. <a href="http://www.ncbi.nlm.nih.gov/pubmed/15374866">SPAAN: a software program for prediction of adhesins and adhesin-like proteins using neural networks</a>. <em>Bioinformatics</em>. 2005 Feb 15;21(4):483-91. PMID: 15374866.</li>
+      <li>Altschul SF, Gish W, Miller W, Myers EW, Lipman DJ. <a href="http://www.ncbi.nlm.nih.gov/pubmed/2231712">Basic Local Alignment Search Too</a>l. <em>J Mol Biol </em>215:403-410; 1990. PMID: 2231712.</li>
+      <li>Peters B, Sidney J, Bourne P, Bui HH, Buus S, Doh G, Fleri W, Kronenberg M, Kubo R, Lund O, Nemazee D, Ponomarenko JV, Sathiamurthy M, S choenberger S, Stewart S, Surko P, Way S, Wilson S, Sette A. <a href="http://www.ncbi.nlm.nih.gov/pubmed/15760272">The immune epitope database and analysis resource: from vision to blueprint.</a> <em>PLoS Biol</em>. 2005 Mar;3(3):e91. PMID: 15760272. </li>
+      <li>Peters B, Bui HH, Frankild S, Nielson M, Lundegaard C, Kostem E, Basch D, Lamberth K, Harndahl M, Fleri W, Wilson SS, Sidney J, Lund O, Buus S, Sette A. <a href="http://www.ncbi.nlm.nih.gov/pubmed/16789818">A community resource benchmarking predictions of peptide binding to MHC-I molecules</a>. <em>PLoS Comput Biol.</em> 2006 Jun 9;2(6):e65. Epub 2006 Jun 9. PMID: 16789818.</li>
+      <li>Lin HH, Ray S, Tongchusak S, Reinherz EL, Brusic V. <a href="http://www.ncbi.nlm.nih.gov/pubmed/18366636">Evaluation of MHC class I peptide binding prediction servers: applications for vaccine research</a>. <em>BMC Immunol</em>. 2008 Mar 16;9:8. PMID: 18366636.</li>
+      <li>Lin HH, Zhang GL, Tongchusak S, Reinherz EL, Brusic V. <a href="http://www.ncbi.nlm.nih.gov/pubmed/19091022">Evaluation of MHC-II peptide binding prediction servers: applications for vaccine research</a>. <em>BMC Bioinformatics</em>. 2008 Dec 12;9 Suppl 12:S22. PMID: 19091022.</li>
+      <li>Wang P, Sidney J, Dow C, Mothé B, Sette A, Peters B. <a href="http://www.ncbi.nlm.nih.gov/pubmed/18389056">A systematic assessment of MHC class II peptide binding predictions and evaluation of a consensus approach</a>. <em>PLoS Comput Biol</em>. 2008 Apr 4;4(4):e1000048. PMID: 18389056.</li>
+      <li>De Groot AS, Ardito M, McClaine EM, Moise L, Martin WD. <a href="http://www.ncbi.nlm.nih.gov/pubmed/19660593">Immunoinformatic comparison of T-cell epitopes contained in novel swine-origin influenza A (H1N1) virus with epitopes in 2008-2009 conventional influenza vaccine</a>. <em>Vaccine</em>. 2009 Sep 25;27(42):5740-7. Epub 2009 Aug 4.PMID: 19660593. <br />
+        </li>
+    </ol>
+<p class="style1" id="paperscitingvaxign">Selected Papers that have Cited Vaxign:  </p>
+      <ol>
+        <li>Caro-Gomez E, Gazi M, Goez Y, Valbuena G. <a href="http://www.sciencedirect.com/science/article/pii/S0264410X14009013">Discovery of novel cross-protective Rickettsia prowazekii T-cell antigens using a combined reverse vaccinology and in vivo screening approach</a>. <em>Vaccine</em>. 2014 Jul 7. pii: S0264-410X(14)00901-3. doi: 10.1016/j.vaccine.2014.06.089. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/25010827">25010827</a>.</li>
+        <li>Pereira UP, Soares SC, Blom J, Leal CA, Ramos RT, Guimarães LC, Oliveira LC, Almeida SS, Hassan SS, Santos AR, Miyoshi A, Silva A, Tauch A, Barh D, Azevedo V, Figueiredo HC. <a href="http://www.funpecrp.com.br/gmr/year2013/vol12-3/pdf/gmr3719.pdf">In silico prediction of conserved vaccine targets in <em>Streptococcus agalactiae</em> strains isolated from fish, cattle, and human samples</a>. <em>Genet Mol Res</em>. 2013 Aug 12;12(3):2902-12. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/24065646">24065646</a>.</li>
+        <li>Soares SC, Trost E, Ramos RT, Carneiro AR, Santos AR, Pinto AC, Barbosa E, Aburjaile F, Ali A, Diniz CA, Hassan SS, Fiaux K, Guimarães LC, Bakhtiar SM, Pereira U, Almeida SS, Abreu VA, Rocha FS, Dorella FA, Miyoshi A, Silva A, Azevedo V, Tauch A. <a href="http://www.sciencedirect.com/science/article/pii/S0168165612007080">Genome sequence of <em>Corynebacterium pseudotuberculosis</em> biovar equi strain 258 and prediction of antigenic targets to improve biotechnological vaccine production</a>. <em>J Biotechnol</em>. 2013 Aug 20;167(2):135-41. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/23201561">23201561</a>. </li>
+        <li>Gomez G, Pei J, Mwangi W, Adams LG, Rice-Ficht A, Ficht TA.<a href="http://www.plosone.org/article/info%3Adoi/10.1371/journal.pone.0059751"> Immunogenic and invasive properties of <em>Brucella melitensis</em> 16M outer membrane protein vaccine candidates identified via a reverse vaccinology approach</a>. <em>PLoS One</em>. 2013;8(3):e59751. doi: 10.1371/journal.pone.0059751. Epub 2013 Mar 22. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/23533646">23533646</a>. PMCID: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3606113/">PMC3606113</a>.</li>
+        <li>Ali A, Soares SC, Santos AR, Guimar?es LC, Barbosa E, Almeida SS, Abreu VA, Carneiro AR, Ramos RT, Bakhtiar SM, Hassan SS, Ussery DW, On S, Silva A, Schneider MP, Lage AP, Miyoshi A, Azevedo V. <a href="http://www.ncbi.nlm.nih.gov/pubmed/22890137"><em>Campylobacter fetus</em> subspecies: Comparative genomics and prediction of potential virulence targets</a>. <em>Gene</em>. 2012 Oct 25;508(2):145-56. Epub 2012 Aug 6. PMID: 22890137. </li>
+        <li>V D'Afonseca, SC Soares, A Ali, AR Santos, Pinto AC, Magalh?es AAC, de Jesus Faria C, Barbosa E, Guimar?es LC, Eslab?o M, Almeida SS, Abreu VAC, Zerlotini A, Carneiro AR, Cerdeira LT, Ramos RTJ, Hirata Jr R, Mattos-Guaraldi AL, Trost E, Tauch A, Silva A, Schneider MP, Miyoshi A, Azevedo V. <a href="http://www.dovepress.com/getfile.php?fileID=12141">Reannotation of the Corynebacterium diphtheriae NCTC13129 genome as a new approach to studying gene targets connected to virulence and pathogenicity in diphtheria</a>. <em>Open Access Bioinformatics</em>. 2012:4 1–13. <a href="http://dx.doi.org/10.2147/OAB.S25500">http://dx.doi.org/10.2147/OAB.S25500</a>. </li>
+        <li>Jain KK. <a href="http://www.ncbi.nlm.nih.gov/pubmed/22907209">Synthetic Biology and Personalized Medicine</a>. <em>Med Princ Pract</em>. 2012 Aug 16. PMID: 22907209.</li>
+        <li>Oyston P, Robinson K. <a href="http://www.ncbi.nlm.nih.gov/pubmed/22322337">The current challenges for vaccine development</a>. <em>J Med Microbiol</em>. 2012 Jul;61(Pt 7):889-94. PMID: 22322337. (Review)</li>
+        <li>Brumbaugh AR, Mobley HL. <a href="http://www.ncbi.nlm.nih.gov/pubmed/22873125">Preventing urinary tract infection: progress toward an effective <em>Escherichia coli </em>vaccine</a>. <em>Expert Rev Vaccines</em>. 2012 Jun;11(6):663-76. PMID: 22873125. (Review)</li>
+        <li>Kudva IT, Griffin RW, Krastins B, Sarracino DA, Calderwood SB, John M. <a href="http://www.ncbi.nlm.nih.gov/pubmed/22691138">Proteins other than the locus of enterocyte effacement-encoded proteins contribute to <em>Escherichia coli</em> O157:H7 adherence to bovine rectoanal junction stratified squamous epithelial cells</a>. <em>BMC Microbiol</em>. 2012 Jun 12;12:103. PMID: 22691138. </li>
+        <li>Libanova R, Becker PD, Guzmán CA. <a href="http://www.ncbi.nlm.nih.gov/pubmed/21958423">Cyclic di-nucleotides: new era for small molecules as adjuvants</a>. <em>Microb Biotechnol</em>. 2012 Mar;5(2):168-76. doi: 10.1111/j.1751-7915.2011.00306.x. Epub 2011 Sep 29.  PMID: 21958423. </li>
+        <li>Jones D. <a href="http://www.ncbi.nlm.nih.gov/pubmed/22322255">Reverse vaccinology on the cusp</a>. <em>Nat Rev Drug Discov</em>. 2012 Feb 10;11(3):175-6. doi: 10.1038/nrd3679. PMID: 22322255. <strong>(News</strong> and Analysis)</li>
+        <li>He Y, Rappuoli R, De Groot A, Chen RT. <a href="http://www.ncbi.nlm.nih.gov/pubmed/21772787">Emerging vaccine informatics</a>. <em>Journal of Biomedicine and Biotechnology</em>.   2010 (2010), Article ID 218590, 26 pages. 2010;2010:218590. Epub 2011   Jun 15. PMID: 21772787. </li>
+        <li>Moise L, Cousens L, Fueyo J, De Groot AS. <a href="http://www.ncbi.nlm.nih.gov/pubmed/22646824">Harnessing the power of genomics and immunoinformatics to produce improved vaccines</a>. <em>Expert Opin Drug Discov</em>. 2011 Jan;6(1):9-15. PMID: 22646824. (Review)</li>
+        <li>SD Siadat, AS Salmani, MR Aghasadeghi. <a href="http://cdn.intechopen.com/pdfs/34769/InTech-Brucellosis_vaccines_an_overview.pdf">Brucellosis Vaccines: An Overview</a>. In Book: Zoonosis, edited by Dr. Jacob Lorenzo-Morales. Publisher: InTech. Published online 04, April, 2012. ISBN 978-953-51-0479-7. (Book chapter)</li>
+        <li>Thomas C, Moridani M. <a href="http://www.ncbi.nlm.nih.gov/pubmed/19837123">Interindividual variations in the efficacy and toxicity of vaccines</a>. Toxicology. 2010 Dec 5;278(2):204-10. Epub 2009 Oct 28. PMID: 19837123. </li>
+        <li>Tomar N, De RK. <a href="http://www.ncbi.nlm.nih.gov/pubmed/20722763">Immunoinformatics: an integrated scenario</a>. <em>Immunology</em>. 2010 Oct;131(2):153-68. doi: 10.1111/j.1365-2567.2010.03330.x. Epub 2010 Aug 16. Review. PMID: 20722763. </li>
+      </ol>
+          <strong><em>Note:</em></strong> To find more papers that have cited Vaxign, please check Google Scholar: <a href="http://scholar.google.com/scholar?hl=en&amp;q=vaxign">http://scholar.google.com/scholar?hl=en&amp;q=vaxign</a>.
+      <p class="style1" id="links"> Useful Web Links: </p>
+      
+      <ol>
+      <li><a href="http://www.jenner.ac.uk/AntiJen/">AntiJen</a>:     A database containing quantitative binding data for peptides binding to MHC Ligand, TCR-MHC Complexes, T Cell Epitope, TAP, B Cell Epitope molecules and immunological Protein-Protein interactions. </li>
+      <li><a href="http://bioinformatics.uams.edu/mirror/bcipep/">Bcipep</a>: A database of B cell epitopes. </li>
+      <li><a href="http://tools.immuneepitope.org/main/jsp/menu.jsp">IEDB Analysis Resource</a>: A list of IEDB epitope prediction and anlaysis tools. </li>
+      <li><a href="http://www.jenner.ac.uk/JenPep/">JenPep</a>: A database of quantitative binding data for             immunological protein-peptide interactions.</li>
+      <li><a href="http://bio.dfci.harvard.edu/RANKPEP/" target="_blank">RANKPEP</a>: A web-based computational program for prediction of binding peptides to Calss I &amp; II MHC molecules.</li>
+      </ol>
+    <p class="style1">&nbsp;</p>
+    <blockquote>&nbsp;</blockquote> 
+            
+            
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

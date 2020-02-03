@@ -1,0 +1,222 @@
+{% load static %}
+{% load replace %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.css"/>
+<link href="{% static "css/vaxign_results.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_ortholog.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_results.js" %}"></script>
+<script type="text/javascript">
+$( document ).ready( function () {
+    $('#ortholog_results').DataTable( {
+        "lengthMenu":[25, 50, 100, 250, 500, 750, 1000],
+        buttons: [
+                  'copy',
+                  'csv',
+                  'excel',
+                  {extend : 'pdfHtml5',
+                      title : function() {
+                          return "Vaxign Vaccine Design";
+                      },
+                      orientation : 'landscape',
+                      pageSize : 'LEGAL',
+                      text : 'PDF',
+                      titleAttr : 'PDF'
+                  } ],
+        fixedHeader: true,
+        "dom": 'f<"export"B><"clear">tlip',
+        "fnPreDrawCallback":function(){
+            $("#loading").show();
+        },
+        "fnDrawCallback":function(){
+            $("#loading").hide();
+        },
+        "fnInitComplete":function(){
+            $("#ortholog_results").show();
+            $("#export_label").show();
+            $("#loading").hide();
+        },
+        responsive: true,
+        colReorder: true
+    } );
+    
+    
+} );
+</script>
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="results_container ortholog_container">
+        
+                <h3 align="center">Vaxign: Vaccine Target Prediction and Design</h3>
+                
+                <p class="desc">Ortholog Table for <strong>
+{% if not query_detail.c_species_name == '' %}
+                {{ query_detail.c_species_name }}
+{% else %}
+                {{ query_detail.c_query_id }}
+{% endif %}
+                </strong></p>
+                
+                <table>
+                
+                    <form id="form" name="form" method="post" novalidate>
+{% csrf_token %}
+
+{{ form.query_id }}
+
+{{ form.group_name }}
+                    
+                        <tr class="header1">
+                            <td class="left">
+                                <div class="tooltip">
+                                    Select Orthologs <img height="14em" src="{% static "images/exclamation.png" %}">
+                                    <span class="tooltiptext">Tips:</br>To select (or unselect) individual genomes, press Ctrl key and then select.</br>For genome selection in continuous order, you can also use Shift key.</span>
+                                </div>
+                            </td>
+                        </tr>
+                         
+	                    <tr class="option">
+	                        <td>
+                                <select name="have_orthologs" id="id_have_orthologs" multiple="" onchange="show_selected_no('id_have_orthologs', 'have_num_orthologs_label');" size="10">
+{% for ortholog_id, ortholog_name in all_orthologs.items %}
+                                    <option value="{{ ortholog_id }}" 
+{% if ortholog_id in match_orthologs %}
+                                    selected 
+{% endif %}
+                                    >{{ ortholog_name }}</option>
+{% endfor %}
+                                </select>
+						        <br />
+						        selected <span id="have_num_orthologs_label" class="highlight1">{{ form.cleaned_data.have_orthologs|length }}</span> genomes
+						    </td>
+						</tr>
+						
+						<tr class="header1 filter_content">
+						    <td>
+						        <input name="Submit" type="submit" id="Submit" value="Submit"/>
+						        <span class="tdData"><a href="docs">help</a></span>
+						    </td>
+						</tr>                    
+                    
+                    </form>
+                
+                </table>
+
+{% if results %}
+                
+                <div id="loading" class="loading"></div>
+                
+                <p> Found {{ results|length }} protein(s). </p>
+                
+                <table id="ortholog_results" class="display results" data-page-length='25' style="display:none;">
+                
+                    <thead>
+                        <tr class="header">
+                            <td>#</td>
+                            <td>Protein Accession</td>
+                            <td>Protein Name</td>
+{% for ortholog_id, ortholog_name in match_orthologs.items %}
+                            <td>
+	                            <div class="tooltip">
+	                                {{ ortholog_name }} <img height="14em" src="{% static "images/exclamation.png" %}" style="background-color:#A5C3D6;">
+	                                <span class="tooltiptext">Drag to re-order this column</span>
+	                            </div>
+                            </td>
+{% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+{% for record_id, record in results.items %}
+                        <tr class="content">
+                            <td><label style="float:right">{{ forloop.counter }}</label></td>
+                            
+{% if record.c_protein_accession is not None and record.c_protein_accession != '' %}
+                            <td>{{ record.c_protein_accession }}</td>
+{% else %}
+                            <td>{{ record.c_sequence_acc }}</td>
+{% endif %}
+                            <td>
+{% replace search="^(.*?) OS=(.*?) GN=(\w+) PE=\d+ SV=\d+" replacement="$1 [$2]" %}
+{% replace search="\[[^\[\]]+\]$" replacement="" %}
+                            {{ record.c_note }}
+{% endreplace %}
+{% endreplace %}
+                            </td>
+                            
+{% for ortholog_record in record.orthologs %}
+                            <td>
+{% if ortholog_record %}
+{% replace search="^(.*?) OS=(.*?) GN=(\w+) PE=\d+ SV=\d+" replacement="$1 [$2]" %}
+{% replace search="\[[^\[\]]+\]$" replacement="" %}
+                            {{ ortholog_record.c_note }}
+{% endreplace %}
+{% endreplace %}
+                            </br>
+{% if ortholog_record.c_protein_accession is not None and ortholog_record.c_protein_accession != '' %}
+                            ({{ ortholog_record.c_protein_accession }})
+{% else %}
+                            ({{ ortholog_record.c_sequence_acc }})
+{% endif %}
+                            </td>
+{% endif %}
+{% endfor %}
+                        </tr>  
+
+{% endfor %}
+                    </tbody>
+                
+                </table>
+                
+{% endif %}
+        
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

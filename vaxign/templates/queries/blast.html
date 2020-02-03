@@ -1,0 +1,95 @@
+{% load static %}
+{% load replace %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_results.css" %}" rel="stylesheet" type="text/css" />
+
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+            <div class="results_container">
+        
+                <h3 align="center">Vaxign: Vaccine Target Prediction and Design</h3>
+                
+                <p style="font-size:14px;"><strong>{{ protein_note }}({{protein_accession}})</strong></p>
+
+                <p><strong>Alignment to {{ organism }}</strong></p>
+
+{% for target,records in results.items %}
+                <table>
+{% if "\." in record.c_target_id %} 
+                    <tr>
+                        <td colspan=2>
+                            Protein # {{ forloop.counter }}:
+                            <a href="http://www.ncbi.nlm.nih.gov/protein/{{ target }}">{{ target }}</a>
+                        </td>
+                    </tr>
+{% else %}
+                    <tr>
+                        <td colspan=2>
+                            Protein # {{ forloop.counter }}:
+                            <a href="http://www.uniprot.org/uniprot/{{ target }}">{{ target }}</a>
+                        </td>
+                    </tr>
+{% endif %}
+
+{% for record in records %}
+                    <tr>
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+                        
+                        <td>
+<pre>
+{{ record.c_hit_from }} {{ record.c_hseq }} {{ record.c_hit_to }}
+     {{ record.c_midline }}
+{{ record.c_query_from }} {{record.c_qseq }} {{record.c_query_to }}
+</pre>
+                        </td>
+                    </tr>
+{% endfor %}
+                </table>
+{% endfor %}
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

@@ -1,0 +1,83 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="home_container">
+            
+
+  <h3>Table of ROC Areas Under Curve (AUCs)</h3>
+  <p>To evaluate the performance of the Vaxitope epitope prediction program in Vaxign, the Areas Under Curve (AUCs) of the<a href="http://en.wikipedia.org/wiki/Receiver_operating_characteristic"> ROC analysis</a> were calculated using individual allele specific PSSMs. The positive and negative  testing dataset was obtained from IEDB. Specific positive  alelles were used to calculate the  True Positive Rates, and the negative alleles were used to calculate the  False Postive Rates. A leave-one-out approach was applied to test if a known epitope can be predicted on the condition that this epitope is excluded in initial generation of PSSMs. </p>
+  <p>---------------------------</p>
+  <p><strong>Sept 18-27, 2012:</strong> Using new training data from IEDB, we have updated our Vaxitope program. </p>
+  <p><strong>Training Data</strong>: The training data was downloaded from IEDB on September 18,  2012, and is available <a href="{% static "vaxitop/traning_data_20120918.xlsx" %}"><strong>HERE</strong></a>. This new training data was obtained by extracting the <a href="http://www.immuneepitope.org/download_manager.php?filename=mhc_compact.zip">IEDB CSV data file</a>  on September 18,  2012. </p>
+  <p><strong>Results</strong>: The AUC, specificities, and sensitivities of our prediction for each MHC I allele are available <a href="{% static "vaxitop/AUCs20120918.htm" %}"><strong>HERE</strong></a> and for  MHC II allele are available <a href="{% static "vaxitop/AUCsII20120926.htm" %}"><strong>HERE</strong></a>.</p>
+  <p><strong>Notes:</strong> The differences between this version and previous version: </p>
+  <ul>
+    <li>We used the newest training data collected from IEDB. The following describes how we use the training data: </li>
+    <li>For each MHC Class I or II allele, the treatment of the training data: If there are over 200 positive high training data items, we will use only these &quot;positive high&quot; data and ignore those &quot;positive&quot; data. If we do not have over 200 peptides labeled as &quot;positive high&quot; in the IEDB database, we will also include the peptides labeled as &quot;positive&quot; in the IEDB database.</li>
+    <li>We do not any IEDB peptides labeled as &quot;positive intermeidate&quot; for our program training. </li>
+    <li>For any allele that has less than 50 peptides labeled as &quot;positive&quot; or &quot;positive high&quot; in the IEDB database, we do not include the allele in our prediction website. </li>
+    <li>The rationale for the above training data selection is: we can  make very reliable prediction of MHC class I or II epitopes if we have over 200 peptides as training data. If not, we would like to have at least 50 positive peptides as training data for a sound prediction.  </li>
+    </ul>
+  <p><strong>Notes:</strong> The differences between MHC Class I and II epitope prediction:</p>
+  <ul>
+    <li>For MHC Class I allele epitope prediction: We match the length, i.e., we can predict epitopes for various lengths (e.g., 9, 10, 11, ...) if we have sufficient traning data. </li>
+    <li>For MHC Class II allele prediction: we always predict 9-mer amino acid epitopes. However, we do use all the training data with different lengths from IEDB. The selection of the positive training data for MHC class II follows the same procedure as described above. </li>
+  </ul>
+<p>---------------------------</p>
+<p><strong>2009:</strong> The early calculation of AUCs occurred in 2009. Below are the results calculated based on IEDB training data provided. </p>
+  <p><strong>Training Data</strong>: The training data was downloaded from <a href="http://mhcbindingpredictions.immuneepitope.org/dataset.html">the IEDB dataste site</a> (accessed in 2009), and is available <a href="{% static "vaxitop/complete_dataset_2009.zip" %}"><strong>HERE</strong></a>. </p>
+  <p><strong>Results</strong>: The AUC, specificities, and sensitivities of our prediction for each MHC allele are available <a href="{% static "vaxitop/AUCs2009.htm" %}"><strong>HERE</strong></a>. </p>
+  <p>This table below includes results for those MHC alleles that we have randomly chosen for AUC calculation,   but it does not include all MHC alleles available in the Vaxign database. The results were obtained using the training data downloaded from IEDB in 2009. </p>
+  <p>&nbsp;</p>
+  <p>More details about the the method and results are available in our <a href="http://www.ncbi.nlm.nih.gov/pubmed/20671958">original Vaxign paper</a>.</p>
+  <p>&nbsp;</p>
+            
+            
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

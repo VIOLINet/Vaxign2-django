@@ -1,0 +1,55 @@
+table.results {
+    border:1px solid #999966;
+}
+
+.ortholog_container table {
+    border:1px solid #999966;
+    width:40%;
+}
+
+.ortholog_container table tr.header1 {
+    height:30px;
+    text-align:center;
+    background-color:#DDDDDD;
+    font-weight:bold;
+}
+
+.ortholog_container table tr.option td {
+    border-right:1px solid #DFEBFF; 
+    border-bottom:1px solid #DFEBFF;
+    font-size: 12px;
+    font-family: arial, verdana, sans-serif;
+    text-align:center;
+    padding:10px;
+}
+
+.ortholog_container table tr.option td select {
+    width:80%;
+}
+
+.dataTables_wrapper {
+    max-width: -webkit-calc(100vw - 200px);
+    max-width:    -moz-calc(100vw - 200px);
+    max-width:         calc(100vw - 200px);
+}
+
+.dataTables_filter {
+    text-align: left !important;
+    float: left !important;
+}
+
+.export{
+    float: right;
+}
+
+.clear{
+    clear:both;
+}
+
+.dt-button {
+    font-size: 12px !important;
+    padding: 3px !important;
+    margin-top: 3px !important;
+    margin-left: 3px !important;
+    margin-right: 0px !important;
+}

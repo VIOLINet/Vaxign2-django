@@ -1,0 +1,289 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.base.min.css"/>
+<link href="{% static "css/vaxign_projects.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_projects.js" %}"></script>
+<script type="text/javascript">
+$( document ).ready( function () {
+    $('#analyses').DataTable( {
+        "lengthMenu":[10, 20, 50, 75, 100],
+        fixedHeader: true,
+        "dom": 'f<"clear">tlip',
+        "fnPreDrawCallback":function(){
+            $("#loading").show();
+        },
+        "fnDrawCallback":function(){
+            $("#loading").hide();
+        },
+        "fnInitComplete":function(){
+            $("#analyses").show();
+            $("#loading").hide();
+        },
+    } );
+} );
+</script>
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="home_container">
+            
+                <div style="width:70%;">
+                    <h3>Project: {{ project.c_vaxign_projectname }}</h3>
+                    <span style="float:right;"><a href="/vaxign2/project">Click here</a> to go back.</span>
+                </div>
+                
+                <input id="project_id" type="hidden" value="{{ project.c_vaxign_projectid }}"></input>
+
+                <table class="projects" style="min-width:70%;">
+                    <tr class="option2">
+                        <td class="left">Description</td>
+                        <td class="right">{{ project.c_description }}</td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Institution(s)</td>
+                        <td class="right">{{ project.c_institution }}</td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Investigator(s)</td>
+                        <td class="right">{{ project.c_investigator }}</td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Grant Support</td>
+                        <td class="right">{{ project.c_grant }}</td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Note</td>
+                        <td class="right">{{ project.c_note }}</td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Share to Public?</td>
+                        <td id="project_public" class="right">
+{% if project.c_is_public == 1 %}
+                            Yes
+{% else %}
+                            No
+{% endif %}
+                        </td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">List in Vaxign?</td>
+                        <td class="right">
+{% if project.c_list_title == 1 %}
+                            Yes
+{% else %}
+                            No
+{% endif %}
+                        </td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Project Owner</td>
+                        <td class="right">{{ owner.c_first_name }} {{ owner.c_last_name }}</td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left">Project Curator(s)</td>
+                        <td class="right">
+{% for curator in curators %}
+{% if project.c_userfk == request.session.c_user_name %}
+                            <a href="javascript:removeCurator('{{ project.c_vaxign_projectid }}', '{{ curator.c_user_name }}')">
+                                <img src="{% static "images/delete_s.jpg" %}" alt="Remove" border="0" title="Remove" />
+                            </a>
+{% endif %}
+                            {{ curator.c_first_name }} {{ curator.c_last_name }} &nbsp;
+{% endfor %}
+                            </br>
+                            <div id="curator">
+                                <input size="35"></input>
+                                <a class="button" style="text-align:bottom;" href="javascript:addCurator('{{ project.c_vaxign_projectid }}')">&nbsp;Add&nbsp;</a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr class="option2">
+                        <td class="left" rowspan="
+{% if request.session.is_admin %}
+                        5
+{% else %}
+                        4
+{% endif %}
+                        ">
+                            Project Operation
+                        </td>
+                        <td class="right" colspan="2">
+                            <a class="button large" href="/vaxign2/project/{{ project.c_vaxign_projectid }}/edit">&nbsp;Edit Project Profile&nbsp;</a>
+                        </td>
+                    </tr>
+                    <tr class="option2">
+                        <td class="right" colspan="2">
+                            <a class="button large" href="javascript:removeProject('{{ project.c_vaxign_projectid }}')">&nbsp;Delete Project&nbsp;</a>
+                        </td>
+                    </tr>
+                    <tr class="option2">
+                        <td class="right" colspan="2">
+                            <a class="button large" href="/vaxign2/project/{{ project.c_vaxign_projectid }}/query/run">&nbsp;Start Vaxign Dynamic Analysis&nbsp;</a>
+                        </td>
+                    </tr>
+{% if request.session.is_admin %}
+                    <tr class="option2">
+                        <td class="right" colspan="2">
+                            <a class="button large" href="">&nbsp;Run Vaxign Ortholog Analysis&nbsp;</a>
+                        </td>
+                    </tr>
+{% endif %}
+
+                </table>
+                
+                <h4>Analyses:</h4>
+
+{% if queries %}                
+                <table id="analyses" class="display projects" data-page-length='10' style="display:none;">
+                
+	                <thead>
+	                    <tr class="header">
+	                        <td style="width:3%;">Query No.</td>
+	                        <td style="width:10%;">Query ID</td>
+	                        <td style="width:20%;">Genome Group Name 
+	                           <div class="tooltip">
+                                    <a href="/vaxign2/tutorial"><img height="16em" src="{% static "images/question.png" %}"></img></a>
+                                    <span class="tooltiptext" style="margin-left:-125px;">
+                                    Example:</br>
+                                    Brucella is the genome group</br>
+                                    Brucella abortus 2308 strain is the genome</br></br>
+                                    Click here for tutorial
+                                    </span>
+                                </div>
+	                        </td>
+	                        <td style="width:20%;">Genome Name 
+	                           <div class="tooltip">
+                                    <a href="/vaxign2/tutorial"><img height="16em" src="{% static "images/question.png" %}"></img></a>
+                                    <span class="tooltiptext" style="margin-left:-125px;">
+                                    Example:</br>
+                                    Brucella is the genome group</br>
+                                    Brucella abortus 2308 strain is the genome</br></br>
+                                    Click here for tutorial
+                                    </span>
+                                </div>
+	                        </td>
+	                        <td style="width:5%;">Sequence Count</td>
+	                        <td style="width:10%;">Status</td>
+	                        <td style="width:7%;">Submit Time</td>
+	                        <td style="width:7%;">Finish Time</td>
+	                        <td style="width:3%;">Public</td>
+	                        <td style="width:15%;">Operations</td>
+	                    </tr>
+	                </thead>
+	                
+	                <tbody>
+	               
+{% for query in queries %}
+                        <tr class="content">
+                            <td style="width:3%;text-align:center;">{{ forloop.counter }}</td>
+                            <td style="width:10%;">{{ query.c_query_id }}</td>
+                            <td style="width:20%;">{{ query.c_species_short }}</td>
+                            <td style="width:20%;">{{ query.c_species_name }}</td>
+                            <td style="width:5%;">{{ query.sequence_count }}</td>
+                            <td style="width:10%;">{{ query.c_status }}</td>
+                            <td style="width:7%;">{{ query.c_submit_time }}</td>
+                            <td style="width:7%;">{{ query.c_finish_time }}</td>
+                            <td style="width:3%;">
+                                <select id="query_public" onChange="changeQueryPublic('{{ query.c_query_id }}')">
+                                    <option value="0" 
+{% if query.c_is_public == '0' %}
+                                    selected
+{% endif %}
+                                    >No</option>
+                                    <option value="1"
+{% if query.c_is_public == '1' %}
+                                    selected
+{% endif %}                                    
+                                    >Yes</option>
+                                </select>
+                            </td>
+                            <td style="width:15%;">
+                                <a class="button" href="/vaxign2/project/{{ project.c_vaxign_projectid }}/query/{{ query.c_query_id }}/setting">&nbsp;Setting&nbsp;</a>
+                                <a class="button" href="/vaxign2/query/{{ query.c_query_id }}/results">&nbsp;Result&nbsp;</a>
+                                <a class="button" href="javascript:removeQuery('{{ project.c_vaxign_projectid }}', '{{ query.c_query_id }}')">&nbsp;Delete&nbsp;</a>
+                            </td>
+                        </tr>
+{% endfor %}
+                    </tbody>
+
+                </table>
+{% endif %}
+                
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+<script type="text/javascript">
+var ajax = new XMLHttpRequest();
+ajax.open("GET", "/vaxign2/api/t_user_query/all", true);
+ajax.onload = function() {
+	var json = JSON.parse(ajax.responseText)
+	var data = []
+	for (var i=0; i<json.length; i++) {
+		data[i] = {'value':json[i].c_user_name,'label':json[i].c_first_name+' '+json[i].c_last_name};
+	}
+    new Awesomplete(document.querySelector("#curator input"),{ list: data });
+};
+ajax.send();
+</script>
+
+</body>

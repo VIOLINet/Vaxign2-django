@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="home_container">
+            
+
+  <h3 align="center">Frequently Asked Questions (FAQs)</h3>
+  <p align="center">&nbsp;</p>
+<p><strong>1. What is Vaxign? </strong></p>
+    <p> Vaxign is a web-based vaccine design software program. Vaxign uses the reverse vaccinology strategy for rational vaccine design. </p>
+    <p><strong>2.</strong><strong> Who are primary   users of Vaxign?</strong></p>
+    <p> Vaccine researchers, and bioinformaticians who are designing vaccines.  </p>
+    <p><strong>3. How the ortholog detection works in Vaxign? </strong></p>
+    <p> Vaxign uses <a href="http://orthomcl.org/cgi-bin/OrthoMclWeb.cgi?rm=orthomcl#Methods">OrthoMCL</a> for ortholog detection. The OrthoMCL algorithm is <a href="https://docs.google.com/document/pub?id=1RB-SqCjBmcpNq-YbOYdFxotHGuU7RK_wqxqDAMjyP_w">HERE</a>. Sometimes a  unique protein that is predicted to be absent from another genome may not be &quot;completely&quot; unique since a NCBI BLAST may identify some protein hit(s) in another strain or more strains under the same species. This is likely due to the setting of the cutoffs used in the OrthoMCL software program. </p>
+    <p><strong>4. What is the “supertype” HLA Class I alleles? </strong></p>
+    <p>The human MHC Class I super calss alleles include six HLA alleles: 'HLA-A*01:01', 'HLA-A*02:01', 'HLA-A*03:01', 'HLA-A*24:02', 'HLA-B*07:02', and 'HLA-B*44:03'. The six HLA Class I alleles cover more than  99% of the human population from the collection of Caucasian, North   American Black, Japanese, Chinese, and Hispanics. Reference: <a href="http://www.ncbi.nlm.nih.gov/pubmed/19660593">(De Groot et al., 2009).</a></p>
+    <p><strong>5. What is the most common  “supertype” HLA Class II alleles? </strong></p>
+    <p>The human MHC Class I super calss alleles include eight HLA alleles: 'HLA-DRB1*01:01', 'HLA-DRB1*03:01', 'HLA-DRB1*04:01', 'HLA-DRB1*07:01', 'HLA-DRB1*08:01', 'HLA-DRB1*11:01', 'HLA-DRB1*13:01', and 'HLA-DRB1*15:01'. The eight “supertype” HLA Class II alleles together covers more than  99% of the human population from the collection of Caucasian, North   American Black, Japanese, Chinese, and Hispanics. Reference: <a href="http://www.ncbi.nlm.nih.gov/pubmed/19660593">(De Groot et al., 2009).</a> </p>
+    <p>&nbsp;</p>
+            
+            
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

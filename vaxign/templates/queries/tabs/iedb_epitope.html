@@ -1,0 +1,212 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-html5-1.6.1/sl-1.3.1/datatables.min.css"/>
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_results.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxitop.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fc-3.3.0/fh-3.1.6/rr-1.2.6/sc-2.0.1/sl-1.3.1/datatables.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_results.js" %}"></script>
+<script type="text/javascript">
+$( document ).ready( function () {
+    $('#linear_tcell_epitope').DataTable( {
+        "lengthMenu":[5, 10, 25, 50, 100],
+        select: 'single',
+        buttons: [
+                  'copy',
+                  'csv',
+                  'excel',
+                  {extend : 'pdfHtml5',
+                      title : function() {
+                          return "Vaxign Vaccine Design";
+                      },
+                      orientation : 'landscape',
+                      pageSize : 'LEGAL',
+                      text : 'PDF',
+                      titleAttr : 'PDF'
+                  } ],
+        "dom": 'f<"export vaxitop_export"B><"clear">tli<"vaxitop_page"p>',
+    } );
+    $('#linear_bcell_epitope').DataTable( {
+        "lengthMenu":[5, 10, 25, 50, 100],
+        select: 'single',
+        buttons: [
+                  'copy',
+                  'csv',
+                  'excel',
+                  {extend : 'pdfHtml5',
+                      title : function() {
+                          return "Vaxign Vaccine Design";
+                      },
+                      orientation : 'landscape',
+                      pageSize : 'LEGAL',
+                      text : 'PDF',
+                      titleAttr : 'PDF'
+                  } ],
+        "dom": 'f<"export vaxitop_export"B><"clear">tli<"vaxitop_page"p>',
+    } );
+    
+    $('#linear_epitope_select').on( 'change', function() {
+        if ( this.value === 'tcell' ) {
+            $('#linear_epitope_container').show();
+            $('#linear_tcell_epitope_container').show();
+            $('#linear_bcell_epitope_container').hide();
+            $('#linear_epitope_location_header').show();
+            $('#linear_epitope_location_container').show();
+            $( "p.linear_epitope_location" ).unmark();
+        } else if ( this.value === 'bcell' ) {
+            $('#linear_epitope_container').show();
+            $('#linear_bcell_epitope_container').show();
+            $('#linear_tcell_epitope_container').hide();
+            $('#linear_epitope_location_header').show();
+            $('#linear_epitope_location_container').show();
+            $( "p.linear_epitope_location" ).unmark();
+        }
+    } );
+
+    var ttable = $('#linear_tcell_epitope').DataTable();
+    ttable.on( 'select', function ( e, dt, type, indexes ) {
+        if ( type === 'row' ) {
+            indexes.forEach( function( index ) {
+                var seq = ttable.column( 1 ).data()[index];
+                $( "p.linear_epitope_location" ).mark( seq, {
+                    "element":"mark",
+                } );
+            } );
+        }
+    } );
+    ttable.on( 'deselect', function ( e, dt, type, indexes ) {
+        if ( type === 'row' ) {
+            indexes.forEach( function( index ) {
+                var seq = ttable.column( 1 ).data()[index];
+                $( "p.linear_epitope_location" ).unmark( seq, {
+                    "element":"mark",
+                } );
+            } );
+        }
+    } );
+
+    var btable = $('#linear_bcell_epitope').DataTable();
+    btable.on( 'select', function ( e, dt, type, indexes ) {
+        if ( type === 'row' ) {
+            indexes.forEach( function( index ) {
+                var seq = btable.column( 1 ).data()[index];
+                $( "p.linear_epitope_location" ).mark( seq, {
+                    "element":"mark",
+                } );
+            } );
+        }
+    } );
+    btable.on( 'deselect', function ( e, dt, type, indexes ) {
+        if ( type === 'row' ) {
+            indexes.forEach( function( index ) {
+                var seq = btable.column( 1 ).data()[index];
+                $( "p.linear_epitope_location" ).unmark( seq, {
+                    "element":"mark",
+                } );
+            } );
+        }
+    } );
+} );
+</script>
+
+<table>
+
+    <tr>
+        <td bgcolor="#A5C3D6" colspan="2" class="styleLeftColumn">IEDB Experimentally Validated Epitopes</td>
+    </tr>
+    <tr>
+        <td bgcolor="#E4E4E4" class="styleLeftColumn">IEDB Linear Epitope</td>
+        <td bgcolor="#F5FAF7" class="tdData">
+            <select name="linear_epitope_select" id="linear_epitope_select">
+                <option disabled selected value> -- Assay Type -- </option>
+                <option value="tcell">T Cell Epitope</option>
+                <option value="bcell">B Cell Epitope</option>
+            </select>
+        </td>
+    </tr>
+    <tr id="linear_epitope_container" style="display:none">
+        <td colspan="2">
+            
+            <div id="linear_tcell_epitope_container" style="display:none;padding-top:15px;padding-bottom:15px;width:50vw;">
+<!-- Start Linear T Cell Epitope -->        
+                
+<table id="linear_tcell_epitope" class="display" data-page-length='5' style="width:50vw;margin:20px">
+	<thead>
+	    <tr>
+	        <td style="font-size:12px;white-space:nowrap;">IEDB ID</td>
+	        <td style="font-size:12px">Epitope</td>
+	        <td style="font-size:12px">MHC restriction</td>
+	        <td style="font-size:12px">Starting position</td>
+	        <td style="font-size:12px">Ending position</td>
+	    </tr>
+	</thead>
+	<tbody>
+	
+{% for epitope in t_cell_epitopes %}
+		<tr>
+		    <td style="font-size:12px"><a href='https://www.iedb.org/epitope/{{ epitope.epitope_id }}' target='_blank'>{{ epitope.epitope_id }}</a></td>
+		    <td style="font-size:12px">{{ epitope.linear_peptide_seq }}</td>
+		    <td style="font-size:12px">
+{% for allele_id, allele_name in epitope.alleles.items %}
+                <a href='https://www.iedb.org/mhc/{{ allele_id }}' target='_blank'>{{ allele_name }}</a>
+{% endfor %}
+	       </td>
+	       <td style="font-size:12px">{{ epitope.start_pos }}</td>
+	       <td style="font-size:12px">{{ epitope.end_pos }}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+<!-- End Linear T Cell Epitope -->    
+            </div>
+            
+            <div id="linear_bcell_epitope_container" style="display:none;padding-top:15px;padding-bottom:15px;width:50vw;">
+<!-- Start Linear B Cell Epitope -->    
+<table id="linear_bcell_epitope" class="display" data-page-length='5' style="width:50vw;margin:20px">
+    <thead>
+        <tr>
+            <td style="font-size:12px;white-space:nowrap;">IEDB ID</td>
+            <td style="font-size:12px">Epitope</td>
+            <td style="font-size:12px">Starting position</td>
+            <td style="font-size:12px">Ending position</td>
+        </tr>
+    </thead>
+    <tbody>
+{% for epitope in b_cell_epitopes %}
+	    <tr>
+	        <td style="font-size:12px"><a href='https://www.iedb.org/epitope/{{ epitope.epitope_id }}' target='_blank'>{{ epitope.epitope_id }}</a></td>
+	        <td style="font-size:12px">{{ epitope.linear_peptide_seq }}</td>
+	        <td style="font-size:12px">{{ epitope.start_pos }}</td>
+	        <td style="font-size:12px">{{ epitope.end_pos }}</td>
+{% endfor %}
+    </tbody>
+    
+</table>
+<!-- END Linear B Cell Epitope -->    
+            </div>
+            
+        </td>
+    </tr>
+    
+    <tr id="linear_epitope_location_header" style="display:none;">
+        <td bgcolor="#E4E4E4" class="styleLeftColumn" colspan="2">
+            <div class="tooltip">
+                Epitope Location <img id="linear_epitope_q" height="14px" src="{% static "images/exclamation.png" %}">
+                <span class="tooltiptext">Select Eptiope from above table.</span>
+            </div>
+        </td>
+    </tr>
+    <tr id="linear_epitope_location_container" style="display:none;">
+        <td class="tdData" colspan="2">
+            <p id="linear_epitope_location" name="linear_epitope_location" class="linear_epitope_location" style="margin:2px;width:600px;font-size:16px;letter-spacing:0.5em;font-family:'Courier New', Courier, monospace;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;">{{ sequence }}</p>
+        </td>
+    </tr>
+
+</table>

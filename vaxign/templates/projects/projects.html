@@ -1,0 +1,129 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.css"/>
+<link href="{% static "css/vaxign_projects.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/cr-1.5.2/fh-3.1.6/sp-1.0.1/datatables.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_projects.js" %}"></script>
+<script type="text/javascript">
+$( document ).ready( function () {
+    $('#projects').DataTable( {
+        "lengthMenu":[10, 20, 50, 75, 100],
+        fixedHeader: true,
+        "dom": 'f<"clear">tlip',
+        "fnPreDrawCallback":function(){
+            $("#loading").show();
+        },
+        "fnDrawCallback":function(){
+            $("#loading").hide();
+        },
+        "fnInitComplete":function(){
+            $("#projects").show();
+            $("#loading").hide();
+        },
+    } );
+    
+    
+} );
+</script>
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="home_container">
+
+                <div id="loading" class="loading"></div>
+                
+                <a href="/vaxign2/project/add">Click here</a>  to create another new project.
+
+{% if projects %}
+                <table id="projects" class="display projects" data-page-length='10' style="display:none;">
+                
+                <thead>
+                    <tr class="header">
+                        <td style="width:5%">Project No.</td>
+                        <td style="width:60%">Project Title</td>
+                        <td style="width:5%">Project Owner?</td>
+                        <td style="width:10%">Project Member(s)</td>
+                        <td style="width:10%">Creation Time</td>
+                        <td style="width:10%">Operations</td>
+                    </tr>
+                </thead>
+                
+                <tbody>
+
+{% for project in projects %}
+                    <tr class="content">
+                        <td style="width:5%;text-align:center;">{{ forloop.counter }}</td>
+                        <td style="width:60%">
+                            <strong>{{ project.c_vaxign_projectname }}</strong>:
+                            <pre style="white-space:pre-wrap;word-wrap:break-word;">{{ project.c_description }}</pre>
+                        </td>
+                        <td style="width:5%;text-align:center;">
+{% if project.c_userfk == request.session.c_user_name %}
+                            <img src="{% static "/images/checkmark.gif" %}" alt="Yes"></img>
+{% endif %}
+                        </td>
+                        <td style="width:10%">{{ project.curators }}</td>
+                        <td style="width:10%">{{ project.format_time }}</td>
+                        <td style="width:10%">
+                            <a class="button" href="/vaxign2/project/{{ project.c_vaxign_projectid }}">&nbsp;Open&nbsp;</a>
+                            <a class="button" href="javascript:removeProject('{{ project.c_vaxign_projectid }}')">&nbsp;Delete&nbsp;</a>
+                        </td>
+                    </tr>
+{% endfor %}
+
+                </tbody>
+                
+                </table>
+{% endif %}
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

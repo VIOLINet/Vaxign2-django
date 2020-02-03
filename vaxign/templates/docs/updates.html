@@ -1,0 +1,71 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="home_container">
+            
+
+  <h3 align="center">Vaxign Updates</h3>
+
+<ul>
+
+<li>5/25/2015: Junping fixed a bug in MHC Class I &amp; II epitope prediciton. This bug occurred when the server systems recoverred from a breakdown. </li>
+<li>Fall 2014: the VIOLIN/Vaxign servers were down for a couple of months in the fall 2014. </li>
+<li>Sept 27, 2012: Documentation page updated. </li>
+<li>Sept 18-27, 2012: MHC Class I and II epitope prediction tool (Vaxitop) updated. </li>
+<li>Feb 14, 2012: Updated the Vaxitop program using new training data from IEDB (version 2.4). Reorganized and cleaned up many scripts.</li>
+<li>July 14, 2011: Updated the Vaxitop program using new training data from IEDB. More details are available <a href="/vaxign2/docs/aucs">HERE</a>.</li>
+<li>01/10/2010, a miner bug causes query stop in the middle, fixed.</li>
+<li>Second Vaxign Publication: He Y, Xiang Z, Mobley HLT. <a href="http://www.hindawi.com/journals/jbb/2010/297505.html">Vaxign: the first web-based vaccine design program   for reverse vaccinology and an application for vaccine development</a>. <em>Journal of   Biomedicine and Biotechnology</em>. Volume 2010 (2010), Article ID 297505, 15 pages. [PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20671958">20671958</a>]</li>
+<li>First Vaxign publication: Xiang Z, He Y. <a href="http://www.sciencedirect.com/science?_ob=MImg&amp;_imagekey=B986S-4X20NYP-4-1&amp;_cdi=59134&amp;_user=99318&amp;_pii=S1877282X09000368&amp;_orig=browse&amp;_coverDate=12/31/2009&amp;_sk=999989998&amp;view=c&amp;wchp=dGLbVlz-zSkzV&amp;_valck=1&amp;md5=36fca33c514e75538b8c18e84f51e0c9&amp;ie=/sdarticle.pdf">Vaxign: a web-based vaccine target design program for reverse vaccinology</a>.<em> Procedia in Vaccinology. </em>2009. <a href="http://www.sciencedirect.com/science?_ob=PublicationURL&amp;_cdi=59134&amp;_pubType=J&amp;_auth=y&amp;_acct=C000007678&amp;_version=1&amp;_urlVersion=0&amp;_userid=99318&amp;md5=864f3629df593777ade19938d06c3126&amp;jchunk=1#1">Volume   1, Issue 1</a>, Pages 23-29.</li>
+<li>07/31/2008, initial version is online.</li>
+</ul>
+            
+            
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>
