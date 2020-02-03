@@ -183,8 +183,10 @@ $(document).on('click', '.btn', function() {
 								<td class="right loose">
 {% if results.c_protein_accession is not None and results.c_protein_accession != '' %}
                                     {{ results.c_protein_accession }}
-{% else %}
+{% elif record.c_protein_acc is not None and record.c_protein_acc != '' %}
                                     {{ results.c_sequence_acc }}
+{% else %}
+                                    {{ sequence_id }}
 {% endif %}
 								</td>
 							</tr>
@@ -203,21 +205,21 @@ $(document).on('click', '.btn', function() {
                             <tr class="option2">
 								<td class="left loose">Gene Accession</td>
 								<td class="right loose">
-                                    {{ results.c_gene_id|default_if_none:"" }}
+                                    {{ results.c_gene_id|default_if_none:"-" }}
                                 </td>
 							</tr>
                             
                             <tr class="option2">
 								<td class="left loose">Gene Symbol</td>
 								<td class="right loose">
-                                    {{ results.c_gene_symbol|default_if_none:"" }}
+                                    {{ results.c_gene_symbol|default_if_none:"-" }}
                                 </td>
 							</tr>
                             
                             <tr class="option2">
 								<td class="left loose">Locus Tag</td>
 								<td class="right loose">
-                                    {{ results.c_locus_tag|default_if_none:"" }}
+                                    {{ results.c_locus_tag|default_if_none:"-" }}
                                 </td>
 							</tr>
 
@@ -225,7 +227,7 @@ $(document).on('click', '.btn', function() {
                             <tr class="option2">
                                 <td class="left loose">Vaxign&#8209;ML Score</td>
                                 <td class="right loose">
-                                    {{ results.c_vaxign_ml_score|floatformat:1|default_if_none:"" }}
+                                    {{ results.c_vaxign_ml_score|floatformat:1|default_if_none:"-" }}
                                 </td>
                             </tr>
 {% endif %}      
@@ -233,7 +235,7 @@ $(document).on('click', '.btn', function() {
                             <tr class="option2">
 								<td class="left loose">Protein Length</td>
 								<td class="right loose">
-                                    {{ results.c_protein_length|default_if_none:"" }}
+                                    {{ results.c_protein_length|default_if_none:"-" }}
                                 </td>
                             </tr>
                             
@@ -257,7 +259,7 @@ $(document).on('click', '.btn', function() {
                             <tr class="option2">
                                 <td class="left loose">Adhesin Probability</td>
                                 <td class="right loose">
-                                    {{ results.c_spaan|floatformat:3|default_if_none:"" }}
+                                    {{ results.c_spaan|floatformat:3|default_if_none:"-" }}
                                 </td>
                             </tr>
 {% endif %}
@@ -266,7 +268,7 @@ $(document).on('click', '.btn', function() {
                             <tr class="option2">
                                 <td class="left loose">Transmembrane Helices</td>
                                 <td class="right loose">
-                                    {{ results.c_tmhmm_predhel|default_if_none:"" }}
+                                    {{ results.c_tmhmm_predhel|default_if_none:"-" }}
                                 </td>
                             </tr>
                             

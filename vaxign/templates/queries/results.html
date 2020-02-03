@@ -284,7 +284,9 @@ $( document ).ready( function () {
                         <span onclick="closeHTab(event, 'analysis');" class="topright">&times</span>
 	                   
 						<ul>
-						    <li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/ortholog" target="_blank">Show Ortholog Table</a></li>
+{% if query_detail.c_ortholog_computed and query_detial.c_ortholog_computed == 1 %}
+						    <li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/ortholog" target="_blank">Show Genome Group Orthologs Table</a></li>
+{% endif %}
 						</ul>
 	                </div>
 	                
@@ -340,9 +342,12 @@ $( document ).ready( function () {
                             
 {% if record.c_protein_accession is not None and record.c_protein_accession != '' %}
                             <td><a href="/vaxign2/query/{{ query_detail.c_query_id }}/protein/{{ record.c_sequence_id }}" target="_blank">{{ record.c_protein_accession }}</a></td>
-{% else %}
+{% elif record.c_protein_acc is not None and record.c_protein_acc != '' %}
                             <td><a href="/vaxign2/query/{{ query_detail.c_query_id }}/protein/{{ record.c_sequence_id }}" target="_blank">{{ record.c_sequence_acc }}</a></td>
+{% else %}
+                            <td><a href="/vaxign2/query/{{ query_detail.c_query_id }}/protein/{{ record.c_sequence_id }}" target="_blank">{{ record.c_sequence_id }}</a></td>
 {% endif %}
+
                             <td>
 {% replace search="^(.*?) OS=(.*?) GN=(\w+) PE=\d+ SV=\d+" replacement="\1 [\2]" %}
 {% replace search="\[[^\[\]]+\]$" replacement="" %}
@@ -354,13 +359,16 @@ $( document ).ready( function () {
                             <td>
 {% if record.c_gene_id is not None and record.c_gene_id != '' %}
                                 <a href="http://www.ncbi.nlm.nih.gov/gene/{{ record.c_gene_id }}">{{ record.c_gene_id }}</a>
+{% else %}
+                                -
 {% endif %}
+                            </td>
                             
-                            <td>{{ record.c_gene_symbol|default_if_none:"" }}</td>
+                            <td>{{ record.c_gene_symbol|default_if_none:"-" }}</td>
                             
-                            <td>{{ record.c_locus_tag|default_if_none:"" }}</td>
+                            <td>{{ record.c_locus_tag|default_if_none:"-" }}</td>
 {% if 'vaxign_ml' in query_detail.c_included_analyses %}
-                            <td>{{ record.c_vaxign_ml_score|floatformat:1|default_if_none:"" }}</td>
+                            <td>{{ record.c_vaxign_ml_score|floatformat:1|default_if_none:"-" }}</td>
 {% endif %}                            
                             
 {% if 'psort' in query_detail.c_included_analyses %}
@@ -379,11 +387,11 @@ $( document ).ready( function () {
 {% endif %}
                             
 {% if 'spaan' in query_detail.c_included_analyses %}
-                            <td>{{ record.c_spaan|floatformat:3|default_if_none:"" }}</td>
+                            <td>{{ record.c_spaan|floatformat:3|default_if_none:"-" }}</td>
 {% endif %}
                             
 {% if 'tmhmm' in query_detail.c_included_analyses %}
-                            <td>{{ record.c_tmhmm_predhel|default_if_none:"" }}</td>
+                            <td>{{ record.c_tmhmm_predhel|default_if_none:"-" }}</td>
 {% endif %}
 
 {% if 'blasth' in query_detail.c_included_analyses %}
