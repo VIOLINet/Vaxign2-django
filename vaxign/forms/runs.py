@@ -127,7 +127,7 @@ class RunsForm(forms.Form):
         note = cleaned_data.get('note')
         email = cleaned_data.get('email')
         
-        if not sequence:
+        if not sequence or (sequence_type == 'protein_fasta' and not sequence.startswith('>')):
             raise forms.ValidationError('Please provide valid protein sequence FASTA or identifiers.')
         
         if not organism:
