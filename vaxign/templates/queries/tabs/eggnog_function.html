@@ -16,24 +16,28 @@
             <span class="tooltiptext" style="margin-left:-125px;">All functional annotations are predicted using the EggNOG 5.0 database and EggNOG-MAPPER.</br>Click here for more detail</span>
         </div>
     </span>
-    
+
 	    <table class="results" style="margin-top:5px">
 	        
+{% if cogs %}
 	        <tr class="header1">
 	           <td colspan="2">Clusters of Orthologous Groups (COGs)</td>
 	        </tr>
-	        
+{% endif %}
+
 {% for cog_id,cog_name in cogs.items %}
             <tr class="option2">
                 <td class="left loose">[{{ cog_id }}]</td>
                 <td class="right loose">{{ cog_name }}</td>
             </tr>
 {% endfor %}
-	        
+
+{% if gos.biological_process or gos.molecular_function or gos.cellular_component %}
             <tr class="header1">
                <td colspan="2">Gene Ontology (GO)</td>
             </tr>
-            
+{% endif %}
+
 {% if gos.biological_process %}
 {% for bp_id, bp_name in gos.biological_process.items %}
             <tr class="option2">

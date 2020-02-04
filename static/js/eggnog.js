@@ -1,4 +1,4 @@
-function loadeggNOGFunction(queryID, seqID) {
+function loadEggNOGFunction(queryID, seqID) {
 	if (document.getElementById('eggnog_function').innerHTML=='') {
 		document.getElementById('eggnog_function').innerHTML = "<div class='loading' style='position:relative;'></div>";
 		dojo.xhrGet({
