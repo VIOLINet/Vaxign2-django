@@ -38,7 +38,7 @@ def protein_eggnog_function(request, queryID, seqID):
                 os.mkdir(os.path.join(settings.VAXIGN2_TMP_DIR, queryID))
                 
             queryPath = os.path.join(settings.VAXIGN2_TMP_DIR, queryID)
-            open(os.path.join(queryPath, queryID+'.fasta'), 'w').write(str.format("""
+            open(os.path.join(queryPath, seqID+'.fasta'), 'w').write(str.format("""
 >{}
 {}
             """, sequence.c_sequence_id, sequence.c_sequence))
@@ -46,8 +46,8 @@ def protein_eggnog_function(request, queryID, seqID):
             queryPath = os.path.join(settings.WORKSPACE_DIR, queryID)
         cmd = ['python2', os.path.join(settings.EGGNOG_PATH, 'emapper.py'),
                '--cpu', '10',
-               '-i', os.path.join(queryPath, queryID+'.fasta'),
-               '--output', queryID,
+               '-i', os.path.join(queryPath, seqID+'.fasta'),
+               '--output', seqID,
                '--output_dir', queryPath,
                '--temp_dir', queryPath,
                '--data_dir', settings.EGGNOG_DB_PATH,
@@ -63,7 +63,7 @@ def protein_eggnog_function(request, queryID, seqID):
                '--override', '--no_file_comments', '--predict_ortho'
                ]
         subprocess.call(cmd)
-        for line in open(os.path.join(queryPath, queryID+'.emapper.annotations')).read().splitlines():
+        for line in open(os.path.join(queryPath, seqID+'.emapper.annotations')).read().splitlines():
             tokens = line.split('\t')
             TVaxignEggnogFunctions(
                 c_sequence_id= tokens[0],
@@ -136,7 +136,7 @@ def protein_eggnog_ortholog(request, queryID, seqID):
                 os.mkdir(os.path.join(settings.VAXIGN2_TMP_DIR, queryID))
                 
             queryPath = os.path.join(settings.VAXIGN2_TMP_DIR, queryID)
-            open(os.path.join(queryPath, queryID+'.fasta'), 'w').write(str.format("""
+            open(os.path.join(queryPath, seqID+'.fasta'), 'w').write(str.format("""
 >{}
 {}
             """, sequence.c_sequence_id, sequence.c_sequence))
@@ -144,8 +144,8 @@ def protein_eggnog_ortholog(request, queryID, seqID):
             queryPath = os.path.join(settings.WORKSPACE_DIR, queryID)
         cmd = ['python2', os.path.join(settings.EGGNOG_PATH, 'emapper.py'),
                '--cpu', '10',
-               '-i', os.path.join(queryPath, queryID+'.fasta'),
-               '--output', queryID,
+               '-i', os.path.join(queryPath, seqID+'.fasta'),
+               '--output', seqID,
                '--output_dir', queryPath,
                '--temp_dir', queryPath,
                '--data_dir', settings.EGGNOG_DB_PATH,
@@ -161,7 +161,7 @@ def protein_eggnog_ortholog(request, queryID, seqID):
                '--override', '--no_file_comments', '--predict_ortho'
                ]
         subprocess.call(cmd)
-        for line in open(os.path.join(queryPath, queryID+'.emapper.predict_orthologs')).read().splitlines():
+        for line in open(os.path.join(queryPath, seqID+'.emapper.predict_orthologs')).read().splitlines():
             if line.startswith('#'):
                 continue
             tokens = line.split('\t')

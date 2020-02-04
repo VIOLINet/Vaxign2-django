@@ -54,7 +54,7 @@ def protein(request, queryID, seqID):
                 os.mkdir(os.path.join(settings.VAXIGN2_TMP_DIR, queryID))
                 
             queryPath = os.path.join(settings.VAXIGN2_TMP_DIR, queryID)
-            open(os.path.join(queryPath, queryID+'.fasta'), 'w').write(str.format("""
+            open(os.path.join(queryPath, seqID+'.fasta'), 'w').write(str.format("""
 >{}
 {}
             """, sequence.c_sequence_id, sequence.c_sequence))
@@ -67,7 +67,7 @@ def protein(request, queryID, seqID):
             cmd = str.format("{} {} {} -mt 0.1 -hit_list > {}",
                                 os.path.join(settings.VAXITOP_PATH, 'lib', 'meme', 'bin', 'mast'),
                                 os.path.join(settings.VAXITOP_PATH, 'pssm', str(group)+'.xml'),
-                                os.path.join(queryPath, queryID+'.fasta'),
+                                os.path.join(queryPath, seqID+'.fasta'),
                                 os.path.join(queryPath, str(group)+'.matching.txt'),
                             )
             cmds.append(cmd)
