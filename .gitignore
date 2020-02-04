@@ -18,3 +18,7 @@ vaxign2/env.py
 vaxign-php
 # Vaxitop scripts
 vaxitop
+# eggNOG-mapper scripts
+eggnog-mapper-2.0.1
+# GOATOOLS GO ontology file
+go-basic.obo

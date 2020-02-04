@@ -5,6 +5,7 @@ from vaxign.views import queries
 from vaxign.views import runs
 from vaxign.views import projects
 from vaxign.views import vaxitop
+from vaxign.views import analysis
 
 from . import apis
 
@@ -33,6 +34,8 @@ urlpatterns = [
     path('query/<str:queryID>/vaxitop', vaxitop.index),
     path('query/<str:queryID>/protein/<str:seqID>/vaxitop', vaxitop.protein),
     path('query/<str:queryID>/protein/<str:seqID>/iedb/search', vaxitop.iedb_search),
+    
+    path('query/<str:queryID>/protein/<str:seqID>/eggnog/function', analysis.protein_eggnog_function),
     
     path('run/<str:queryID>', runs.index),
     path('run/<str:queryID>/vaxitop', runs.vaxitop),

@@ -1,0 +1,101 @@
+{% load static %}
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_results.css" %}" rel="stylesheet" type="text/css" />
+
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+
+<div class="results_container">
+
+    <span style="margin-left:10px;">
+        <strong>Functional Annotation Prediction</strong>
+        <div class="tooltip">
+            <a href="http://eggnogdb.embl.de" target="_blank"><img height="16em" src="{% static "images/question.png" %}">  </a>
+            <span class="tooltiptext" style="margin-left:-125px;">All functional annotations are predicted using the EggNOG 5.0 database and EggNOG-MAPPER.</br>Click here for more detail</span>
+        </div>
+    </span>
+    
+	    <table class="results" style="margin-top:5px">
+	        
+	        <tr class="header1">
+	           <td colspan="2">Clusters of Orthologous Groups (COGs)</td>
+	        </tr>
+	        
+{% for cog_id,cog_name in cogs.items %}
+            <tr class="option2">
+                <td class="left loose">[{{ cog_id }}]</td>
+                <td class="right loose">{{ cog_name }}</td>
+            </tr>
+{% endfor %}
+	        
+            <tr class="header1">
+               <td colspan="2">Gene Ontology (GO)</td>
+            </tr>
+            
+{% if gos.biological_process %}
+{% for bp_id, bp_name in gos.biological_process.items %}
+            <tr class="option2">
+{% if forloop.counter == 1 %}
+                <td class="left" rowspan="{{ gos.biological_process|length }}">Biological Process</td>
+{% endif %}
+	            <td class="right"><a href="http://amigo.geneontology.org/amigo/term/{{ bp_id }}">{{ bp_name }} ({{ bp_id }})</a></td>
+            </tr>
+{% endfor %}
+{% endif %}
+
+{% if gos.molecular_function %}
+{% for mf_id, mf_name in gos.molecular_function.items %}
+            <tr class="option2">
+{% if forloop.counter == 1 %}
+                <td class="left" rowspan="{{ gos.molecular_function|length }}">Molecular Function</td>
+{% endif %}
+                <td class="right"><a href="http://amigo.geneontology.org/amigo/term/{{ mf_id }}">{{ mf_name }} ({{ mf_id }})</a></td>
+            </tr>
+{% endfor %}
+{% endif %}
+
+{% if gos.cellular_component %}
+{% for cc_id, cc_name in gos.cellular_component.items %}
+            <tr class="option2">
+{% if forloop.counter == 1 %}
+                <td class="left" rowspan="{{ gos.cellular_component|length }}">Cellular Component</td>
+{% endif %}
+                <td class="right"><a href="http://amigo.geneontology.org/amigo/term/{{ cc_id }}">{{ cc_name }} ({{ cc_id }})</a></td>
+            </tr>
+{% endfor %}
+{% endif %}
+
+{% if keggs.kegg_ko or keggs.kegg_pathway %}
+            <tr class="header1">
+                <td colspan="2">KEGG</td>
+            </tr>
+{% endif %}
+
+{% if keggs.kegg_pathway %}
+{% for kegg_pathway_id, kegg_pathway_name in keggs.kegg_pathway.items %}
+            <tr class="option2">
+{% if forloop.counter == 1 %}
+            <td class="left loose" rowspan="{{ keggs.kegg_pathway|length }}">Pathways</td>
+{% endif %}
+            <td class="right"><a href="https://www.genome.jp/dbget-bin/www_bget?{{ kegg_pathway_id }}">{{ kegg_pathway_name }}</a></td>
+{% endfor %}
+            </tr>
+{% endif %}
+
+{% if keggs.kegg_ko %}
+{% for kegg_ko_id, kegg_ko_name in keggs.kegg_ko.items %}
+            <tr class="option2">
+{% if forloop.counter == 1 %}
+            <td class="left loose" rowspan="{{ keggs.kegg_ko|length }}">Functional Orthologs</td>
+{% endif %}
+            <td class="right loose"><a href="https://www.genome.jp/dbget-bin/www_bget?{{ kegg_ko_id }}">{{ kegg_ko_name }}</a></td>
+{% endfor %}
+            </tr>
+{% endif %}
+
+        </table>
+    
+    </div>
+</div>
