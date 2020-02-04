@@ -28,6 +28,7 @@
 <script language="javascript" src="{% static "js/common.js" %}"></script>
 <script language="javascript" src="{% static "js/vaxign_results.js" %}"></script>
 <script language="javascript" src="{% static "js/vaxitop.js" %}"></script>
+<script language="javascript" src="{% static "js/eggnog.js" %}"></script>
 <script type="text/javascript">
 function format ( d ) {
     var sequence = "{{ sequence }}";
@@ -172,6 +173,7 @@ $(document).on('click', '.btn', function() {
 	                    <button id="defaultOpen" class="vtablinks" onclick="openVTab(event, 'basic')">Basic Information</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'vaxitop');loadVaxitop('{{ query_id }}','{{ sequence_id }}')">Vaxitop Prediction</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'iedb_epitope');loadIEDB('{{ query_id }}','{{ sequence_id }}')">IEDB Epitope</button>
+	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_function'); loadeggNOGFunction('{{ query_id }}', '{{ sequence_id }}')">Functional Annotation</button>
 	                </div>
 		                    
 		            <div id="basic" class="vtabcontent" style="padding-top:10px;">
@@ -328,6 +330,8 @@ $(document).on('click', '.btn', function() {
 		            <div id="vaxitop" class="vtabcontent"></div>
 		            
 		            <div id="iedb_epitope" class="vtabcontent"></div>
+		            
+		            <div id="eggnog_function" class="vtabcontent"></div>
 		            
 	            </div>
             </div>
