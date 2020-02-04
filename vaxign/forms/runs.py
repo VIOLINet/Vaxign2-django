@@ -25,11 +25,13 @@ class RunsForm(forms.Form):
     sequence_type = forms.ChoiceField(
         choices=(
             ('protein_fasta', 'Protein Sequence (FASTA Format)'),
-            ('protein_gi','NCBI Protein GI'),
+            ('protein_uniprotkb', 'UniprotKB Protein ID'),
+            ('protein_uniprot_proteome', 'Uniprot Proteome ID'),
+            ('protein_gi','NCBI Protein ID'),
             ('protein_refseq','NCBI Protein Refseq'),
             ('gene_id','NCBI Gene ID'),
-            ('protein_fasta_url', 'Protein Sequence (FASTA File Link)'),
             ('bioproject_id','NCBI Bioproject ID'),
+            ('protein_fasta_url', 'Protein Sequence (FASTA File Link)'),
         ),
     )
     
@@ -127,7 +129,7 @@ class RunsForm(forms.Form):
         note = cleaned_data.get('note')
         email = cleaned_data.get('email')
         
-        if not sequence:
+        if not sequence or (sequence_type == 'protein_fasta' and not sequence.startswith('>')):
             raise forms.ValidationError('Please provide valid protein sequence FASTA or identifiers.')
         
         if not organism:

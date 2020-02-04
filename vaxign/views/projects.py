@@ -314,6 +314,12 @@ def run(request, projectID):
             url2 = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&retmode=text&rettype=fasta&id=' + ','.join(geneIDs)
             with urllib.request.urlopen(url2) as file2:
                 tmpData['sequence'] = file2.read().decode()
+        # Sequence input type: UniprotKB Protein ID
+        if tmpData['sequence_type'] == 'protein_uniprotkb':
+            logger.debug("Selected UniprotKB Protein ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
         # Sequence input type: NCBI Bioproject ID
         if tmpData['sequence_type'] == 'bioproject_id':
             logger.debug( "Selected NCBI Bioproject ID. Retrieving sequence from NCBI...")
@@ -348,6 +354,12 @@ def run(request, projectID):
                     tmpData['group_name'] = organism
                 if tmpData['genome_name'] == '':
                     tmpData['genome_name'] = str.format('{} {}', organism, strain)
+        # Sequence input type: Uniprot Proteome ID
+        if tmpData['sequence_type'] == 'protein_uniprot_proteome':
+            logger.debug("Selected Uniprot Proteome ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=proteome:{}&format=fasta', tmpData['sequence'].strip())
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
             
         form = RunsForm(tmpData or None)
     else:

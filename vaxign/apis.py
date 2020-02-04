@@ -147,10 +147,15 @@ def t_vaxign_mast_results(request, queryID):
                 'sequence': row.c_sequence,
                 'protein': row.c_protein_accession,
             }
-        else:
+        elif row.c_sequence_acc is not None and row.c_sequence_acc != '':
             sequences[row.c_sequence_id] = {
                 'sequence': row.c_sequence,
                 'protein': row.c_sequence_acc,
+            }
+        else:
+            sequences[row.c_sequence_id] = {
+                'sequence': row.c_sequence,
+                'protein': row.c_sequence_id,
             }
     
     masts = []

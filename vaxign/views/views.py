@@ -8,6 +8,7 @@ import string
 import random
 import collections
 import phpserialize
+import xml.etree.ElementTree as ET
 
 from django.conf import settings
 from django.db.models import Q
@@ -25,17 +26,25 @@ import logging
 logger = logging.getLogger('console')
 
 def index(request, name):
-    
-    try:
-        php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
-        php_session = phpserialize.loads(php_session_str)
-        request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
-        request.session['is_admin'] = php_session['is_admin'.encode()]
-    except:
-        if 'c_user_name' in request.session.keys():
-            del request.session['c_user_name']
-        if 'is_admin' in request.session.keys():
-            del request.session['is_admin']
+    if 'c_user_name' not in request.session.keys():
+        try:
+            php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
+            php_session = phpserialize.loads(php_session_str)
+            request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
+            request.session['is_admin'] = php_session['is_admin'.encode()]
+        except:
+            pass
+    else:
+        try:
+            php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
+            php_session = phpserialize.loads(php_session_str)
+            request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
+            request.session['is_admin'] = php_session['is_admin'.encode()]
+        except:
+            if 'c_user_name' in request.session.keys():
+                del request.session['c_user_name']
+            if 'is_admin' in request.session.keys():
+                del request.session['is_admin']
     
     if name == 'index' or name not in ['dynamic', 'precompute']:
         name = 'dynamic'
@@ -60,7 +69,7 @@ def index(request, name):
         # Process sequence data
         # Sequence input type: NCBI Protein GI or Refseq
         if tmpData['sequence_type'] == 'protein_gi':
-            logger.debug( "Selected NCBI Protein GI. Retrieving sequence from NCBI...")
+            logger.debug("Selected NCBI Protein GI. Retrieving sequence from NCBI...")
             try:
                 url = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&retmode=text&rettype=fasta&id=' + re.sub('[,\s]+', ',', tmpData['sequence'])
                 with urllib.request.urlopen(url) as file:
@@ -78,7 +87,7 @@ def index(request, name):
                 tmpData['sequence'] = None
         # Sequence input type: FASTA URL
         if tmpData['sequence_type'] == 'protein_fasta_url':
-            logger.debug( "Selected custom protein FASTA file link(s). Retrieving sequence from the source(s)...")
+            logger.debug("Selected custom protein FASTA file link(s). Retrieving sequence from the source(s)...")
             tmp = ''
             for url in re.split('[\r\n]+', tmpData['sequence']):
                 with urllib.request.urlopen(url.strip()) as file:
@@ -86,13 +95,59 @@ def index(request, name):
             tmpData['sequence'] = tmp
         # Sequence input type: NCBI Gene ID
         if tmpData['sequence_type'] == 'gene_id':
-            logger.debug( "Selected NCBI Gene ID. Retrieving sequence from NCBI...")
+            logger.debug("Selected NCBI Gene ID. Retrieving sequence from NCBI...")
             url1 = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=gene&db=protein&term=srcdb_refseq[PROP]&id=' + re.sub('[,\s]+', '', tmpData['sequence'])
             with urllib.request.urlopen(url1) as file1:
                 geneIDs = list(set(re.findall('<Link>\s+<Id>(\d+)<\/Id>\s+<\/Link>', file1.read().decode())))
             url2 = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&retmode=text&rettype=fasta&id=' + ','.join(geneIDs)
             with urllib.request.urlopen(url2) as file2:
                 tmpData['sequence'] = file2.read().decode()
+        # Sequence input type: UniprotKB Protein ID
+        if tmpData['sequence_type'] == 'protein_uniprotkb':
+            logger.debug("Selected UniprotKB Protein ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
+        # Sequence input type: NCBI Bioproject ID
+        if tmpData['sequence_type'] == 'bioproject_id':
+            logger.debug( "Selected NCBI Bioproject ID. Retrieving sequence from NCBI...")
+            if tmpData['sequence'].strip().startswith( 'PRJNA' ):
+                bioprojectID = tmpData['sequence'].strip().replace('PRJNA', '')
+            else:
+                bioprojectID = tmpData['sequence'].strip()
+            url1 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=bioproject&db=protein&id='+bioprojectID
+            proteinIDs = []
+            with urllib.request.urlopen(url1) as file1:
+                tree1 = ET.fromstring(file1.read().decode())
+                for proteinID in tree1.find('LinkSet').find('LinkSetDb').iter('Id'):
+                    proteinIDs.append(proteinID.text)
+            url2 = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+            data2 = urllib.parse.urlencode({
+                'db': 'protein',
+                'rettype': 'fasta',
+                'retmode': 'text',
+                'retmax': '10000',
+                'id': ','.join(proteinIDs),
+            }).encode()
+            request2 = urllib.request.Request(url=url2, data=data2)
+            with urllib.request.urlopen(request2) as file2:
+                tmpData['sequence'] = file2.read().decode()
+            
+            url3 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=bioproject&id='+bioprojectID
+            with urllib.request.urlopen(url3) as file3:
+                tree3 = ET.fromstring(file3.read().decode())
+                organism = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Name').text
+                strain = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Strain').text
+                if tmpData['group_name'] == '':
+                    tmpData['group_name'] = organism
+                if tmpData['genome_name'] == '':
+                    tmpData['genome_name'] = str.format('{} {}', organism, strain)
+        # Sequence input type: Uniprot Proteome ID
+        if tmpData['sequence_type'] == 'protein_uniprot_proteome':
+            logger.debug("Selected Uniprot Proteome ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=proteome:{}&format=fasta', tmpData['sequence'].strip())
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
             
         form1 = RunsForm(tmpData or None)
         context['vaxign_option'] = 'dynamic'
@@ -232,23 +287,23 @@ def stats(request):
 
 def login(request):
     
-    try:
-        php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
-        php_session = phpserialize.loads(php_session_str)
-        request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
-        request.session['is_admin'] = php_session['is_admin'.encode()]
-    except:
-        if 'c_user_name' in request.session.keys():
-            del request.session['c_user_name']
-        if 'is_admin' in request.session.keys():
-            del request.session['is_admin']
+    if 'c_user_name' not in request.session.keys() and 'is_admin' not in request.session.keys():
+        try:
+            php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
+            php_session = phpserialize.loads(php_session_str)
+            request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
+            request.session['is_admin'] = php_session['is_admin'.encode()]
+        except:
+            pass
     
     return redirect('/vaxign2')
     
 def logout(request):
     
-    del request.session['c_user_name']
-    del request.session['is_admin']
+    if 'c_user_name' in request.session.keys():
+        del request.session['c_user_name']
+    if 'is_admin' in request.session.keys():
+        del request.session['is_admin']
     
     return redirect('/vaxign2')
 
@@ -306,6 +361,52 @@ def vaxignml(request):
             url2 = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&retmode=text&rettype=fasta&id=' + ','.join(geneIDs)
             with urllib.request.urlopen(url2) as file2:
                 tmpData['sequence'] = file2.read().decode()
+        # Sequence input type: UniprotKB Protein ID
+        if tmpData['sequence_type'] == 'protein_uniprotkb':
+            logger.debug("Selected UniprotKB Protein ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
+        # Sequence input type: NCBI Bioproject ID
+        if tmpData['sequence_type'] == 'bioproject_id':
+            logger.debug( "Selected NCBI Bioproject ID. Retrieving sequence from NCBI...")
+            if tmpData['sequence'].strip().startswith( 'PRJNA' ):
+                bioprojectID = tmpData['sequence'].strip().replace('PRJNA', '')
+            else:
+                bioprojectID = tmpData['sequence'].strip()
+            url1 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=bioproject&db=protein&id='+bioprojectID
+            proteinIDs = []
+            with urllib.request.urlopen(url1) as file1:
+                tree1 = ET.fromstring(file1.read().decode())
+                for proteinID in tree1.find('LinkSet').find('LinkSetDb').iter('Id'):
+                    proteinIDs.append(proteinID.text)
+            url2 = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+            data2 = urllib.parse.urlencode({
+                'db': 'protein',
+                'rettype': 'fasta',
+                'retmode': 'text',
+                'retmax': '10000',
+                'id': ','.join(proteinIDs),
+            }).encode()
+            request2 = urllib.request.Request(url=url2, data=data2)
+            with urllib.request.urlopen(request2) as file2:
+                tmpData['sequence'] = file2.read().decode()
+            
+            url3 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=bioproject&id='+bioprojectID
+            with urllib.request.urlopen(url3) as file3:
+                tree3 = ET.fromstring(file3.read().decode())
+                organism = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Name').text
+                strain = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Strain').text
+                if tmpData['group_name'] == '':
+                    tmpData['group_name'] = organism
+                if tmpData['genome_name'] == '':
+                    tmpData['genome_name'] = str.format('{} {}', organism, strain)
+        # Sequence input type: Uniprot Proteome ID
+        if tmpData['sequence_type'] == 'protein_uniprot_proteome':
+            logger.debug("Selected Uniprot Proteome ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=proteome:{}&format=fasta', tmpData['sequence'].strip())
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
             
         form = RunsForm(tmpData or None)
     else:
@@ -375,6 +476,52 @@ def vaxitop(request):
             url2 = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&retmode=text&rettype=fasta&id=' + ','.join(geneIDs)
             with urllib.request.urlopen(url2) as file2:
                 tmpData['sequence'] = file2.read().decode()
+        # Sequence input type: UniprotKB Protein ID
+        if tmpData['sequence_type'] == 'protein_uniprotkb':
+            logger.debug("Selected UniprotKB Protein ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
+        # Sequence input type: NCBI Bioproject ID
+        if tmpData['sequence_type'] == 'bioproject_id':
+            logger.debug( "Selected NCBI Bioproject ID. Retrieving sequence from NCBI...")
+            if tmpData['sequence'].strip().startswith( 'PRJNA' ):
+                bioprojectID = tmpData['sequence'].strip().replace('PRJNA', '')
+            else:
+                bioprojectID = tmpData['sequence'].strip()
+            url1 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=bioproject&db=protein&id='+bioprojectID
+            proteinIDs = []
+            with urllib.request.urlopen(url1) as file1:
+                tree1 = ET.fromstring(file1.read().decode())
+                for proteinID in tree1.find('LinkSet').find('LinkSetDb').iter('Id'):
+                    proteinIDs.append(proteinID.text)
+            url2 = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+            data2 = urllib.parse.urlencode({
+                'db': 'protein',
+                'rettype': 'fasta',
+                'retmode': 'text',
+                'retmax': '10000',
+                'id': ','.join(proteinIDs),
+            }).encode()
+            request2 = urllib.request.Request(url=url2, data=data2)
+            with urllib.request.urlopen(request2) as file2:
+                tmpData['sequence'] = file2.read().decode()
+            
+            url3 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=bioproject&id='+bioprojectID
+            with urllib.request.urlopen(url3) as file3:
+                tree3 = ET.fromstring(file3.read().decode())
+                organism = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Name').text
+                strain = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Strain').text
+                if tmpData['group_name'] == '':
+                    tmpData['group_name'] = organism
+                if tmpData['genome_name'] == '':
+                    tmpData['genome_name'] = str.format('{} {}', organism, strain)
+        # Sequence input type: Uniprot Proteome ID
+        if tmpData['sequence_type'] == 'protein_uniprot_proteome':
+            logger.debug("Selected Uniprot Proteome ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=proteome:{}&format=fasta', tmpData['sequence'].strip())
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
         
         if tmpData['sequence'] != '':
             queryID = ''.join(random.choice('ABCDEFGHJKMNPQRSTUVWXYZ23456789') for i in range(10))
