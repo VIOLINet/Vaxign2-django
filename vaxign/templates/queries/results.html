@@ -342,7 +342,7 @@ $( document ).ready( function () {
                             
 {% if record.c_protein_accession is not None and record.c_protein_accession != '' %}
                             <td><a href="/vaxign2/query/{{ query_detail.c_query_id }}/protein/{{ record.c_sequence_id }}" target="_blank">{{ record.c_protein_accession }}</a></td>
-{% elif record.c_protein_acc is not None and record.c_protein_acc != '' %}
+{% elif record.c_sequence_acc is not None and record.c_sequence_acc_acc != '' %}
                             <td><a href="/vaxign2/query/{{ query_detail.c_query_id }}/protein/{{ record.c_sequence_id }}" target="_blank">{{ record.c_sequence_acc }}</a></td>
 {% else %}
                             <td><a href="/vaxign2/query/{{ query_detail.c_query_id }}/protein/{{ record.c_sequence_id }}" target="_blank">{{ record.c_sequence_id }}</a></td>

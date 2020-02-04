@@ -186,7 +186,7 @@ $(document).on('click', '.btn', function() {
 								<td class="right loose">
 {% if results.c_protein_accession is not None and results.c_protein_accession != '' %}
                                     {{ results.c_protein_accession }}
-{% elif record.c_protein_acc is not None and record.c_protein_acc != '' %}
+{% elif record.c_sequence_acc is not None and record.c_sequence_acc != '' %}
                                     {{ results.c_sequence_acc }}
 {% else %}
                                     {{ sequence_id }}
