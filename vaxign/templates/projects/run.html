@@ -44,6 +44,13 @@ $( document ).ready( function () {
         },
     } );
     
+    $("#id_organism").change(function() {
+        if ($(this).val()!='bacteria')
+            $("#id_bacteria_strain").hide();
+        else
+            $("#id_bacteria_strain").show();
+    });
+    
     $('#id_group_name').change( function() {
         var group_name = $('#id_group_name').val();
         var genome_name = $('#id_genome_name').val();

@@ -33,6 +33,13 @@ $( document ).ready( function () {
             $(".optional_content").hide();
 		}
 	} );
+	
+	$("#id_organism").change(function() {
+		if ($(this).val()!='bacteria')
+			$("#id_bacteria_strain").hide();
+		else
+			$("#id_bacteria_strain").show();
+	});
 } );
 </script>
 
