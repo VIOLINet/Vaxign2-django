@@ -131,7 +131,7 @@ def protein_eggnog_function(request, queryID, seqID):
     try:    
         eggnog = TVaxignEggnogFunctions.objects.get(c_sequence_id=seqID)
         
-        godag = get_godag('go-basic.obo')
+        godag = get_godag(settings.GO_BASIC_OBO_PATH)
         gos = {
             'biological_process': {},
             'molecular_function': {},
