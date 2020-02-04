@@ -25,17 +25,25 @@ import logging
 logger = logging.getLogger('console')
 
 def index(request, name):
-    
-    try:
-        php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
-        php_session = phpserialize.loads(php_session_str)
-        request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
-        request.session['is_admin'] = php_session['is_admin'.encode()]
-    except:
-        if 'c_user_name' in request.session.keys():
-            del request.session['c_user_name']
-        if 'is_admin' in request.session.keys():
-            del request.session['is_admin']
+    if 'c_user_name' not in request.session.keys():
+        try:
+            php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
+            php_session = phpserialize.loads(php_session_str)
+            request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
+            request.session['is_admin'] = php_session['is_admin'.encode()]
+        except:
+            pass
+    else:
+        try:
+            php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
+            php_session = phpserialize.loads(php_session_str)
+            request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
+            request.session['is_admin'] = php_session['is_admin'.encode()]
+        except:
+            if 'c_user_name' in request.session.keys():
+                del request.session['c_user_name']
+            if 'is_admin' in request.session.keys():
+                del request.session['is_admin']
     
     if name == 'index' or name not in ['dynamic', 'precompute']:
         name = 'dynamic'
@@ -238,23 +246,23 @@ def stats(request):
 
 def login(request):
     
-    try:
-        php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
-        php_session = phpserialize.loads(php_session_str)
-        request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
-        request.session['is_admin'] = php_session['is_admin'.encode()]
-    except:
-        if 'c_user_name' in request.session.keys():
-            del request.session['c_user_name']
-        if 'is_admin' in request.session.keys():
-            del request.session['is_admin']
+    if 'c_user_name' not in request.session.keys() and 'is_admin' not in request.session.keys():
+        try:
+            php_session_str = open(str.format('{}/sess_{}', settings.SESSION_FILE_PATH, request.COOKIES.get('PHPSESSID'))).read().encode()
+            php_session = phpserialize.loads(php_session_str)
+            request.session['c_user_name'] = php_session['c_user_name'.encode()].decode()
+            request.session['is_admin'] = php_session['is_admin'.encode()]
+        except:
+            pass
     
     return redirect('/vaxign2')
     
 def logout(request):
     
-    del request.session['c_user_name']
-    del request.session['is_admin']
+    if 'c_user_name' in request.session.keys():
+        del request.session['c_user_name']
+    if 'is_admin' in request.session.keys():
+        del request.session['is_admin']
     
     return redirect('/vaxign2')
 
