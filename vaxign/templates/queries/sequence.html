@@ -173,7 +173,8 @@ $(document).on('click', '.btn', function() {
 	                    <button id="defaultOpen" class="vtablinks" onclick="openVTab(event, 'basic')">Basic Information</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'vaxitop');loadVaxitop('{{ query_id }}','{{ sequence_id }}')">Vaxitop Prediction</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'iedb_epitope');loadIEDB('{{ query_id }}','{{ sequence_id }}')">IEDB Epitope</button>
-	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_function'); loadeggNOGFunction('{{ query_id }}', '{{ sequence_id }}')">Functional Annotation</button>
+	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_function'); loadEggNOGFunction('{{ query_id }}', '{{ sequence_id }}')">Functional Annotation</button>
+	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_ortholog'); loadEggNOGOrtholog('{{ query_id }}', '{{ sequence_id }}')">Orthologous Protein</button>
 	                </div>
 		                    
 		            <div id="basic" class="vtabcontent" style="padding-top:10px;">
@@ -332,6 +333,8 @@ $(document).on('click', '.btn', function() {
 		            <div id="iedb_epitope" class="vtabcontent"></div>
 		            
 		            <div id="eggnog_function" class="vtabcontent"></div>
+		            
+		            <div id="eggnog_ortholog" class="vtabcontent"></div>
 		            
 	            </div>
             </div>
