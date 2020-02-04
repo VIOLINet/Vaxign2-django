@@ -12,3 +12,18 @@ function loadEggNOGFunction(queryID, seqID) {
 		});
 	};
 }
+
+function loadEggNOGOrtholog(queryID, seqID) {
+	if (document.getElementById('eggnog_ortholog').innerHTML=='') {
+		document.getElementById('eggnog_ortholog').innerHTML = "<div class='loading' style='position:relative;'></div>";
+		dojo.xhrGet({
+			url: "/vaxign2/query/"+queryID+"/protein/"+seqID+"/eggnog/ortholog",
+			load: function(data){
+				$('#eggnog_ortholog').html(data);
+			},
+			error: function(data) {
+				alert("An error occurred: " + data);
+			},
+		});
+	};
+}

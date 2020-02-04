@@ -36,6 +36,7 @@ urlpatterns = [
     path('query/<str:queryID>/protein/<str:seqID>/iedb/search', vaxitop.iedb_search),
     
     path('query/<str:queryID>/protein/<str:seqID>/eggnog/function', analysis.protein_eggnog_function),
+    path('query/<str:queryID>/protein/<str:seqID>/eggnog/ortholog', analysis.protein_eggnog_ortholog),
     
     path('run/<str:queryID>', runs.index),
     path('run/<str:queryID>/vaxitop', runs.vaxitop),

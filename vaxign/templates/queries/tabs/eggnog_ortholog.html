@@ -1,0 +1,46 @@
+{% load static %}
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_results.css" %}" rel="stylesheet" type="text/css" />
+
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+
+<div class="results_container">
+
+    <span style="margin-left:10px;">
+        <strong>Orthologous Protein Prediction</strong>
+        <div class="tooltip">
+            <a href="http://eggnogdb.embl.de" target="_blank"><img height="16em" src="{% static "images/question.png" %}">  </a>
+            <span class="tooltiptext" style="margin-left:-125px;">All orthologous proteins are predicted using the EggNOG 5.0 database and EggNOG-MAPPER.</br>Click here for more detail</span>
+        </div>
+    </span>
+    
+    <table class="results" style="margin-top:5px">
+
+            <tr class="header1">
+               <td>Organism</td>
+               <td>Protein</td>
+            </tr>
+
+{% for ortholog in orthologs %}
+            <tr class="option2">
+                <td class="left loose">{{ ortholog.taxon_name }} (Taxon: {{ ortholog.taxon_id }})</td>
+                <td class="right loose">{{ cog_name }}
+{% for protein in ortholog.proteins %}
+{% if '[Gene]' not in protein %}
+                <a href="https://www.uniprot.org/uniprot/{{ protein }}">{{ protein }}</a>
+{% else %}
+                {{ protein }}
+{% endif %}
+{% if not forloop.last %}
+                ,
+{% endif %}
+{% endfor %}
+                </td>
+            </tr>
+{% endfor %}
+    
+    </div>
+</div>
