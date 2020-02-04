@@ -25,11 +25,12 @@ class RunsForm(forms.Form):
     sequence_type = forms.ChoiceField(
         choices=(
             ('protein_fasta', 'Protein Sequence (FASTA Format)'),
-            ('protein_gi','NCBI Protein GI'),
+            ('protein_uniprotkb', 'UniprotKB Protein ID'),
+            ('protein_gi','NCBI Protein ID'),
             ('protein_refseq','NCBI Protein Refseq'),
             ('gene_id','NCBI Gene ID'),
-            ('protein_fasta_url', 'Protein Sequence (FASTA File Link)'),
             ('bioproject_id','NCBI Bioproject ID'),
+            ('protein_fasta_url', 'Protein Sequence (FASTA File Link)'),
         ),
     )
     

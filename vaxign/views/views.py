@@ -60,7 +60,7 @@ def index(request, name):
         # Process sequence data
         # Sequence input type: NCBI Protein GI or Refseq
         if tmpData['sequence_type'] == 'protein_gi':
-            logger.debug( "Selected NCBI Protein GI. Retrieving sequence from NCBI...")
+            logger.debug("Selected NCBI Protein GI. Retrieving sequence from NCBI...")
             try:
                 url = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&retmode=text&rettype=fasta&id=' + re.sub('[,\s]+', ',', tmpData['sequence'])
                 with urllib.request.urlopen(url) as file:
@@ -78,7 +78,7 @@ def index(request, name):
                 tmpData['sequence'] = None
         # Sequence input type: FASTA URL
         if tmpData['sequence_type'] == 'protein_fasta_url':
-            logger.debug( "Selected custom protein FASTA file link(s). Retrieving sequence from the source(s)...")
+            logger.debug("Selected custom protein FASTA file link(s). Retrieving sequence from the source(s)...")
             tmp = ''
             for url in re.split('[\r\n]+', tmpData['sequence']):
                 with urllib.request.urlopen(url.strip()) as file:
@@ -86,13 +86,19 @@ def index(request, name):
             tmpData['sequence'] = tmp
         # Sequence input type: NCBI Gene ID
         if tmpData['sequence_type'] == 'gene_id':
-            logger.debug( "Selected NCBI Gene ID. Retrieving sequence from NCBI...")
+            logger.debug("Selected NCBI Gene ID. Retrieving sequence from NCBI...")
             url1 = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=gene&db=protein&term=srcdb_refseq[PROP]&id=' + re.sub('[,\s]+', '', tmpData['sequence'])
             with urllib.request.urlopen(url1) as file1:
                 geneIDs = list(set(re.findall('<Link>\s+<Id>(\d+)<\/Id>\s+<\/Link>', file1.read().decode())))
             url2 = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&retmode=text&rettype=fasta&id=' + ','.join(geneIDs)
             with urllib.request.urlopen(url2) as file2:
                 tmpData['sequence'] = file2.read().decode()
+        # Sequence input type: UniprotKB Protein ID
+        if tmpData['sequence_type'] == 'protein_uniprotkb':
+            logger.debug("Selected UniprotKB Protein ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
             
         form1 = RunsForm(tmpData or None)
         context['vaxign_option'] = 'dynamic'
@@ -306,6 +312,12 @@ def vaxignml(request):
             url2 = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&retmode=text&rettype=fasta&id=' + ','.join(geneIDs)
             with urllib.request.urlopen(url2) as file2:
                 tmpData['sequence'] = file2.read().decode()
+        # Sequence input type: UniprotKB Protein ID
+        if tmpData['sequence_type'] == 'protein_uniprotkb':
+            logger.debug("Selected UniprotKB Protein ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
             
         form = RunsForm(tmpData or None)
     else:
@@ -375,6 +387,12 @@ def vaxitop(request):
             url2 = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&retmode=text&rettype=fasta&id=' + ','.join(geneIDs)
             with urllib.request.urlopen(url2) as file2:
                 tmpData['sequence'] = file2.read().decode()
+        # Sequence input type: UniprotKB Protein ID
+        if tmpData['sequence_type'] == 'protein_uniprotkb':
+            logger.debug("Selected UniprotKB Protein ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
         
         if tmpData['sequence'] != '':
             queryID = ''.join(random.choice('ABCDEFGHJKMNPQRSTUVWXYZ23456789') for i in range(10))
