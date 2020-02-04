@@ -16,7 +16,8 @@
             <span class="tooltiptext" style="margin-left:-125px;">All orthologous proteins are predicted using the EggNOG 5.0 database and EggNOG-MAPPER.</br>Click here for more detail</span>
         </div>
     </span>
-    
+
+{% if orthologs %}    
     <table class="results" style="margin-top:5px">
 
             <tr class="header1">
@@ -41,6 +42,8 @@
                 </td>
             </tr>
 {% endfor %}
-    
+{% else %}
+    <span style="margin-left:10px;">No Orthologous Protein Found.</span>
+{% endif %}
     </div>
 </div>

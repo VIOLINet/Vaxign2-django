@@ -17,6 +17,7 @@
         </div>
     </span>
 
+{% if cogs or gos.biological_process or gos.molecular_function or gos.cellular_component or keggs.kegg_path or keegs.kegg_ko %}
 	    <table class="results" style="margin-top:5px">
 	        
 {% if cogs %}
@@ -100,6 +101,8 @@
 {% endif %}
 
         </table>
-    
+{% else %}
+    <span style="margin-left:10px;">No Function Found.</span>
+{% endif %}    
     </div>
 </div>
