@@ -26,6 +26,7 @@ class RunsForm(forms.Form):
         choices=(
             ('protein_fasta', 'Protein Sequence (FASTA Format)'),
             ('protein_uniprotkb', 'UniprotKB Protein ID'),
+            ('protein_uniprot_proteome', 'Uniprot Proteome ID'),
             ('protein_gi','NCBI Protein ID'),
             ('protein_refseq','NCBI Protein Refseq'),
             ('gene_id','NCBI Gene ID'),

@@ -354,6 +354,12 @@ def run(request, projectID):
                     tmpData['group_name'] = organism
                 if tmpData['genome_name'] == '':
                     tmpData['genome_name'] = str.format('{} {}', organism, strain)
+        # Sequence input type: Uniprot Proteome ID
+        if tmpData['sequence_type'] == 'protein_uniprot_proteome':
+            logger.debug("Selected Uniprot Proteome ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=proteome:{}&format=fasta', tmpData['sequence'].strip())
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
             
         form = RunsForm(tmpData or None)
     else:

@@ -8,6 +8,7 @@ import string
 import random
 import collections
 import phpserialize
+import xml.etree.ElementTree as ET
 
 from django.conf import settings
 from django.db.models import Q
@@ -105,6 +106,46 @@ def index(request, name):
         if tmpData['sequence_type'] == 'protein_uniprotkb':
             logger.debug("Selected UniprotKB Protein ID. Retrieving sequence from Uniprot...")
             url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
+        # Sequence input type: NCBI Bioproject ID
+        if tmpData['sequence_type'] == 'bioproject_id':
+            logger.debug( "Selected NCBI Bioproject ID. Retrieving sequence from NCBI...")
+            if tmpData['sequence'].strip().startswith( 'PRJNA' ):
+                bioprojectID = tmpData['sequence'].strip().replace('PRJNA', '')
+            else:
+                bioprojectID = tmpData['sequence'].strip()
+            url1 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=bioproject&db=protein&id='+bioprojectID
+            proteinIDs = []
+            with urllib.request.urlopen(url1) as file1:
+                tree1 = ET.fromstring(file1.read().decode())
+                for proteinID in tree1.find('LinkSet').find('LinkSetDb').iter('Id'):
+                    proteinIDs.append(proteinID.text)
+            url2 = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+            data2 = urllib.parse.urlencode({
+                'db': 'protein',
+                'rettype': 'fasta',
+                'retmode': 'text',
+                'retmax': '10000',
+                'id': ','.join(proteinIDs),
+            }).encode()
+            request2 = urllib.request.Request(url=url2, data=data2)
+            with urllib.request.urlopen(request2) as file2:
+                tmpData['sequence'] = file2.read().decode()
+            
+            url3 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=bioproject&id='+bioprojectID
+            with urllib.request.urlopen(url3) as file3:
+                tree3 = ET.fromstring(file3.read().decode())
+                organism = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Name').text
+                strain = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Strain').text
+                if tmpData['group_name'] == '':
+                    tmpData['group_name'] = organism
+                if tmpData['genome_name'] == '':
+                    tmpData['genome_name'] = str.format('{} {}', organism, strain)
+        # Sequence input type: Uniprot Proteome ID
+        if tmpData['sequence_type'] == 'protein_uniprot_proteome':
+            logger.debug("Selected Uniprot Proteome ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=proteome:{}&format=fasta', tmpData['sequence'].strip())
             with urllib.request.urlopen(url) as file:
                 tmpData['sequence'] = file.read().decode()
             
@@ -326,6 +367,46 @@ def vaxignml(request):
             url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
             with urllib.request.urlopen(url) as file:
                 tmpData['sequence'] = file.read().decode()
+        # Sequence input type: NCBI Bioproject ID
+        if tmpData['sequence_type'] == 'bioproject_id':
+            logger.debug( "Selected NCBI Bioproject ID. Retrieving sequence from NCBI...")
+            if tmpData['sequence'].strip().startswith( 'PRJNA' ):
+                bioprojectID = tmpData['sequence'].strip().replace('PRJNA', '')
+            else:
+                bioprojectID = tmpData['sequence'].strip()
+            url1 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=bioproject&db=protein&id='+bioprojectID
+            proteinIDs = []
+            with urllib.request.urlopen(url1) as file1:
+                tree1 = ET.fromstring(file1.read().decode())
+                for proteinID in tree1.find('LinkSet').find('LinkSetDb').iter('Id'):
+                    proteinIDs.append(proteinID.text)
+            url2 = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+            data2 = urllib.parse.urlencode({
+                'db': 'protein',
+                'rettype': 'fasta',
+                'retmode': 'text',
+                'retmax': '10000',
+                'id': ','.join(proteinIDs),
+            }).encode()
+            request2 = urllib.request.Request(url=url2, data=data2)
+            with urllib.request.urlopen(request2) as file2:
+                tmpData['sequence'] = file2.read().decode()
+            
+            url3 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=bioproject&id='+bioprojectID
+            with urllib.request.urlopen(url3) as file3:
+                tree3 = ET.fromstring(file3.read().decode())
+                organism = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Name').text
+                strain = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Strain').text
+                if tmpData['group_name'] == '':
+                    tmpData['group_name'] = organism
+                if tmpData['genome_name'] == '':
+                    tmpData['genome_name'] = str.format('{} {}', organism, strain)
+        # Sequence input type: Uniprot Proteome ID
+        if tmpData['sequence_type'] == 'protein_uniprot_proteome':
+            logger.debug("Selected Uniprot Proteome ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=proteome:{}&format=fasta', tmpData['sequence'].strip())
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
             
         form = RunsForm(tmpData or None)
     else:
@@ -399,6 +480,46 @@ def vaxitop(request):
         if tmpData['sequence_type'] == 'protein_uniprotkb':
             logger.debug("Selected UniprotKB Protein ID. Retrieving sequence from Uniprot...")
             url = str.format('https://www.uniprot.org/uniprot/?query=id:{}&format=fasta', re.sub('[,\s]+', '+OR+id:', tmpData['sequence']))
+            with urllib.request.urlopen(url) as file:
+                tmpData['sequence'] = file.read().decode()
+        # Sequence input type: NCBI Bioproject ID
+        if tmpData['sequence_type'] == 'bioproject_id':
+            logger.debug( "Selected NCBI Bioproject ID. Retrieving sequence from NCBI...")
+            if tmpData['sequence'].strip().startswith( 'PRJNA' ):
+                bioprojectID = tmpData['sequence'].strip().replace('PRJNA', '')
+            else:
+                bioprojectID = tmpData['sequence'].strip()
+            url1 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=bioproject&db=protein&id='+bioprojectID
+            proteinIDs = []
+            with urllib.request.urlopen(url1) as file1:
+                tree1 = ET.fromstring(file1.read().decode())
+                for proteinID in tree1.find('LinkSet').find('LinkSetDb').iter('Id'):
+                    proteinIDs.append(proteinID.text)
+            url2 = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+            data2 = urllib.parse.urlencode({
+                'db': 'protein',
+                'rettype': 'fasta',
+                'retmode': 'text',
+                'retmax': '10000',
+                'id': ','.join(proteinIDs),
+            }).encode()
+            request2 = urllib.request.Request(url=url2, data=data2)
+            with urllib.request.urlopen(request2) as file2:
+                tmpData['sequence'] = file2.read().decode()
+            
+            url3 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=bioproject&id='+bioprojectID
+            with urllib.request.urlopen(url3) as file3:
+                tree3 = ET.fromstring(file3.read().decode())
+                organism = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Name').text
+                strain = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Strain').text
+                if tmpData['group_name'] == '':
+                    tmpData['group_name'] = organism
+                if tmpData['genome_name'] == '':
+                    tmpData['genome_name'] = str.format('{} {}', organism, strain)
+        # Sequence input type: Uniprot Proteome ID
+        if tmpData['sequence_type'] == 'protein_uniprot_proteome':
+            logger.debug("Selected Uniprot Proteome ID. Retrieving sequence from Uniprot...")
+            url = str.format('https://www.uniprot.org/uniprot/?query=proteome:{}&format=fasta', tmpData['sequence'].strip())
             with urllib.request.urlopen(url) as file:
                 tmpData['sequence'] = file.read().decode()
         
