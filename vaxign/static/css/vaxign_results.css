@@ -178,3 +178,7 @@ table.dataTable tbody th, table.dataTable tbody td {
     background-image: url("../images/protein.png") !important;
     background-size:20px 20px !important;
 }
+
+.has_taxon {
+	 text-decoration:underline !important;
+}

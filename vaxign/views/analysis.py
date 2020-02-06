@@ -329,7 +329,7 @@ def protein_eggnog_ortholog(request, queryID, seqID, display):
                     branch += list(treeMap[current])
                     del treeMap[current]
                 else:
-                    html += str.format("<li class='jstree-open' data-jstree='{{\"icon\":\"cell\"}}'><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={}' target='_blank'>{} (Taxon:{})</a><ul>",
+                    html += str.format("<li class='jstree-open' data-jstree='{{\"icon\":\"cell\"}}'><a class='has_taxon'href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={}' target='_blank'>{} (Taxon:{})</a><ul>",
                                        current, taxonMap[current], current)
                     if current in orthologs.keys():
                         for protein in orthologs[current]:
