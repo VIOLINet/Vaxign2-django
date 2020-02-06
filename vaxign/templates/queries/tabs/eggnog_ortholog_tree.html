@@ -3,11 +3,13 @@
 <link rel="shortcut icon" href="/favicon.ico"/>
 <link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
 <link href="{% static "css/vaxign_results.css" %}" rel="stylesheet" type="text/css" />
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
 <script language="javascript" src="{% static "js/common.js" %}"></script>
-
-<div class="results_container">
+<div class="results_container" style="width:500px;">
 
     <span style="margin-left:10px;">
         <strong>Orthologous Protein Prediction</strong>
@@ -16,34 +18,29 @@
             <span class="tooltiptext" style="margin-left:-125px;">All orthologous proteins are predicted using the EggNOG 5.0 database and EggNOG-MAPPER.</br>Click here for more detail</span>
         </div>
     </span>
-
+    
+    <select onchange="reloadOrtholog('{{ query_id }}', '{{ sequence_id }}');" style="margin-left:10px;">
+        <option value="table">Table View</option>
+        <option value="tree" selected>Tree View</option>
+    </select>
 {% if orthologs %}    
-    <table class="results" style="margin-top:5px">
 
-            <tr class="header1">
-               <td>Organism</td>
-               <td>Protein</td>
-            </tr>
+    <div id="eggnog_ortholog_tree">
+    
+    {{ tree|safe }}
 
-{% for ortholog in orthologs %}
-            <tr class="option2">
-                <td class="left loose">{{ ortholog.taxon_name }} (Taxon: {{ ortholog.taxon_id }})</td>
-                <td class="right loose">{{ cog_name }}
-{% for protein in ortholog.proteins %}
-{% if '[Gene]' not in protein %}
-                <a href="https://www.uniprot.org/uniprot/{{ protein }}">{{ protein }}</a>
-{% else %}
-                {{ protein }}
-{% endif %}
-{% if not forloop.last %}
-                ,
-{% endif %}
-{% endfor %}
-                </td>
-            </tr>
-{% endfor %}
+    </div>
+
 {% else %}
     <span style="margin-left:10px;">No Orthologous Protein Found.</span>
 {% endif %}
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function () { $('#eggnog_ortholog_tree').jstree().bind("select_node.jstree", function (e, data) {
+        var href = data.node.a_attr.href;
+        if (href!='#')
+            window.open(href, '_blank');
+   }); });
+</script>
