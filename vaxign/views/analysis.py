@@ -30,7 +30,7 @@ def protein_eggnog_function(request, queryID, seqID):
     except:
         return HttpResponse("No eggNOG Prediction available")
     
-    if TVaxignEggnogFunctions.objects.filter(c_sequence_id=seqID).count() == 0:
+    if sequence.c_eggnog_function_computed == None or sequence.c_eggnog_function_computed == 'n':
         if not os.path.exists(os.path.join(settings.WORKSPACE_DIR, queryID, queryID+'.fasta')):
             if not os.path.exists(settings.VAXIGN2_TMP_DIR):
                 os.mkdir(settings.VAXIGN2_TMP_DIR)
@@ -83,6 +83,9 @@ def protein_eggnog_function(request, queryID, seqID):
                     bigg_reaction=  tokens[16],
                     cogs=  tokens[-2],
                 ).save()
+            sequence.c_eggnog_function_computed = 'y'
+            sequence.save()
+                
         else:
             queryPath = os.path.join(settings.WORKSPACE_DIR, queryID)
             cmd = ['python2', os.path.join(settings.EGGNOG_PATH, 'emapper.py'),
@@ -128,6 +131,8 @@ def protein_eggnog_function(request, queryID, seqID):
                     bigg_reaction=  tokens[16],
                     cogs=  tokens[-2],
                 ).save()
+            sequence.c_eggnog_function_computed = 'y'
+            sequence.save()
     try:    
         eggnog = TVaxignEggnogFunctions.objects.get(c_sequence_id=seqID)
         
@@ -163,7 +168,7 @@ def protein_eggnog_function(request, queryID, seqID):
     
     return render(request, 'queries/tabs/eggnog_function.html', context)
 
-def protein_eggnog_ortholog(request, queryID, seqID):
+def protein_eggnog_ortholog(request, queryID, seqID, display):
     
     context = {'query_id': queryID, 'sequence_id': seqID}
     
@@ -173,7 +178,7 @@ def protein_eggnog_ortholog(request, queryID, seqID):
     except:
         return HttpResponse("No eggNOG Prediction available")
     
-    if TVaxignEggnogOrtholog.objects.filter(c_sequence_id=seqID).count() == 0:
+    if sequence.c_eggnog_ortholog_computed == None or sequence.c_eggnog_ortholog_computed == 'n':
         if not os.path.exists(os.path.join(settings.WORKSPACE_DIR, queryID, queryID+'.fasta')):
             if not os.path.exists(settings.VAXIGN2_TMP_DIR):
                 os.mkdir(settings.VAXIGN2_TMP_DIR)
@@ -211,6 +216,8 @@ def protein_eggnog_ortholog(request, queryID, seqID):
                     c_ortholog_taxon = tokens[1],
                     c_ortholog_gene = tokens[2],
                 ).save()
+            sequence.c_eggnog_ortholog_computed = 'y'
+            sequence.save()
         else:
             queryPath = os.path.join(settings.WORKSPACE_DIR, queryID)
             cmd = ['python2', os.path.join(settings.EGGNOG_PATH, 'emapper.py'),
@@ -241,6 +248,8 @@ def protein_eggnog_ortholog(request, queryID, seqID):
                     c_ortholog_taxon = tokens[1],
                     c_ortholog_gene = tokens[2],
                 ).save()
+            sequence.c_eggnog_ortholog_computed = 'y'
+            sequence.save()
     
     eggnog = TVaxignEggnogOrtholog.objects.filter(c_sequence_id=seqID)
     
@@ -287,5 +296,7 @@ def protein_eggnog_ortholog(request, queryID, seqID):
                 'proteins': proteins,
             })
         context['orthologs'] = orthologs
-    
-    return render(request, 'queries/tabs/eggnog_ortholog.html', context)
+    if display == 'tree':
+        return render(request, 'queries/tabs/eggnog_ortholog_tree.html', context)
+    else:
+        return render(request, 'queries/tabs/eggnog_ortholog_table.html', context)
