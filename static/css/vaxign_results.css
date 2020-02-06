@@ -168,3 +168,17 @@ table.dataTable tbody td.select-checkbox:before, table.dataTable tbody td.select
 table.dataTable tbody th, table.dataTable tbody td {
 	padding:8px 4px !important;
 }
+
+.cell {
+	background: none !important;
+	width: 0px !important;
+}
+
+.protein {
+    background-image: url("../images/protein.png") !important;
+    background-size:20px 20px !important;
+}
+
+.has_taxon {
+	 text-decoration:underline !important;
+}

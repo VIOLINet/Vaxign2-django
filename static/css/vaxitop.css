@@ -118,9 +118,9 @@ tr.content td {
 }
 
 .dataTables_wrapper {
-    width: -webkit-calc(100vw - 200px);
-    width:    -moz-calc(100vw - 200px);
-    width:         calc(100vw - 200px);
+    max-width: -webkit-calc(100vw - 200px);
+    max-width:    -moz-calc(100vw - 200px);
+    max-width:         calc(100vw - 200px);
 }
 
 .vaxitop_export {
