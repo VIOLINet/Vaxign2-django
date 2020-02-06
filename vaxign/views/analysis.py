@@ -255,9 +255,28 @@ def protein_eggnog_ortholog(request, queryID, seqID, display):
     
     if eggnog.count() != 0:
         Entrez.email = settings.ADMIN_EMAIL
+        tops = ['Archaea', 'Bacteria', 'Eukaryota', 'Viruses', 'Other', 'Unclassified']
+        
         taxonMap = {}
+        treeMap = {}
         for record in Entrez.read(Entrez.efetch(db='Taxonomy', id=[str(i) for i in list(eggnog.values_list('c_ortholog_taxon', flat=True))])):
             taxonMap[record['TaxId']] = record['ScientificName']
+            topFound = False
+            parent = None
+            top = None
+            for lineage in record['Lineage'].split('; '):
+                if not topFound and lineage not in tops:
+                    continue
+                elif not topFound:
+                    parent = lineage
+                    topFound = True
+                    continue
+                if parent not in treeMap.keys():
+                    treeMap[parent] = set([])
+                treeMap[parent].add(lineage)
+                parent = lineage
+            treeMap[parent] = set([])
+            treeMap[parent].add(record['TaxId'])
         
         rawGeneNames = []
         for rawGenes in eggnog.values_list('c_ortholog_gene', flat=True):
@@ -272,10 +291,61 @@ def protein_eggnog_ortholog(request, queryID, seqID, display):
         }).encode()
         proteinMap = {}
         with urllib.request.urlopen(url, data=data) as file:
-            for line in file.read().decode().splitlines():
+            for line in file.read().decode().splitlines()[1:]:
                 tokens = line.split('\t')
                 proteinMap[tokens[0]] = tokens[1]
+    
+    if display == 'tree':
+        orthologs = {}
+        for ortholog in eggnog:
+            taxon = ortholog.c_ortholog_taxon
+            if str(taxon) not in taxonMap.keys():
+                taxonName = ''
+            else:
+                taxonName = taxonMap[str(taxon)]
+            proteins = []
+            for gene in ortholog.c_ortholog_gene.split(','):
+                geneID = gene.split('.')[1]
+                if geneID not in proteinMap:
+                    proteins.append(geneID)
+                else:
+                    proteins.append(proteinMap[geneID])
+            if str(taxon) not in orthologs.keys():
+                orthologs[str(taxon)] = []
+            orthologs[str(taxon)] = proteins
         
+        html = "<ul>"
+        for top in tops:
+            if top not in treeMap.keys():
+                continue
+            html += "<li class='jstree-open' data-jstree='{\"icon\":\"cell\"}'>"+top+"<ul>"
+            queue = list(treeMap[top])
+            branch = list(treeMap[top])
+            while len(queue) != 0:
+                current = queue.pop()
+                if current in treeMap.keys():
+                    html += "<li class='jstree-open' data-jstree='{\"icon\":\"cell\"}'>"+current+"<ul>"
+                    queue += list(treeMap[current])
+                    branch += list(treeMap[current])
+                    del treeMap[current]
+                else:
+                    html += str.format("<li class='jstree-open' data-jstree='{{\"icon\":\"cell\"}}'><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={}' target='_blank'>{} (Taxon:{})</a><ul>",
+                                       current, taxonMap[current], current)
+                    if current in orthologs.keys():
+                        for protein in orthologs[current]:
+                            html += str.format("<li class='jstree-open' data-jstree='{{\"icon\":\"protein\"}}'><a href='https://www.uniprot.org/uniprot/{}'>{}</a></li>", protein, protein)
+                    html += "</ul></li>"
+                    while len(branch) > 0 and branch[-1] not in queue:
+                        branch.pop()
+                        if len(branch) > 0 and branch[-1] not in queue:
+                            html += "</ul></li>"
+            html += "</ul></li>"
+        html += "</ul>"
+        context['orthologs'] = orthologs
+        context['tree'] = html
+        
+        return render(request, 'queries/tabs/eggnog_ortholog_tree.html', context)
+    else:
         orthologs = []
         for ortholog in eggnog:
             taxon = ortholog.c_ortholog_taxon
@@ -287,7 +357,7 @@ def protein_eggnog_ortholog(request, queryID, seqID, display):
             for gene in ortholog.c_ortholog_gene.split(','):
                 geneID = gene.split('.')[1]
                 if geneID not in proteinMap:
-                    proteins.append('[Gene]'+geneID)
+                    proteins.append(geneID)
                 else:
                     proteins.append(proteinMap[geneID])
             orthologs.append({
@@ -296,7 +366,4 @@ def protein_eggnog_ortholog(request, queryID, seqID, display):
                 'proteins': proteins,
             })
         context['orthologs'] = orthologs
-    if display == 'tree':
-        return render(request, 'queries/tabs/eggnog_ortholog_tree.html', context)
-    else:
         return render(request, 'queries/tabs/eggnog_ortholog_table.html', context)
