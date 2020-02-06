@@ -284,6 +284,9 @@ $( document ).ready( function () {
                         <span onclick="closeHTab(event, 'analysis');" class="topright">&times</span>
 	                   
 						<ul>
+{% if 'mast_I' in query_detail.c_included_analyses or 'mast_II' in query_detail.c_included_analyses %}
+                            <li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/vaxitop">Show Vaxitop Results</a></li>
+{% endif %}
 {% if query_detail.c_ortholog_computed and query_detial.c_ortholog_computed == 1 %}
 						    <li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/ortholog" target="_blank">Show Custom Genome Group Orthologs Table</a></li>
 {% endif %}
