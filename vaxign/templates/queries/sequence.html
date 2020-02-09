@@ -177,6 +177,7 @@ $(document).on('click', '.btn', function() {
 	                    <button class="vtablinks" onclick="openVTab(event, 'iedb_epitope');loadIEDB('{{ query_id }}','{{ sequence_id }}')">IEDB Epitope</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_function'); loadEggNOGFunction('{{ query_id }}', '{{ sequence_id }}')">Functional Annotation</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_ortholog'); loadEggNOGOrtholog('{{ query_id }}', '{{ sequence_id }}')">Orthologous Protein</button>
+	                    <button class="vtablinks" onclick="openVTab(event, 'population_coverage'); loadPopCov('{{ query_id }}','{{ sequence_id }}');">Population Coverage</button>
 	                </div>
 		                    
 		            <div id="basic" class="vtabcontent" style="padding-top:10px;">
@@ -337,6 +338,8 @@ $(document).on('click', '.btn', function() {
 		            <div id="eggnog_function" class="vtabcontent"></div>
 		            
 		            <div id="eggnog_ortholog" class="vtabcontent"></div>
+		            
+		            <div id="population_coverage" class="vtabcontent"></div>
 		            
 	            </div>
             </div>
