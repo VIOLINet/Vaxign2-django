@@ -8,6 +8,7 @@ import urllib
 import subprocess
 import pandas as pd
 import plotly.graph_objects as go
+
 from Bio import Entrez
 from Bio.KEGG import REST
 from goatools.base import get_godag

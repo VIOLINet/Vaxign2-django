@@ -8,6 +8,10 @@ import json
 import urllib
 import pymysql
 import collections
+import numpy as np
+import plotly.graph_objects as go
+
+from plotly import offline
 
 from django.conf import settings
 from django.contrib import messages
@@ -18,6 +22,7 @@ from vaxign.models import TVaxignAnalysisResults
 from vaxign.models import OrthomclResultsSeqs
 from vaxign.models import TVaxignBlastResults
 from vaxign.models import TVaxignMastResults
+from vaxign.models import TVaxignAlleleGroup
 
 from vaxign.forms.results import ResultsForm
 from vaxign.forms.ortholog import OrthologForm
@@ -35,6 +40,95 @@ def index(request, queryID):
     context = {'query_id': queryID}
     
     return render(request, 'queries/vaxitop.html', context)
+
+def heatmap(request, queryID):
+    
+    context = {}
+    
+    alleles = request.POST['alleles']
+    pval = 0.05
+    
+    groupMap = {}
+    groupIDMap = {}
+    for row in TVaxignAlleleGroup.objects.all():
+        groupMap[re.sub("[^a-zA-Z0-9]", '', row.mhc_allele)] = row.mhc_allele
+        groupIDMap[row.c_allele_group_id] = row.mhc_allele
+    
+    
+    selected = set([])
+    for select in alleles.split(','):
+        if select == '':
+            continue
+        tokens = select.split('_')
+        if tokens[2] == 'any':
+            matched = TVaxignAlleleGroup.objects.filter(
+                Q(mhc_species=tokens[0]) & Q(mhc_class=tokens[1])
+            ).values_list('c_allele_group_id', flat=True)
+        elif tokens[3] == 'any':
+            matched = TVaxignAlleleGroup.objects.filter(
+                Q(mhc_species=tokens[0]) & Q(mhc_class=tokens[1]) & Q(mhc_allele=groupMap[tokens[2]])
+            ).values_list('c_allele_group_id', flat=True)
+        else:
+            matched = TVaxignAlleleGroup.objects.filter(
+                Q(mhc_species=tokens[0]) & Q(mhc_class=tokens[1]) & Q(mhc_allele=groupMap[tokens[2]]) & Q(epitope_length=tokens[3])
+            ).values_list('c_allele_group_id', flat=True)
+        selected.update(matched)
+    sequences = collections.OrderedDict()
+    for row in TVaxignAnalysisResults.objects.filter(c_query_id=queryID).order_by('c_sequence_id'):
+        if row.c_protein_accession is not None and row.c_protein_accession != '':
+            sequences[row.c_sequence_id] = {
+                'sequence': row.c_sequence,
+                'protein': row.c_protein_accession,
+            }
+        elif row.c_sequence_acc is not None and row.c_sequence_acc != '':
+            sequences[row.c_sequence_id] = {
+                'sequence': row.c_sequence,
+                'protein': row.c_sequence_acc,
+            }
+        else:
+            sequences[row.c_sequence_id] = {
+                'sequence': row.c_sequence,
+                'protein': row.c_sequence_id,
+            }
+    
+    masts = {}
+    for sequence in sequences.keys():
+        masts[sequence] = {}
+        for allele in selected:
+            masts[sequence][allele] = 0
+    
+    for row in TVaxignMastResults.objects.filter(
+        Q(c_sequence_id__in=sequences.keys()) & Q(c_allele_group_id__in=selected) & Q(c_hit_p_value__lte=pval)
+    ):
+        masts[row.c_sequence_id][row.c_allele_group_id] += 1 
+    
+    data = []
+    
+    for sequence in sequences.keys():
+        row = []
+        for allele in selected:
+            row.append(masts[sequence][allele])
+        data.append(row)
+    data = np.array(data)
+    
+    fig = go.Figure(
+        data = go.Heatmap(
+            z = data,
+            x = [groupIDMap[i] for i in selected],
+            y = [sequences[i]['protein'] for i in sequences.keys()],
+            colorscale = 'Hot',
+            reversescale = True,
+        ),
+        layout = {
+            'autosize': False,
+            'height': 35*len(sequences),
+            'width': 15*len(selected),
+        },
+    )
+    
+    context['heatmap'] = offline.plot(fig, output_type='div')
+    
+    return render(request, 'queries/vaxitop_heatmap.html', context)
 
 def protein(request, queryID, seqID):
     

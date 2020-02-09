@@ -179,7 +179,14 @@ $(document).on('click', '.btn', function() {
                     </tr>
                     
                     <tr>
-                        <td colspan="5" style="text-align:center;"><a class="button large" href="javascript:refresh_table('{{ query_id }}', '');">&nbsp;Show Vaxitop Results&nbsp;</a></td>
+                        <td colspan="5" style="text-align:center;">
+                            <a class="button large" href="javascript:refresh_table('{{ query_id }}', '');">&nbsp;Show Vaxitop Results&nbsp;</a>
+                            <form id="form1" name="form1" method="post" action="/vaxign2/query/{{ query_id }}/vaxitop/export/heatmap" novalidate style="display:inline;" target="_blank">
+{% csrf_token %}
+                                <input type="hidden" name="alleles" id="id_alleles"></input>
+                                <a class="button large" href="#" onclick="export_heatmap();">&nbsp;Export Vaxitop Heatmap&nbsp;</a>
+                            </form>
+                            </td>
                     </tr>
                 </table>
                 

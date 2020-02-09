@@ -485,6 +485,15 @@ function add_option(option) {
 	}
 }
 
+function export_heatmap() {
+	var value = ''
+	document.querySelectorAll('.selected_allele').forEach( function(selection) {
+		value += selection.id+',';
+	} );
+	document.getElementById('id_alleles').value = value.substring(0,value.length-1);
+	document.forms['form1'].submit();
+}
+
 function loadIEDB(queryID, seqID) {
 	if (document.getElementById('iedb_epitope').innerHTML=='') {
 		document.getElementById('iedb_epitope').innerHTML = "<div class='loading' style='position:relative;'></div>";

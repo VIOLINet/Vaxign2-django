@@ -32,6 +32,7 @@ urlpatterns = [
     path('query/<str:queryID>/protein/<str:seqID>/blast/<str:organism>', queries.blast),
     
     path('query/<str:queryID>/vaxitop', vaxitop.index),
+    path('query/<str:queryID>/vaxitop/export/heatmap', vaxitop.heatmap),
     path('query/<str:queryID>/protein/<str:seqID>/vaxitop', vaxitop.protein),
     path('query/<str:queryID>/protein/<str:seqID>/iedb/search', vaxitop.iedb_search),
     
