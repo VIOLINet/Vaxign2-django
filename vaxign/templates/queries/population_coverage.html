@@ -1,0 +1,122 @@
+{% load static %}
+{% load replace %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<title>Vaxign: Vaccine Design</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_results.css" %}" rel="stylesheet" type="text/css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"></script>
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+<script language="javascript" src="{% static "js/vaxign_results.js" %}"></script>
+<script language="javascript">
+function reloadPopCov(queryID) {
+    var view = document.getElementById('popcov_type');
+    var option = view.options[view.selectedIndex].value;
+    window.open("/vaxign2/query/"+queryID+"/population_coverage/"+option,'_self');
+};
+</script>
+</head>
+
+<body style="margin:0px;" id="main_body">
+
+{% include 'template_vaxign_top.html' %}  
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="160" valign="top">
+
+{% include 'template_vaxign_left.html' %}
+
+        </td>
+        
+        <td valign="top">
+        
+{% if 'c_user_name' in request.session %}
+
+            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+{% include 'template_small_navi.html' %}
+            </div>
+
+{% endif %}
+
+            <div class="results_container">
+        
+                <h3 align="center">Vaxign: Vaccine Target Prediction and Design</h3>
+                
+                <div id="population_coverage">
+                
+                    <select id="popcov_type" style="margin-left:10px;margin-bottom:10px;" onchange="reloadPopCov('{{ query_id }}');">
+				        <option value="combine" 
+{% if combine %}
+				            selected
+{% endif %}
+				            >MHC-I & MHC-II</option>
+				        <option value="I" 
+{% if mhc_i %}
+				            selected
+{% endif %}>MHC-I</option>
+				        <option value="II" 
+{% if mhc_ii %}
+				            selected
+{% endif %}>MHC-II</option>
+				    </select>
+				    
+{% if mhc_i %}
+				    <div id="mhc_i_popcov">
+				        <span style="margin-left:10px;margin-top:10px;">
+				            <strong>Population Coverage of MHC-I Reference Alleles</strong>
+				            <div class="tooltip">
+				                <a href="https://help.iedb.org/hc/en-us/articles/114094151851" target="_blank"><img height="16em" src="{% static "images/question.png" %}">  </a>
+				                <span class="tooltiptext" style="margin-left:-125px;">IEDB recommended alleles which cover a wide range of human genetic variation in MHC-I and MHC-II HLA alleles, thereby represents the majority of the world population.</br>Click here for more detail</span>
+				            </div>
+				        </span>
+				        {{ mhc_i|safe }}
+				    </div>
+{% elif mhc_ii %}
+				    <div id="mhc_ii_popcov">
+				        <span style="margin-left:10px;margin">
+				            <strong>Population Coverage of MHC-II Reference Alleles</strong>
+				            <div class="tooltip">
+				                <a href="https://help.iedb.org/hc/en-us/articles/114094151851" target="_blank"><img height="16em" src="{% static "images/question.png" %}">  </a>
+				                <span class="tooltiptext" style="margin-left:-125px;">IEDB recommended alleles which cover a wide range of human genetic variation in MHC-I and MHC-II HLA alleles, thereby represents the majority of the world population.</br>Click here for more detail</span>
+				            </div>
+				        </span>
+				        {{ mhc_ii|safe }}
+				    </div>
+{% elif combine %}
+				    <div id="combine_popcov">
+				        <span style="margin-left:10px;margin">
+				            <strong>Population Coverage of MHC-I & MHC-II Reference Alleles</strong>
+				            <div class="tooltip">
+				                <a href="https://help.iedb.org/hc/en-us/articles/114094151851" target="_blank"><img height="16em" src="{% static "images/question.png" %}">  </a>
+				                <span class="tooltiptext" style="margin-left:-125px;">IEDB recommended alleles which cover a wide range of human genetic variation in MHC-I and MHC-II HLA alleles, thereby represents the majority of the world population.</br>Click here for more detail</span>
+				            </div>
+				        </span>
+				        {{ combine|safe }}
+				    </div>
+{% endif %}
+
+                </div>
+                
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+{% include 'template_vaxign_bottom.html' %}
+
+</body>

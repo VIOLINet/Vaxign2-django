@@ -22,3 +22,5 @@ vaxitop
 eggnog-mapper-2.0.1
 # GOATOOLS GO ontology file
 go-basic.obo
+# IEDB tools
+iedb

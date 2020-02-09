@@ -39,6 +39,13 @@ urlpatterns = [
     path('query/<str:queryID>/protein/<str:seqID>/eggnog/ortholog', analysis.protein_eggnog_ortholog, {'display':'table'}),
     path('query/<str:queryID>/protein/<str:seqID>/eggnog/ortholog/<str:display>', analysis.protein_eggnog_ortholog),
     
+    path('query/<str:queryID>/population_coverage', analysis.population_coverage, {'mhc_class':'combine'}),
+    path('query/<str:queryID>/population_coverage/<str:mhc_class>', analysis.population_coverage),
+    path('query/<str:queryID>/population_coverage/<str:mhc_class>/<str:country_code>', analysis.population_coverage),
+    path('query/<str:queryID>/protein/<str:seqID>/population_coverage', analysis.protein_population_coverage, {'mhc_class':'combine'}),
+    path('query/<str:queryID>/protein/<str:seqID>/population_coverage/<str:mhc_class>', analysis.protein_population_coverage),
+    path('query/<str:queryID>/protein/<str:seqID>/population_coverage/<str:mhc_class>/<str:country_code>', analysis.protein_population_coverage),
+    
     path('run/<str:queryID>', runs.index),
     path('run/<str:queryID>/vaxitop', runs.vaxitop),
     
