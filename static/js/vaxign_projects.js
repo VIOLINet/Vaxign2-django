@@ -68,3 +68,19 @@ function removeQuery(projectID, queryID) {
 		location.reload();
 	}
 }
+
+function runOrtholog(projectID) {
+	if (confirm("Please make sure there is only one genome group in this project.\n\nAre you sure you want to run ortholog for this project?")) {
+		dojo.xhrGet({
+			url: "/vaxign2/project/"+projectID+"/ortholog",
+			load: function(data) {
+				alert(data)
+			},
+			error: function(data) {
+				alert("An error occurred: " + data);
+			},
+			timeout:5000,
+		});
+		location.reload();
+	}
+}
