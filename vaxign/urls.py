@@ -61,6 +61,7 @@ urlpatterns = [
     path('project/<str:projectID>/remove', projects.remove),
     path('project/<str:projectID>/curator/<email>/add', projects.curator, {'type':'add'}),
     path('project/<str:projectID>/curator/<email>/remove', projects.curator, {'type':'remove'}),
+    path('project/<str:projectID>/ortholog', projects.ortholog),
     path('project/<str:projectID>/query/run', projects.run),
     path('project/<str:projectID>/query/<str:queryID>/setting', projects.querySetting),
     path('project/<str:projectID>/query/<str:queryID>/remove', projects.queryRemove),

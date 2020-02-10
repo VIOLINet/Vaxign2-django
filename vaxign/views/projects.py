@@ -3,13 +3,17 @@ from django.shortcuts import render, redirect
 # Create your views here.
 
 import re
+import os
 import time
 import json
 import random
 import urllib
 import string
+import subprocess
 import collections
 import xml.etree.ElementTree as ET
+
+from django.conf import settings
 
 from django.db.models import Q
 from django.db.models.functions import Now
@@ -375,6 +379,25 @@ def run(request, projectID):
     context['form'] = form
         
     return render(request, "projects/run.html", context)
+
+def ortholog(request, projectID):
+    
+    if 'c_user_name' not in request.session:
+        return redirect('/users/register.php?redirect=/vaxign2/login')
+    elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
+        return HttpResponse(status=403)
+    
+    if 'is_admin' not in request.session or not request.session['is_admin']:
+        return HttpResponse(status=403)
+    
+    project = TVaxignProject.objects.get(c_vaxign_projectid=projectID)
+    
+    if not project.c_ortholog_status.startswith('Running'):
+        proc = subprocess.Popen(['php',os.path.join(settings.VAXIGN_PHP_DIR, 'load_project_orthomcl.php'), projectID], cwd=settings.VAXIGN_PHP_DIR)
+        project.c_ortholog_status = "Running with PID:" + str(proc.pid)
+        project.save()
+        
+    return HttpResponse(project.c_ortholog_status)
     
 def querySetting(request, projectID, queryID):
     
