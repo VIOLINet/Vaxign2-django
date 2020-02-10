@@ -34,3 +34,18 @@ function loadPopCov(queryID, seqID) {
         });
     };
 }
+
+function loadOrthoMCLPhylogeny(queryID, seqID) {
+    if (document.getElementById('orthomcl_phylogeny').innerHTML=='') {
+        document.getElementById('orthomcl_phylogeny').innerHTML = "<strong>Opening this page for the first time may take a while.</strong><div class='loading' style='position:relative;'></div>";
+        dojo.xhrGet({
+            url: "/vaxign2/query/"+queryID+"/protein/"+seqID+"/orthomcl/phylogeny",
+            load: function(data){
+                $('#orthomcl_phylogeny').html(data);
+            },
+            error: function(data) {
+                alert("An error occurred: " + data);
+            },
+        });
+    };
+}

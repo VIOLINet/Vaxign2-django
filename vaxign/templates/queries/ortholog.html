@@ -176,7 +176,7 @@ $( document ).ready( function () {
                             <td>{{ record.c_sequence_acc }}</td>
 {% endif %}
                             <td>
-{% replace search="^(.*?) OS=(.*?) GN=(\w+) PE=\d+ SV=\d+" replacement="$1 [$2]" %}
+{% replace search="^(.*?) OS=(.*?) GN=(\w+) PE=\d+ SV=\d+" replacement="\1 [\2]" %}
 {% replace search="\[[^\[\]]+\]$" replacement="" %}
                             {{ record.c_note }}
 {% endreplace %}
@@ -186,7 +186,7 @@ $( document ).ready( function () {
 {% for ortholog_record in record.orthologs %}
                             <td>
 {% if ortholog_record %}
-{% replace search="^(.*?) OS=(.*?) GN=(\w+) PE=\d+ SV=\d+" replacement="$1 [$2]" %}
+{% replace search="^(.*?) OS=(.*?) GN=(\w+) PE=\d+ SV=\d+" replacement="\1 [\2]" %}
 {% replace search="\[[^\[\]]+\]$" replacement="" %}
                             {{ ortholog_record.c_note }}
 {% endreplace %}

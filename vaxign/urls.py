@@ -47,6 +47,7 @@ urlpatterns = [
     path('query/<str:queryID>/protein/<str:seqID>/population_coverage/<str:mhc_class>', analysis.protein_population_coverage),
     path('query/<str:queryID>/protein/<str:seqID>/population_coverage/<str:mhc_class>/<str:country_code>', analysis.protein_population_coverage),
     
+    path('query/<str:queryID>/protein/<str:seqID>/orthomcl/phylogeny', analysis.protein_orthomcl_phylogeny),
     path('run/<str:queryID>', runs.index),
     path('run/<str:queryID>/vaxitop', runs.vaxitop),
     
@@ -61,6 +62,7 @@ urlpatterns = [
     path('project/<str:projectID>/remove', projects.remove),
     path('project/<str:projectID>/curator/<email>/add', projects.curator, {'type':'add'}),
     path('project/<str:projectID>/curator/<email>/remove', projects.curator, {'type':'remove'}),
+    path('project/<str:projectID>/ortholog', projects.ortholog),
     path('project/<str:projectID>/query/run', projects.run),
     path('project/<str:projectID>/query/<str:queryID>/setting', projects.querySetting),
     path('project/<str:projectID>/query/<str:queryID>/remove', projects.queryRemove),

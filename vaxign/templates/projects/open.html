@@ -177,7 +177,7 @@ $( document ).ready( function () {
 {% if request.session.is_admin %}
                     <tr class="option2">
                         <td class="right" colspan="2">
-                            <a class="button large" href="">&nbsp;Run Vaxign Ortholog Analysis&nbsp;</a>
+                            <a class="button large" href="javascript:runOrtholog('{{ project.c_vaxign_projectid }}')">&nbsp;Run Vaxign Ortholog Analysis&nbsp;</a>
                         </td>
                     </tr>
 {% endif %}

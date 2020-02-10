@@ -6,25 +6,33 @@ import os
 import re
 import urllib
 import subprocess
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
 from Bio import Entrez
+from Bio import Phylo
+from Bio import AlignIO
 from Bio.KEGG import REST
+from Bio.Align.Applications import ClustalwCommandline
 from goatools.base import get_godag
 from plotly import offline
 
 from django.conf import settings
 
 from django.db.models import Q
+from vaxign.models import TVaxignQuery
 from vaxign.models import TVaxignAnalysisResults
 from vaxign.models import TVaxignEggnogFunctions
 from vaxign.models import TVaxignEggnogOrtholog
 from vaxign.models import TVaxignAlleleGroup
 from vaxign.models import TVaxignMastResults
 from vaxign.models import TVaxignPopulationCoverage
+from vaxign.models import OrthomclResultsSeqs
 
 from vaxign.views.runs import BulkCreateManager
+
+from django.http import HttpResponse
 
 import logging
 from django.core.exceptions import ValidationError
@@ -931,3 +939,227 @@ def population_coverage(request, queryID, mhc_class, country_code=None):
     
     
     return render(request, 'queries/population_coverage.html', context)
+
+
+
+def protein_orthomcl_phylogeny(request, queryID, seqID):
+    
+    context = {'query_id': queryID, 'sequence_id': seqID}
+    
+    try:
+        query = TVaxignQuery.objects.get(c_query_id=queryID)
+    except:
+        return HttpResponse(status=404)
+    
+    if query.c_ortholog_computed != 1:
+        return HttpResponse(status=404)
+    
+    context['query_detail'] = query
+    context['sequence'] = TVaxignAnalysisResults.objects.get(c_sequence_id=seqID)
+    
+    tmpResult = OrthomclResultsSeqs.objects.filter(
+        Q(c_sequence_id=seqID) & Q(genome=queryID)
+    )
+    mapQueryToTmp = {}
+    for row in tmpResult:
+        mapQueryToTmp[row.c_sequence_id] = row.result_id
+    
+    orthologResult = OrthomclResultsSeqs.objects.filter(
+        Q(result_id__in=tmpResult) & Q(species=query.c_species_short)
+    )
+    mapTmpToOrtholog = {}
+    for row in orthologResult:
+        mapTmpToOrtholog[row.result_id] = row.c_sequence_id
+    
+    orthologs = {}
+    for row in TVaxignAnalysisResults.objects.filter(c_sequence_id__in=orthologResult.values_list('c_sequence_id',flat=True)):
+        orthologs[str(row.c_sequence_id)] = row
+    
+    genomes = {}
+    for orthologID, ortholog in orthologs.items():
+        genomes[orthologID] = TVaxignQuery.objects.get(c_query_id=TVaxignAnalysisResults.objects.get(c_sequence_id=orthologID).c_query_id).c_species_name
+    
+    if not os.path.exists(os.path.join(settings.WORKSPACE_DIR, queryID)):
+        if not os.path.exists(settings.VAXIGN2_TMP_DIR):
+            os.mkdir(settings.VAXIGN2_TMP_DIR)
+        if not os.path.exists(os.path.join(settings.VAXIGN2_TMP_DIR, queryID)):
+            os.mkdir(os.path.join(settings.VAXIGN2_TMP_DIR, queryID))
+        queryPath = os.path.join(settings.VAXIGN2_TMP_DIR, queryID)
+    else:
+        queryPath = os.path.join(settings.WORKSPACE_DIR, queryID)
+    
+    if not os.path.exists(os.path.join(queryPath, seqID+'.clustalw.aln')) or not os.path.exists(os.path.join(queryPath, seqID+'.clustalw.dnd')):
+        open(os.path.join(queryPath, seqID+'.clustalw.fasta'), 'w').write('')
+        for orthologID, ortholog in orthologs.items():
+            open(os.path.join(queryPath, seqID+'.clustalw.fasta'), 'a').write(str.format(""">{}
+{}
+""", orthologID, ortholog.c_sequence))
+    
+        clustalw = ClustalwCommandline(os.path.join(settings.CLUSTALW_PATH, 'clustalw2'), infile=os.path.join(queryPath, seqID+'.clustalw.fasta'))
+        clustalw()
+        dnd = open(os.path.join(queryPath, seqID+'.clustalw.dnd')).read().replace('-','')
+        open(os.path.join(queryPath, seqID+'.clustalw.dnd'), 'w').write(dnd)
+    
+    tree = Phylo.read(os.path.join(queryPath, seqID+'.clustalw.dnd'), "newick")
+    
+    x_coords = rectangular_phylograms.get_x_coordinates(tree)
+    y_coords = rectangular_phylograms.get_y_coordinates(tree)
+    line_shapes = [] 
+    rectangular_phylograms.draw_clade(tree.root, 0, line_shapes, x_coords, y_coords, line_color='rgb(25,25,25)', line_width=1)
+    
+    my_tree_clades = x_coords.keys()
+    X = []
+    Y = []
+    text = []
+    labels = []
+    for cl in my_tree_clades:
+        if cl.name == None:
+            continue
+        X.append(x_coords[cl])
+        Y.append(y_coords[cl])
+        ortholog = orthologs[cl.name]
+        note = re.sub("\[[^\[\]]+\]$", '', ortholog.c_note)
+        note = re.sub("^(.*?) [\w]+=.*", r"\1", note)
+        if ortholog.c_protein_accession is not None and ortholog.c_protein_accession != '':
+            text.append(str.format("Protein ID: {}</br>Protein Name: {}", ortholog.c_protein_accession, note))
+        elif ortholog.c_sequence_acc is not None and ortholog.c_sequence_acc != '':
+            text.append(str.format("Protein ID: {}</br>Protein Name: {}", ortholog.c_sequence_acc, note))
+        else:
+            text.append(str.format("Protein ID: {}</br>Protein Name: {}", ortholog.c_sequence_id, note))
+        
+        labels.append(genomes[cl.name])
+    
+    fig = go.Figure(
+        data = dict(
+            type = 'scatter',
+            x = X,
+            y = Y,
+            mode = 'markers',
+            marker={'size':8},
+            text = text,
+        ), 
+        layout = dict(
+            font = {'size':12},
+            width = 1000,
+            height = 35*len(text),
+            autosize = True,
+            showlegend = False,
+            xaxis = dict(
+                showline = True,  
+                zeroline = False,
+                showgrid = False,
+                ticklen = 4,          
+                showticklabels = True,
+            ),
+            yaxis = {'visible':False}, 
+            hovermode = 'closest',
+            plot_bgcolor = 'rgb(250,250,250)',
+            margin = {'l':10},
+            shapes = line_shapes,
+       )
+    )
+    fig.add_trace(go.Scatter(
+        x=np.array(X)+0.01,
+        y=Y,
+        mode="text",
+        text=labels,
+        textposition="middle right",
+        hoverinfo = 'none',
+    ))
+    
+    fig.update_xaxes(range=[-0.1, 1.1])
+    context['phylogeny'] = offline.plot(fig, output_type='div')
+        
+    return render(request, 'queries/tabs/orthomcl_phylogeny.html', context)
+
+
+"""
+Plotly plots of rectangular and circular layout phylograms and cladograms
+adapted from Github https://github.com/empet/Phylogenetic-trees
+"""
+class rectangular_phylograms:
+    @staticmethod
+    def get_x_coordinates(tree):
+        # Associates to  each clade a x-coord.
+        # returns a dict {clade: x-coord}, i.e the key is a clade, and x-coord its value
+        
+        xcoords = tree.depths()
+        # tree.depth() maps tree clades to depths (by branch length).
+        # returns a dict {clade: depth} where clade runs over all Clade instances of the tree,
+        # and depth is the distance from root to clade
+        
+        # If there are no branch lengths, assign unit branch lengths
+        if not max(xcoords.values()):
+            xcoords = tree.depths(unit_branch_lengths=True)
+        return xcoords
+    
+    @staticmethod
+    def get_y_coordinates(tree, dist=1.3):
+        # y-coordinates are   multiple of dist (i*dist below); 
+        # dist: vertical distance between two consecutive leafs; it is chosen such that to get a tree of 
+        # reasonable height 
+        # returns  a dict {clade: y-coord}
+            
+        maxheight = tree.count_terminals()#Counts the number of tree leafs.
+      
+        ycoords = dict((leaf, maxheight - i*dist) for i, leaf in enumerate(reversed(tree.get_terminals())))
+        def calc_row(clade):
+                for subclade in clade:
+                    if subclade not in ycoords:
+                        calc_row(subclade)
+                ycoords[clade] = (ycoords[clade.clades[0]] +
+                                  ycoords[clade.clades[-1]]) / 2
+    
+        if tree.root.clades:
+            calc_row(tree.root)
+        return ycoords
+    
+    @staticmethod
+    def get_clade_lines(orientation='horizontal', y_curr=0, x_start=0, x_curr=0, y_bot=0, y_top=0,
+                        line_color='rgb(25,25,25)', line_width=0.5):
+        # define a Plotly shape of type 'line', for each branch
+        
+        branch_line = dict(type= 'line',
+                           layer='below',
+                           line=dict(color=line_color, 
+                                     width=line_width)
+                         )
+        if orientation == 'horizontal':
+            branch_line.update(x0=x_start,
+                               y0=y_curr,
+                               x1=x_curr,
+                               y1=y_curr)
+        elif orientation == 'vertical':
+            branch_line.update(x0=x_curr,
+                               y0=y_bot,
+                               x1=x_curr,
+                               y1=y_top)
+        else:
+            raise ValueError("Line type can be 'horizontal' or 'vertical'")
+           
+        return branch_line    
+    
+    @staticmethod    
+    def draw_clade(clade, x_start,  line_shapes, x_coords, y_coords,  line_color='rgb(15,15,15)', line_width=1):
+        # defines recursively  the tree  lines (branches), starting from the argument clade
+        
+        x_curr = x_coords[clade]
+        y_curr = y_coords[clade]
+       
+        # Draw a horizontal line 
+        branch_line=rectangular_phylograms.get_clade_lines(orientation='horizontal', y_curr=y_curr, x_start=x_start, x_curr=x_curr,  
+                                    line_color=line_color, line_width=line_width)
+       
+        line_shapes.append(branch_line)
+       
+        if clade.clades:
+            # Draw a vertical line connecting all children
+            y_top = y_coords[clade.clades[0]]
+            y_bot = y_coords[clade.clades[-1]]
+           
+            line_shapes.append(rectangular_phylograms.get_clade_lines(orientation='vertical', x_curr=x_curr, y_bot=y_bot, y_top=y_top,
+                                               line_color=line_color, line_width=line_width))
+           
+            # Draw descendants
+            for child in clade:
+                rectangular_phylograms.draw_clade(child, x_curr, line_shapes, x_coords, y_coords)

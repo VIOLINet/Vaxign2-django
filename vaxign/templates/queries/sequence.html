@@ -175,9 +175,12 @@ $(document).on('click', '.btn', function() {
 	                    <button id="defaultOpen" class="vtablinks" onclick="openVTab(event, 'basic')">Basic Information</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'vaxitop');loadVaxitop('{{ query_id }}','{{ sequence_id }}')">Vaxitop Prediction</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'iedb_epitope');loadIEDB('{{ query_id }}','{{ sequence_id }}')">IEDB Epitope</button>
-	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_function'); loadEggNOGFunction('{{ query_id }}', '{{ sequence_id }}')">Functional Annotation</button>
-	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_ortholog'); loadEggNOGOrtholog('{{ query_id }}', '{{ sequence_id }}')">Orthologous Protein</button>
-	                    <button class="vtablinks" onclick="openVTab(event, 'population_coverage'); loadPopCov('{{ query_id }}','{{ sequence_id }}');">Population Coverage</button>
+	                    <button class="vtablinks" onclick="openVTab(event, 'population_coverage'); loadPopCov('{{ query_id }}','{{ sequence_id }}');">IEDB Population Coverage</button>
+	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_function'); loadEggNOGFunction('{{ query_id }}', '{{ sequence_id }}')">EggNOG Functions</button>
+	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_ortholog'); loadEggNOGOrtholog('{{ query_id }}', '{{ sequence_id }}')">EggNOG Orthologs</button>
+{% if query_detail.c_ortholog_computed and query_detail.c_ortholog_computed == 1 %}
+	                    <button class="vtablinks" onclick="openVTab(event, 'orthomcl_phylogeny'); loadOrthoMCLPhylogeny('{{ query_id }}', '{{ sequence_id }}')">Genome Group Phylogeny</button>
+{% endif %}
 	                </div>
 		                    
 		            <div id="basic" class="vtabcontent" style="padding-top:10px;">
@@ -335,11 +338,13 @@ $(document).on('click', '.btn', function() {
 		            
 		            <div id="iedb_epitope" class="vtabcontent"></div>
 		            
+		            <div id="population_coverage" class="vtabcontent"></div>
+		            
 		            <div id="eggnog_function" class="vtabcontent"></div>
 		            
 		            <div id="eggnog_ortholog" class="vtabcontent"></div>
 		            
-		            <div id="population_coverage" class="vtabcontent"></div>
+		            <div id="orthomcl_phylogeny" class="vtabcontent"></div>
 		            
 	            </div>
             </div>
