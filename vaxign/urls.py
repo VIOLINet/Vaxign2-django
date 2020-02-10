@@ -47,6 +47,7 @@ urlpatterns = [
     path('query/<str:queryID>/protein/<str:seqID>/population_coverage/<str:mhc_class>', analysis.protein_population_coverage),
     path('query/<str:queryID>/protein/<str:seqID>/population_coverage/<str:mhc_class>/<str:country_code>', analysis.protein_population_coverage),
     
+    path('query/<str:queryID>/protein/<str:seqID>/orthomcl/phylogeny', analysis.protein_orthomcl_phylogeny),
     path('run/<str:queryID>', runs.index),
     path('run/<str:queryID>/vaxitop', runs.vaxitop),
     

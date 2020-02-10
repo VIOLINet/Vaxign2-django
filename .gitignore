@@ -24,3 +24,5 @@ eggnog-mapper-2.0.1
 go-basic.obo
 # IEDB tools
 iedb
+# ClustalW scripts
+clustalw-2.1
