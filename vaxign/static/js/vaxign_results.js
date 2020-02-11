@@ -49,3 +49,18 @@ function loadOrthoMCLPhylogeny(queryID, seqID) {
         });
     };
 }
+
+function loadOrthoMCLMSA(queryID, seqID) {
+    if (document.getElementById('orthomcl_msa').innerHTML=='') {
+        document.getElementById('orthomcl_msa').innerHTML = "<strong>Opening this page for the first time may take a while.</strong><div class='loading' style='position:relative;'></div>";
+        dojo.xhrGet({
+            url: "/vaxign2/query/"+queryID+"/protein/"+seqID+"/orthomcl/msa",
+            load: function(data){
+                $('#orthomcl_msa').html(data);
+            },
+            error: function(data) {
+                alert("An error occurred: " + data);
+            },
+        });
+    };
+}

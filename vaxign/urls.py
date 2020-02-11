@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from vaxign.views import views
 from vaxign.views import queries
@@ -8,6 +8,8 @@ from vaxign.views import vaxitop
 from vaxign.views import analysis
 
 from . import apis
+
+import vaxign.dash.msa
 
 urlpatterns = [
     path('', views.index, {'name':'index'}),
@@ -48,6 +50,8 @@ urlpatterns = [
     path('query/<str:queryID>/protein/<str:seqID>/population_coverage/<str:mhc_class>/<str:country_code>', analysis.protein_population_coverage),
     
     path('query/<str:queryID>/protein/<str:seqID>/orthomcl/phylogeny', analysis.protein_orthomcl_phylogeny),
+    path('query/<str:queryID>/protein/<str:seqID>/orthomcl/msa', analysis.protein_orthomcl_msa),
+    
     path('run/<str:queryID>', runs.index),
     path('run/<str:queryID>/vaxitop', runs.vaxitop),
     
@@ -86,3 +90,7 @@ urlpatterns += [
     path('api/iedb_epitope_t_cell_linear/<str:seqID>', apis.iedb_epitope_t_cell_linear),
 ]
 
+# Dash
+urlpatterns += [
+    path('django_plotly_dash/', include('django_plotly_dash.urls')),
+]

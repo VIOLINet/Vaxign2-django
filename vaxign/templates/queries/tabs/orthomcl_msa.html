@@ -1,0 +1,39 @@
+{% load static %}
+{% load replace %}
+{% load plotly_dash %}
+
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/tooltip.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/vaxign_results.css" %}" rel="stylesheet" type="text/css" />
+
+<script language="javascript" src="{% static "js/common.js" %}"></script>
+
+<div class="results_container" style="height:60vh;">
+
+    <span style="margin-left:10px;margin-bottom:10px;">
+        <strong>Phylogenetic Tree</strong>
+        <div class="tooltip">
+            <img height="16em" src="{% static "images/question.png" %}">
+            <span class="tooltiptext" style="margin-left:-125px;">Orthologs of the user-defined genome group [].</span>
+        </div>
+        </br>
+    </span>
+    
+    <span style="margin-left:20px;margin-top:10px;">
+        <strong>Genome Group:</strong> {{ query_detail.c_species_short }}</br>
+    </span>
+    <span style="margin-left:20px;margin-top:10px;">
+        <strong>Genome:</strong> {{ query_detail.c_species_name }}</br>
+    </span>
+    <span style="margin-left:20px;margin-top:10px;">
+        <strong>Protein:</strong> 
+{% replace search="^(.*?) OS=(.*?) GN=(\w+) PE=\d+ SV=\d+" replacement="\1 [\2]" %}
+{% replace search="\[[^\[\]]+\]$" replacement="" %}
+                                    {{ sequence.c_note }}
+{% endreplace %}
+{% endreplace %}
+        </br>
+    </span>
+    {% plotly_app name="msa" ratio=1.0 initial_arguments=dash_msa %}
+</div>
