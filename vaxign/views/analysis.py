@@ -1092,7 +1092,7 @@ def protein_orthomcl_phylogeny(request, queryID, seqID):
             x = X,
             y = Y,
             mode = 'markers',
-            marker={'size':8},
+            marker={'size':8,'color':"rgba(0,0,255,1.0)"},
             text = text,
         ), 
         layout = dict(
