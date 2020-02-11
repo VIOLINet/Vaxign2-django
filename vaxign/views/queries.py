@@ -323,7 +323,9 @@ def ortholog(request, queryID):
                 )
                 mapTmpToOrtholog = {}
                 for row in orthologResult:
-                    mapTmpToOrtholog[row.result_id] = row.c_sequence_id
+                    if row.result_id not in mapTmpToOrtholog.keys():
+                        mapTmpToOrtholog[row.result_id] = {}
+                    mapTmpToOrtholog[row.result_id][row.genome] = row.c_sequence_id
                 
                 logger.debug('Gathering ortholog protein detail...')
                 orthologDetail = {}
@@ -349,7 +351,7 @@ def ortholog(request, queryID):
                     }
                     for ortholog in matchOrthologs:
                         try:
-                            results[row.c_sequence_id]['orthologs'].append(orthologDetail[mapTmpToOrtholog[mapQueryToTmp[row.c_sequence_id]]])
+                            results[row.c_sequence_id]['orthologs'].append(orthologDetail[mapTmpToOrtholog[mapQueryToTmp[row.c_sequence_id]][ortholog]])
                         except:
                             results[row.c_sequence_id]['orthologs'].append(None)
                 context['results'] = results
