@@ -179,7 +179,8 @@ $(document).on('click', '.btn', function() {
 	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_function'); loadEggNOGFunction('{{ query_id }}', '{{ sequence_id }}')">EggNOG Functions</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_ortholog'); loadEggNOGOrtholog('{{ query_id }}', '{{ sequence_id }}')">EggNOG Orthologs</button>
 {% if query_detail.c_ortholog_computed and query_detail.c_ortholog_computed == 1 %}
-	                    <button class="vtablinks" onclick="openVTab(event, 'orthomcl_phylogeny'); loadOrthoMCLPhylogeny('{{ query_id }}', '{{ sequence_id }}')">Genome Group Phylogeny</button>
+	                    <button class="vtablinks" onclick="openVTab(event, 'orthomcl_phylogeny'); loadOrthoMCLPhylogeny('{{ query_id }}', '{{ sequence_id }}')">Genome Group Ortholog Phylogeny</button>
+	                    <button class="vtablinks" onclick="openVTab(event, 'orthomcl_msa'); loadOrthoMCLMSA('{{ query_id }}', '{{ sequence_id }}')">Genome Group Ortholog MSA</button>
 {% endif %}
 	                </div>
 		                    
@@ -345,6 +346,8 @@ $(document).on('click', '.btn', function() {
 		            <div id="eggnog_ortholog" class="vtabcontent"></div>
 		            
 		            <div id="orthomcl_phylogeny" class="vtabcontent"></div>
+		            
+		            <div id="orthomcl_msa" class="vtabcontent"></div>
 		            
 	            </div>
             </div>

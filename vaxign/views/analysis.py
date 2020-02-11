@@ -940,7 +940,64 @@ def population_coverage(request, queryID, mhc_class, country_code=None):
     
     return render(request, 'queries/population_coverage.html', context)
 
-
+def protein_orthomcl_msa(request, queryID, seqID):
+    
+    context = {'query_id': queryID, 'sequence_id': seqID}
+    
+    try:
+        query = TVaxignQuery.objects.get(c_query_id=queryID)
+    except:
+        return HttpResponse(status=404)
+    
+    if query.c_ortholog_computed != 1:
+        return HttpResponse(status=404)
+    
+    context['query_detail'] = query
+    context['sequence'] = TVaxignAnalysisResults.objects.get(c_sequence_id=seqID)
+    
+    tmpResult = OrthomclResultsSeqs.objects.filter(
+        Q(c_sequence_id=seqID) & Q(genome=queryID)
+    )
+    mapQueryToTmp = {}
+    for row in tmpResult:
+        mapQueryToTmp[row.c_sequence_id] = row.result_id
+    
+    orthologResult = OrthomclResultsSeqs.objects.filter(
+        Q(result_id__in=tmpResult) & Q(species=query.c_species_short)
+    )
+    mapTmpToOrtholog = {}
+    for row in orthologResult:
+        mapTmpToOrtholog[row.result_id] = row.c_sequence_id
+    
+    orthologs = {}
+    for row in TVaxignAnalysisResults.objects.filter(c_sequence_id__in=orthologResult.values_list('c_sequence_id',flat=True)):
+        orthologs[str(row.c_sequence_id)] = row
+    
+    genomes = {}
+    for orthologID, ortholog in orthologs.items():
+        genomes[orthologID] = TVaxignQuery.objects.get(c_query_id=TVaxignAnalysisResults.objects.get(c_sequence_id=orthologID).c_query_id).c_species_name
+    
+    if not os.path.exists(os.path.join(settings.WORKSPACE_DIR, queryID)):
+        if not os.path.exists(settings.VAXIGN2_TMP_DIR):
+            os.mkdir(settings.VAXIGN2_TMP_DIR)
+        if not os.path.exists(os.path.join(settings.VAXIGN2_TMP_DIR, queryID)):
+            os.mkdir(os.path.join(settings.VAXIGN2_TMP_DIR, queryID))
+        queryPath = os.path.join(settings.VAXIGN2_TMP_DIR, queryID)
+    else:
+        queryPath = os.path.join(settings.WORKSPACE_DIR, queryID)
+    
+    if not os.path.exists(os.path.join(queryPath, seqID+'.clustalw.aln')):
+        open(os.path.join(queryPath, seqID+'.clustalw.fasta'), 'w').write('')
+        for orthologID, ortholog in orthologs.items():
+            open(os.path.join(queryPath, seqID+'.clustalw.fasta'), 'a').write(str.format(""">{}
+{}
+""", orthologID, ortholog.c_sequence))
+        clustalw = ClustalwCommandline(os.path.join(settings.CLUSTALW_PATH, 'clustalw2'), infile=os.path.join(queryPath, seqID+'.clustalw.fasta'))
+        clustalw()
+    
+    context['dash_msa'] = {"sequence_id":{"children":os.path.join(queryPath, seqID+'.clustalw.aln')}}
+    
+    return render(request, 'queries/tabs/orthomcl_msa.html', context)
 
 def protein_orthomcl_phylogeny(request, queryID, seqID):
     
