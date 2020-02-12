@@ -111,6 +111,15 @@ def heatmap(request, queryID):
         data.append(row)
     data = np.array(data)
     
+    if 35*len(masts.keys()) < 600:
+        height = 600
+    else:
+        height = 35*len(masts.keys())
+    if 15*len(selected) < 600:
+        width = 600
+    else:
+        width = 15*len(selected)
+    
     fig = go.Figure(
         data = go.Heatmap(
             z = data,
@@ -121,8 +130,8 @@ def heatmap(request, queryID):
         ),
         layout = {
             'autosize': False,
-            'height': 35*len(sequences),
-            'width': 15*len(selected),
+            'height': height,
+            'width': width,
         },
     )
     
