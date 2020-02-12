@@ -772,6 +772,8 @@ def population_coverage(request, queryID, mhc_class, country_code=None):
                 if line.startswith('average'):
                     break
                 tokens = line.split('\t')
+                if len(tokens) < 2:
+                    continue
                 popcov = TVaxignPopulationCoverage(
                     c_sequence_id=seqID,
                     mhc_class='I',
@@ -795,6 +797,8 @@ def population_coverage(request, queryID, mhc_class, country_code=None):
                 if line.startswith('average'):
                     break
                 tokens = line.split('\t')
+                if len(tokens) < 2:
+                    continue
                 popcov = TVaxignPopulationCoverage(
                     c_sequence_id=seqID,
                     mhc_class='II',
@@ -818,6 +822,8 @@ def population_coverage(request, queryID, mhc_class, country_code=None):
                 if line.startswith('average'):
                     break
                 tokens = line.split('\t')
+                if len(tokens) < 2:
+                    continue
                 popcov = TVaxignPopulationCoverage(
                     c_sequence_id=seqID,
                     mhc_class='I,II',
