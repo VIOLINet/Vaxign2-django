@@ -348,7 +348,6 @@ def run(request, projectID):
             request2 = urllib.request.Request(url=url2, data=data2)
             with urllib.request.urlopen(request2) as file2:
                 tmpData['sequence'] = file2.read().decode()
-            
             url3 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=bioproject&id='+bioprojectID
             with urllib.request.urlopen(url3) as file3:
                 tree3 = ET.fromstring(file3.read().decode())
@@ -358,6 +357,28 @@ def run(request, projectID):
                     tmpData['group_name'] = organism
                 if tmpData['genome_name'] == '':
                     tmpData['genome_name'] = str.format('{} {}', organism, strain)
+        # Sequence input type: NCBI Nucleotide ID
+        if tmpData['sequence_type'] == 'nuccore_id':
+            nuccoreID = tmpData['sequence'].strip()
+            logger.debug( "Selected NCBI Nucleotide ID. Retrieving sequence from NCBI...")
+            url1 = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=protein&id='+nuccoreID
+            proteinIDs = []
+            proteinIDs = []
+            with urllib.request.urlopen(url1) as file1:
+                tree1 = ET.fromstring(file1.read().decode())
+                for proteinID in tree1.find('LinkSet').find('LinkSetDb').iter('Id'):
+                    proteinIDs.append(proteinID.text)
+            url2 = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+            data2 = urllib.parse.urlencode({
+                'db': 'protein',
+                'rettype': 'fasta',
+                'retmode': 'text',
+                'retmax': '10000',
+                'id': ','.join(proteinIDs),
+            }).encode()
+            request2 = urllib.request.Request(url=url2, data=data2)
+            with urllib.request.urlopen(request2) as file2:
+                tmpData['sequence'] = file2.read().decode()
         # Sequence input type: Uniprot Proteome ID
         if tmpData['sequence_type'] == 'protein_uniprot_proteome':
             logger.debug("Selected Uniprot Proteome ID. Retrieving sequence from Uniprot...")

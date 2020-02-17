@@ -31,6 +31,7 @@ class RunsForm(forms.Form):
             ('protein_refseq','NCBI Protein Refseq'),
             ('gene_id','NCBI Gene ID'),
             ('bioproject_id','NCBI Bioproject ID'),
+            ('nuccore_id', 'NCBI Nucleotide ID'),
             ('protein_fasta_url', 'Protein Sequence (FASTA File Link)'),
         ),
     )
