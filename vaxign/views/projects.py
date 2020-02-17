@@ -77,7 +77,7 @@ def index(request):
 def add(request):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
         return HttpResponse(status=403)
     
@@ -123,7 +123,7 @@ def add(request):
 def open(request, projectID):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
         return HttpResponse(status=403)
     
@@ -162,7 +162,7 @@ def open(request, projectID):
 def edit(request, projectID):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     
     context = {}
     
@@ -211,7 +211,7 @@ def edit(request, projectID):
 def remove(request, projectID):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
         return HttpResponse(status=403)
     
@@ -232,7 +232,7 @@ def remove(request, projectID):
 def curator(request, projectID, email, type):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
         return HttpResponse(status=403)
     
@@ -258,7 +258,7 @@ def curator(request, projectID, email, type):
 def run(request, projectID):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
         return HttpResponse(status=403)
     
@@ -404,7 +404,7 @@ def run(request, projectID):
 def ortholog(request, projectID):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
         return HttpResponse(status=403)
     
@@ -423,7 +423,7 @@ def ortholog(request, projectID):
 def querySetting(request, projectID, queryID):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
         return HttpResponse(status=403)
     
@@ -493,7 +493,7 @@ def querySetting(request, projectID, queryID):
 def queryRemove(request, projectID, queryID):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
         return HttpResponse(status=403)
     
@@ -511,7 +511,7 @@ def queryRemove(request, projectID, queryID):
 def queryPermission(request, projectID, queryID, type):
     
     if 'c_user_name' not in request.session:
-        return redirect('/users/register.php?redirect=/vaxign2/login')
+        return redirect('/users/login.php?redirect=/vaxign2/login')
     elif request.session['c_user_name'] not in TUser.objects.all().values_list('c_user_name', flat=True):
         return HttpResponse(status=403)
     
