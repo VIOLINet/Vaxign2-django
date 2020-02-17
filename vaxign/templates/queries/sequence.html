@@ -175,13 +175,24 @@ $(document).on('click', '.btn', function() {
 	                    <button id="defaultOpen" class="vtablinks" onclick="openVTab(event, 'basic')">Basic Information</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'vaxitop');loadVaxitop('{{ query_id }}','{{ sequence_id }}')">Vaxitop Prediction</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'iedb_epitope');loadIEDB('{{ query_id }}','{{ sequence_id }}')">IEDB Epitope</button>
+{% if 'c_user_name' in request.session %}
 	                    <button class="vtablinks" onclick="openVTab(event, 'population_coverage'); loadPopCov('{{ query_id }}','{{ sequence_id }}');">IEDB Population Coverage</button>
 	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_function'); loadEggNOGFunction('{{ query_id }}', '{{ sequence_id }}')">EggNOG Functions</button>
-	                    <button class="vtablinks" onclick="openVTab(event, 'eggnog_ortholog'); loadEggNOGOrtholog('{{ query_id }}', '{{ sequence_id }}')">EggNOG Orthologs</button>
+                        <button class="vtablinks" onclick="openVTab(event, 'eggnog_ortholog'); loadEggNOGOrtholog('{{ query_id }}', '{{ sequence_id }}')">EggNOG Orthologs</button>
 {% if query_detail.c_ortholog_computed and query_detail.c_ortholog_computed == 1 %}
-	                    <button class="vtablinks" onclick="openVTab(event, 'orthomcl_phylogeny'); loadOrthoMCLPhylogeny('{{ query_id }}', '{{ sequence_id }}')">Genome Group Ortholog Phylogeny</button>
-	                    <button class="vtablinks" onclick="openVTab(event, 'orthomcl_msa'); loadOrthoMCLMSA('{{ query_id }}', '{{ sequence_id }}')">Genome Group Ortholog MSA</button>
+                        <button class="vtablinks" onclick="openVTab(event, 'orthomcl_phylogeny'); loadOrthoMCLPhylogeny('{{ query_id }}', '{{ sequence_id }}')">Genome Group Ortholog Phylogeny</button>
+                        <button class="vtablinks" onclick="openVTab(event, 'orthomcl_msa'); loadOrthoMCLMSA('{{ query_id }}', '{{ sequence_id }}')">Genome Group Ortholog MSA</button>
 {% endif %}
+{% else %}
+                        <button class="vtablinks" onclick="alert('Please login (free to register) to access this function.');" style="color:graytext;">IEDB Population Coverage</button>
+                        <button class="vtablinks" onclick="alert('Please login (free to register) to access this function.');" style="color:graytext;">EggNOG Functions</button>
+                        <button class="vtablinks" onclick="alert('Please login (free to register) to access this function.');" style="color:graytext;">EggNOG Orthologs</button>
+{% if query_detail.c_ortholog_computed and query_detail.c_ortholog_computed == 1 %}
+                        <button class="vtablinks" onclick="alert('Please login (free to register) to access this function.');" style="color:graytext;">Genome Group Ortholog Phylogeny</button>
+                        <button class="vtablinks" onclick="alert('Please login (free to register) to access this function.');" style="color:graytext;">Genome Group Ortholog MSA</button>
+{% endif %}
+{% endif %}
+
 	                </div>
 		                    
 		            <div id="basic" class="vtabcontent" style="padding-top:10px;">

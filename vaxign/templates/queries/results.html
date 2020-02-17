@@ -286,7 +286,11 @@ $( document ).ready( function () {
 						<ul>
 {% if 'mast_I' in query_detail.c_included_analyses or 'mast_II' in query_detail.c_included_analyses %}
                             <li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/vaxitop">Show Vaxitop Result</a></li>
+{% if 'c_user_name' in request.session %}
                             <li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/population_coverage">Show Population Coverage Result</a></li>
+{% else %}
+                            <li><a href="javascript:alert('Please login (free to register) to access this function.');" style="color:graytext;">Show Population Coverage Result</a></li>
+{% endif %}
 {% endif %}
 {% if query_detail.c_ortholog_computed and query_detail.c_ortholog_computed == 1 %}
 						    <li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/ortholog" target="_blank">Show Genome Group [{{ query_detail.c_species_short }}] Orthologs</a></li>

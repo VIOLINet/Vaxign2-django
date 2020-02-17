@@ -40,6 +40,9 @@ logger = logging.getLogger('console')
 
 def protein_eggnog_function(request, queryID, seqID):
     
+    if 'c_user_name' not in request.session:
+        return HttpResponse(status=403)
+    
     context = {'query_id': queryID, 'sequence_id': seqID}
     
     try:
@@ -187,6 +190,9 @@ def protein_eggnog_function(request, queryID, seqID):
     return render(request, 'queries/tabs/eggnog_function.html', context)
 
 def protein_eggnog_ortholog(request, queryID, seqID, display):
+    
+    if 'c_user_name' not in request.session:
+        return HttpResponse(status=403)
     
     context = {'query_id': queryID, 'sequence_id': seqID}
     
@@ -387,6 +393,9 @@ def protein_eggnog_ortholog(request, queryID, seqID, display):
         return render(request, 'queries/tabs/eggnog_ortholog_table.html', context)
 
 def protein_population_coverage(request, queryID, seqID, mhc_class, country_code=None):
+    
+    if 'c_user_name' not in request.session:
+        return HttpResponse(status=403)
     
     if country_code == None:
         country_code = settings.POPULATION_COVERAGE_ISO_CODE.values()
@@ -691,6 +700,9 @@ def protein_population_coverage(request, queryID, seqID, mhc_class, country_code
 
 def population_coverage(request, queryID, mhc_class, country_code=None):
     
+    if 'c_user_name' not in request.session:
+        return HttpResponse(status=403)
+    
     if country_code == None:
         country_code = settings.POPULATION_COVERAGE_ISO_CODE.values()
     else:
@@ -948,6 +960,9 @@ def population_coverage(request, queryID, mhc_class, country_code=None):
 
 def protein_orthomcl_msa(request, queryID, seqID):
     
+    if 'c_user_name' not in request.session:
+        return HttpResponse(status=403)
+    
     context = {'query_id': queryID, 'sequence_id': seqID}
     
     try:
@@ -1006,6 +1021,9 @@ def protein_orthomcl_msa(request, queryID, seqID):
     return render(request, 'queries/tabs/orthomcl_msa.html', context)
 
 def protein_orthomcl_phylogeny(request, queryID, seqID):
+    
+    if 'c_user_name' not in request.session:
+        return HttpResponse(status=403)
     
     context = {'query_id': queryID, 'sequence_id': seqID}
     
