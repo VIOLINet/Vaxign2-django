@@ -626,6 +626,8 @@ def protein_population_coverage(request, queryID, seqID, mhc_class, country_code
             marker_line_width = 0.5,
             colorbar_ticksuffix = '%',
             colorbar_title = 'Population Coverage (%)',
+            zmin = 0,
+            zmax = 100,
             ),
             layout = {
                 'width': 1000,
@@ -653,6 +655,8 @@ def protein_population_coverage(request, queryID, seqID, mhc_class, country_code
             marker_line_width = 0.5,
             colorbar_ticksuffix = '%',
             colorbar_title = 'Population Coverage (%)',
+            zmin = 0,
+            zmax = 100,
             ),
             layout = {
                 'width': 1000,
@@ -680,6 +684,8 @@ def protein_population_coverage(request, queryID, seqID, mhc_class, country_code
             marker_line_width = 0.5,
             colorbar_ticksuffix = '%',
             colorbar_title = 'Population Coverage (%)',
+            zmin = 0,
+            zmax = 100,
             ),
             layout = {
                 'width': 1000,
@@ -886,6 +892,8 @@ def population_coverage(request, queryID, mhc_class, country_code=None):
             marker_line_width = 0.5,
             colorbar_ticksuffix = '%',
             colorbar_title = 'Population Coverage (%)',
+            zmin = 0,
+            zmax = 100,
             ),
             layout = {
                 'width': 1200,
@@ -913,6 +921,8 @@ def population_coverage(request, queryID, mhc_class, country_code=None):
             marker_line_width = 0.5,
             colorbar_ticksuffix = '%',
             colorbar_title = 'Population Coverage (%)',
+            zmin = 0,
+            zmax = 100,
             ),
             layout = {
                 'width': 1200,
@@ -940,6 +950,8 @@ def population_coverage(request, queryID, mhc_class, country_code=None):
             marker_line_width = 0.5,
             colorbar_ticksuffix = '%',
             colorbar_title = 'Population Coverage (%)',
+            zmin = 0,
+            zmax = 100,
             ),
             layout = {
                 'width': 1200,
