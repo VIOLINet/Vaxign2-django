@@ -332,7 +332,10 @@ def protein_eggnog_ortholog(request, queryID, seqID, display):
                 taxonName = taxonMap[str(taxon)]
             proteins = []
             for gene in ortholog.c_ortholog_gene.split(','):
-                geneID = gene.split('.')[1]
+                if '.' in gene:
+                    geneID = gene.split('.')[1]
+                else:
+                    geneID = gene
                 if geneID not in proteinMap:
                     proteins.append(geneID)
                 else:
