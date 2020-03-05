@@ -305,7 +305,10 @@ def protein_eggnog_ortholog(request, queryID, seqID, display):
         rawGeneNames = []
         for rawGenes in eggnog.values_list('c_ortholog_gene', flat=True):
             for rawGene in rawGenes.split(','):
-                rawGeneNames.append(rawGene.split('.')[1])
+                if '.' in rawGene:
+                    rawGeneNames.append(rawGene.split('.')[1])
+                else:
+                    rawGeneNames.append(rawGene)
         url = 'https://www.uniprot.org/uploadlists/'
         data = urllib.parse.urlencode({
             'from': 'GENENAME',
@@ -379,7 +382,10 @@ def protein_eggnog_ortholog(request, queryID, seqID, display):
                 taxonName = taxonMap[str(taxon)]
             proteins = []
             for gene in ortholog.c_ortholog_gene.split(','):
-                geneID = gene.split('.')[1]
+                if '.' in gene:
+                    geneID = gene.split('.')[1]
+                else:
+                    geneID = gene
                 if geneID not in proteinMap:
                     proteins.append(geneID)
                 else:
