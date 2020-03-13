@@ -39,8 +39,6 @@ def index(request, queryID):
     included_analysis = formData['basic_analysis'].copy()
     if formData['vaxitop_analysis'] == 'y':
         included_analysis += ['mast_I','mast_II']
-    # TODO Vaxign-ML train models for virus and parasite
-    # Currently use G- by default
     if formData['vaxignml_analysis'] == 'y':
         included_analysis.append('vaxign_ml')
     

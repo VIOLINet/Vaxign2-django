@@ -31,15 +31,12 @@ $( document ).ready( function () {
             $(".optional_content").hide();
 		}
 	} );
-	$("#id_organism").change( function () {
-		if ($("#id_organism").val() == 'bacteria') {
-			$("#id_bacteria_strain").show();
-			$("#vaxignml_row").show();
-		} else {
-			$("#id_bacteria_strain").hide();
-			$("#vaxignml_row").hide();
-		}
-	} );
+	$("#id_organism").change(function() {
+        if ($(this).val()!='bacteria')
+            $("#id_bacteria_strain").hide();
+        else
+            $("#id_bacteria_strain").show();
+    });
 } );
 </script>
 
@@ -147,12 +144,8 @@ $( document ).ready( function () {
                         <tr class="option1">
                             <td>
                                 Select Pathogen Organism Type:
-                                <input type="hidden" name="organism" id="id_organism" value="bacteria"></input>
-                                <select name="bacteria_strain" id="id_bacteria_strain">
-                                    <option disabled selected value> -- Select Pathogen Type -- </option>
-                                    <option value="--positive">Gram+ bacteria</option>
-                                    <option value="--negative">Gram- bacteria</option>
-                                </select>
+{{ form.organism }}
+{{ form.bacteria_strain }}
                             </td>
                         </tr>
                         
