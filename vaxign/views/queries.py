@@ -33,12 +33,32 @@ def results(request, queryID):
                 'query_id':queryID,
                 'have_orthologs':[],
                 'have_no_orthologs':[],
+                'localization': ['Any'],
+                'tmhmm_PredHel_check': False,
+                'tmhmm_PredHel_value': 1,
+                'tmhmm_PredHel_opt': '<=',
+                'spaan_score_check': False,
+                'spaan_score_value': 0.51,
+                'spaan_score_opt': '>=',
+                'human_alignment': '',
+                'mouse_alignment': '',
+                'pig_alignment': '',
             }
     else:
         request.session['results_form_data'] = {
                 'query_id':queryID,
                 'have_orthologs':[],
                 'have_no_orthologs':[],
+                'localization': ['Any'],
+                'tmhmm_PredHel_check': False,
+                'tmhmm_PredHel_value': 1,
+                'tmhmm_PredHel_opt': '<=',
+                'spaan_score_check': False,
+                'spaan_score_value': 0.51,
+                'spaan_score_opt': '>=',
+                'human_alignment': '',
+                'mouse_alignment': '',
+                'pig_alignment': '',
         }
     
     context = {
