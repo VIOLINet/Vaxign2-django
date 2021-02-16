@@ -4,16 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-
-<title>Vaxign: Vaccine Design</title>
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Script-Type" content="text/javascript" />
-
-<link rel="shortcut icon" href="/favicon.ico"/>
-<link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
-<link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
-
+    <title>Vaxign2: Vaccine Design</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link href="{% static 'css/bmain.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/vaxign_home.css' %}" rel="stylesheet" type="text/css" />
 </head>
 
 <body style="margin:0px;" id="main_body">
@@ -23,179 +19,164 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td width="160" valign="top">
-
-{% include 'template_vaxign_left.html' %}
-
+            {% include 'template_vaxign_left.html' %}
         </td>
-        
         <td valign="top">
-        
-{% if 'c_user_name' in request.session %}
-
-            <div style="text-align:right; margin: 2px 8px 2px 8px;">            
-{% include 'template_small_navi.html' %}
-            </div>
-
-{% endif %}
-
+            {% if 'c_user_name' in request.session %}
+                <div style="text-align:right; margin: 2px 8px 2px 8px;">            
+                    {% include 'template_small_navi.html' %}
+                </div>
+            {% endif %}
             <div class="home_container">
-            
-            
-                <h3 align="center">The Vaxign Tutorial  </h3>
-    <p>&nbsp;</p>
-    <p><strong><u>Notes: </u></strong></p>
-    <ul>
-      <li><strong>The following tutorial comes from the Vaxign Demo material prepared for the <a href="http://www.violinet.org/icovax2012">ICoVax 2012 Workshop. </a></strong></li>
-      <li><strong>This material was prepared by Allen Xiang  and Oliver He and was finalized on October 6, 2012.</strong></li>
-      <li><strong>The PDF copy of the material is available <a href="ICoVax2012_Workshop_Vaxign_Demo.pdf">HERE</a>. </strong></li>
-    </ul>
-<p>&nbsp;</p>
-<p><strong>Introduction.</strong> Vaxign is a web-based software program in VIOLIN that  targets for vaccine design. Based on the reverse vaccinology strategy, Vaxign  predicts vaccine targets by bioinformatics analysis of genome sequences. The  genome sequences come from pathogenic strains, non-pathogenic strains  (optional), and host species (human, mouse, or pig). Predicted features in the  Vaxign pipeline include protein subcellular location, transmembrane helices,  adhesin probability, conservation among pathogenic strains, sequence exclusion  from genomes of nonpathogenic strains, sequence similarity to host proteins,  and epitope binding to MHC class I and class II. Vaxign contains precomputed  predictions for over 200 genomes and also allows dynamic vaccine target  prediction based on users’ input sequences. </p>
-    <p><br />
-      The following tutorial will provide step-by-step  instructions on how to navigate through the Vaxign website (<a href="http://www.violinet.org/vaxign">http://www.violinet.org/vaxign</a>). Please feel free to ask any questions throughout this training  exercise. Two use cases will be tested: (1) Human Herpesvirus 1 (HSV-1) vaccine  target prediction; (2) Enterohemorrhagic <em>Escherichia  coli</em> (EHEC) O157:H7 vaccine target prediction. The first HSV use case is  mainly for demonstrating Vaxign sequence conservation analysis and MHC class I  epitope prediction techniques. The O157:H7 use case is mainly for showing some  general features for bacterial vaccine target prediction, such as the  prediction of secreted and outer membrane proteins and transmembrane helices. To save time,  we will mainly use the pre-computed results. We will also go through how to set  up your own account in Vaxign for your analyzed data storage and collaboration  with others. </p>
-<p>&nbsp;</p>
-<p><strong><u>FIRST USE  CASE: HSV-1 VA</u></strong><strong><u>CCINE TARGET PREDICTION</u></strong></p>
-<p><strong>Enter Vaxign  web page. </strong>Open  a browser, such as Firefox or Internet Explorer. Type the URL: <a href="http://www.violinet.org/vaxign">http://www.violinet.org/vaxign</a>. Then you will come to the Vaxign cover page  (Figure 1). Vaxign is a software program freely available for public uses. You  do not need to sign any license or log in in order to use it. It is noted that  we do provide an optional log in service if you want to save your analyzed data  for personal or collaborative uses. This feature will be excised later. There  are two methods for running Vaxign: one is <strong>Vaxign  query</strong> for pre-computed results, the other is <strong>dynamic analysis</strong> for your own sequence input. We will mainly focus  on the Vaxign query method (Figure 2).</p>
-<p  align="center"><strong><u><a href="{% static "tutorial/Fig1and2.jpg" %}"><img src="{% static "tutorial/Fig1and2.jpg" %}" alt="Vaxign Figues 1 and 2" width="800" align="absmiddle" /></a></u></strong></p>
-<p>&nbsp;</p>
-    <p><strong>Select a  Genome Group. </strong>In Vaxign Query site, click the “Please select a genome group” dropdown  list. Select the option “Herpesvirus (52)”. The number “52” means that this  group contains 52 genomes, which are from 52 herpesvirus strains.  </p>
-<p><strong>Select a  Genome. </strong>From  the drop down list, select “Human herpesvirus 1”.</p>
-<p><strong>Ignore “Sequence  ID(s)” line.</strong> This part is for querying one or a list of sequence IDs from the specified genome.  The IDs can be NCBI Protein Accession number, NCBI Protein GI, NCBI Gene ID, and  NCBI Locus Tag. </p>
-<p><strong>Ignore  “Keywords” line.</strong> This part is for querying one or few proteins based on a specific  database ID (e.g., NCBI Locus Tag), gene symbol, or protein description.</p>
-<p><strong>Choose the  default for “Sort by”.</strong> This setting is for how you want to view the results. It is fine to  just stick with the default.   </p>
-<p><strong>Select Filter  Options. </strong>We  have a list of options for you to filter out proteins. Here is a brief  introduction of different options: </p>
-<ul>
-  <li><strong>Select Subcellular Localization.</strong> This feature does not  particularly fit in this virus use case. It is useful for bacterial vaccine  target prediction. For bacterial vaccine development, it is often preferred to  identify outer membrane or secreted proteins as vaccine targets. </li>
-</ul>
-<ul>
-  <li><strong>Maximum Number of Transmembrane  Helices.</strong> It has been observed that a protein with more than one transmembrance helix is  hard to be isolated from a recombinant <em>E.  coli</em> strain. Therefore, this feature is useful if you consider using  recombinant E. coli strains for protein isolation and purification. </li>
-</ul>
-<ul>
-  <li><strong>Minimum Adhesin Probability  (0-1.0).</strong> An adhesin is a protein critical for helping a pathogen to enter a host cell.  Neutralizing an adhesin is helpful for preventing a pathogen’s invasion. The  default cutoff is 0.51.   </li>
-</ul>
-<ul>
-  <li><strong>Have Orthologs in.</strong> This feature is used for finding conserved proteins among a selected  list of strains. <strong>&nbsp;Tips:</strong> To select (or unselect) individual strains, press Ctrl key and then select; For  strain selection in continuous order, you can also use Shift key. In the end of  the selection box, you can type a number “of the above selected genomes”. This  number can be any integer number equal to or less than the maximum number of selected  genomes. If you do not type any number, the default is the total number of selected  genome. This definition allows you to look for those orthologs that appears in  all or part of the selected genomes.    </li>
-</ul>
-<ul>
-  <li><strong>Exclude Proteins having Orthologs in Any of Selected  Genome(s).</strong> This is for excluding  proteins that also also exist in a non-pathogenic strain(s). </li>
-</ul>
-<ul>
-  <li><strong>No Similarity to Human Proteins.</strong> Choose this selection to exclude those vaccine  targets that also exist in humans. </li>
-</ul>
-<ul>
-  <li><strong>No Similarity to Mouse Proteins.</strong> Choose this selection to exclude those vaccine  targets that also exist in mouse. </li>
-</ul>
-<ul>
-  <li><strong>No Similarity to Pig Proteins.</strong> Choose this selection to exclude those vaccine  targets that also exist in pigs. </li>
-</ul>
-<blockquote>
-  <p><strong>NOTE: MHC  Class I &amp; II Epitope Prediction by Vaxitop.</strong> This option has been removed from current version of Vaxign  query cover page. However, you can use the separate Vaxitop program to run it  name  replaces previously defined “Vaxitope” in order to avoid a naming conflict. </p>
-</blockquote>
-<p>To  illustrate step-by-step how Vaxign works, for now let’s NOT select any filter  option.  </p>
-<p><br />
-  <strong>Submit your query.</strong> Slick the “<strong>Submit</strong>” button in the bottom of the Vaxign Query web interface.</p>
-<p><br />
-  <strong>Query result examination.</strong> While a little while, you will come  to a Vaxign query result display page. You will see the first line saying “<strong>Found 77 protein(s).</strong>” The top part of  the results web page is copied in Figure 3. As you can see here, only the first  50 of the 77 proteins are display on this page. You can click “<strong>Next</strong>” or “<strong>Last</strong>” to find the information for the remaining 27 proteins. If you  prefer, you can also change the Page size to 100 to show all the 77 proteins in  one page. Each row of the table is the information for a specific protein,  which includes: (1) Protein Accession number, (2) Gene Symbol, (3)  Localization, (4) Adhesin Probability, (5) Trans-membrane helices, (6) MHC  class I binding epitopes, (7) MHC class II binding epitopes, (6) Similar human  proteins, (7) Similar mouse proteins, and (8) Similar pig proteins. </p>
-<div> </div>
-&nbsp;  
-</p>
-<p align="center"><a href="{% static "tutorial/Fig3.jpg" %}"><img src="{% static "tutorial/Fig3.jpg" %}" width="700" alt="Figure 3" /></a></p>
+                <h3 align="center">The Vaxign2 Tutorial</h3>
 
-<p><strong>Conservation among herpesviruses. </strong>We will now identify how many  proteins are conserved in other human herpesviruses.  </p>
-<ul>
-  <li><strong>Conservation among two other HSV-1 genomes.</strong></li>
-  <ul>
-    <li>Scroll down your  web page to the setting of “<strong>Have  Orthologs in</strong>”, select “<strong>Human herpesvirus 1 strain  F</strong>” and “<strong>Human herpesvirus 1 strain  H129</strong>”. Scroll down a little more to under the selection box,  type “2”  before the phase “<strong>of the above selected  2 genomes</strong>”. If you do not type anything, the default is that you choose the  total number of selected genomes. <strong>Note:</strong> if you type 1, it means that you want your resulted protein to have  conservation in at least one selected genome. </li>
-    <li>Scroll down and click “Search” at the bottom  of the page. </li>
-    <li><strong>Results.</strong> You  will come to another page. This page indicates still 77 proteins. This means  that all 77 proteins are conserved in all three HSV-1 strains. </li>
-  </ul>
-  <li><strong>Conservation among 11 other HSV genomes.</strong></li>
-  <ul>
-    <li>Instead of  choosing only the above 2 HSV-2 genomes, now select all 11 human herpesviruses.  Scroll down a little more to under the selection box, type “11” before the phase “<strong>of the above selected 11 genomes</strong>”. </li>
-    <li>Scroll down and click “Search” at the bottom  of the page. </li>
-    <li><strong>Results.</strong> You  will come to another page. Now you will find only 19 proteins. This means that  only these 19 proteins are conserved in all 12 HSV strains (i.e., 11 + 1 seed  strain). </li>
-  </ul>
-</ul>
-<p><strong>Restriction  of m</strong><strong>aximum number of transmembrane helices. </strong>Now we want to restrict the maximum number of  transmembrane helices to one. </p>
-<ul>
-  <li>Scroll down to  the setting “<strong>2. Maximum Number of  Transmembrane Helices</strong>”. Type “1” (or leave it if it is already 1) and  select this option. </li>
-  <li>Scroll down and click “Search” at the bottom  of the page.</li>
-  <li><strong>Results.</strong> You  will come to another page. Now you will find only 17 proteins. This means that  two proteins have been filtered out. </li>
-</ul>
-<p><strong>Sort results  by Adhesin Probability.</strong> Now we will excise the adhesin probability prediction. </p>
-<ul>
-  <li>Click the table header “<strong>Adhesin  Probability</strong>”. This will sort the 17 proteins based on the adhesin  probability. </li>
-  <li><strong>Results.</strong> Only one protein “<strong>NP_044628.1</strong>” (a  capsid scaffold protein) has an adhesin probability higher than 0.51. The adhesin  probability of this protein is 0.675. This is like that this protein is an  adhesin protein (Note: There appears no literature report that confirms this  prediction.)</li>
-</ul>
-<p><strong>Checking  detailed results for one protein.</strong> Now we will examine one protein in details. </p>
-<ul>
-  <li>Click the protein “<strong>NP_044628.1</strong>”. Then we will come to a  page with detailed predictions for this protein. Parts of the results are shown in Figure 4. </li>
-  <li><strong>Alpha Helix Prediction. </strong>Click on the “<strong>Alpha  Helix Prediction</strong>” on this page. The result of predicted alpha helix for  this protein will be shown on a new page. No transmembrane domain is found. It  appears that this protein is secreted out of a cell. </li>
-  <li><strong>MHC Class I Epitope prediction.</strong> Next we will exercise to find out specific MHC class  I epitopes for this protein. Note that we will not work on MHC class II epitope  prediction in this exercise. </li>
-</ul>
-<p align="center"><a href="{% static "tutorial/Fig4.jpg" %}"><img src="{% static "tutorial/Fig4.jpg" %}" width="300" alt="Figure 4" /></a> </p>
-<p><strong>&nbsp;</strong></p>
-<ul>
-  <li><strong>Human MHC Class I Epitope prediction.</strong> We will focus on prediction of human MHC class I  epitopes.  </li>
-  <ul>
-    <li><strong>P-</strong><strong>value Cutoff.</strong> Choose the default 0.05.</li>
-    <li><strong>MHC Host Species.</strong> Choose “human” in the  dropdown list.</li>
-    <li><strong>Predict epitopes for a MHC  Allele with any epitope length.</strong> If we choose “any allele” and any epitope length,  we will get 484 MHC class I epitopes for 53  unique MHC I alleles, and 198 MHC class II epitopes for 36  unique MHC II alleles. If we choose one common allele “<strong>HLA-A*0201</strong>” and length “10”, we will get 3 MHC class I epitopes for  this allele with a length of 10 amino acids. These epitopes are distributed in  different areas of the protein. Scroll down to the bottom of the page, you can  see the clusters of these epitopes inside the protein (Figure 5). </li>
-    <li><strong>Predict epitopes for a  specific allele with a specific epitope length. </strong>Now, select the setting: human HLA-A*0201, epitope length: 10. Click  “Refresh”. The results are shown in Figure 5. Basically, we get three hits. The  Vaxitop P-values for them are 0.00212, 0.0267, and 0.0495. The positions for  each of the epitopes are also displayed (Figure 5). </li>
-    </ul>
-  <p align="center"><a href="{% static "tutorial/Fig5.jpg" %}"><img src="{% static "tutorial/Fig5.jpg" %}" width="400" alt="Figure 5" /></a></p>
-  <ul>
-    <li><strong>Compare Vaxign epitope  prediction with IEDB epitope prediction. </strong>The IEDB MHC class I epitope prediction  method is a well-known and commonly used method (URL: <a href="http://tools.immuneepitope.org/analyze/html/mhc_binding.html">http://tools.immuneepitope.org/analyze/html/mhc_binding.html</a>). We have downloaded a  copy of the IEDB MHC class I epitope prediction software and installed it in  Vaxign for specific comparison with our own method. The commonly used IEDB MHC  class I “consensus” prediction method is used for this purpose.  To run a comparison, click on “<strong>Run MHC I  epitope prediction using IEDB consensus method and compare with Vaxitop</strong>”.  After the  click, you will come to a page that you can select the MHC allele HLA A*0201  and the length of 10. Then click “Submit”.  The results are shown in Figure 6. It appears  that the top three results out of the two methods are the same three epitopes –  the best one with Vaxitop P-value of 0.00212. The IEDB method turns to provide  more positive results using their IC50 cuttof of 50. We usually provide their  positive results here with the IC50 cutoff value of 10. Even with this cutoff,  many positive values were predicted using the IEDB method but not with Vaxitop (Figure  6). Overall, there is an overlap and also difference between these two methods.  One possible solution in practice is to look for the shared results out of  these two methods. </li>
-  </ul>
-</ul>
-<p align="center"><strong>&nbsp;</strong><a href="{% static "tutorial/Fig6.jpg" %}"><img src="{% static "tutorial/Fig6.jpg" %}" alt="Figure 6" width="500" border="0" /></a></p>
-<p><strong>Gene function  grouping and annotation.</strong> After selection of a list of genes, the results can be automatically  exported to DAVID for functional annotation and grouping. We have also an  internally developed COG analysis to cluster selected genes for COG functional  analysis. These two features are available by clicking corresponding links  immediately after the query result table.  </p>
-<p><strong>Export  results. </strong>The  predicted results can be exported to MS Excel file. </p>
-<p align="center"> </p>
-<p align="center"><strong>&nbsp;</strong></p>
-<p><strong><u>SECOND USE  CASE: <em>E. COLI</em> O157:H7 VACCINE TARGET  PREDICTION</u></strong></p>
-<p>We will not provide much detail for this use case here.<strong> </strong>The procedure to run this is similar  to what we explain above. One feature that is not demonstrated in the above  example is the Filter Option: </p>
-<ul>
-  <li><strong>1. Select Subcellular Localization</strong>.  This option  allows you to select one or more subcellular locations. The options include: </li>
-  <ul>
-    <li>Any Localization </li>
-    <li>Cell wall </li>
-    <li>Cytoplasmic</li>
-    <li>Cytoplasmic Membrane</li>
-    <li>Excellular proteins</li>
-    <li>Outer Membrane</li>
-    <li>Periplasmic</li>
-    <li>Unknown. </li>
-  </ul>
-</ul>
-<p>It is noted that this filter  method is based on PSortb (<a href="http://www.psort.org/psortb/">http://www.psort.org/psortb/</a>),  which is specifically designed for prediction of subcellular localization of  proteins from Gram + or Gram – bacteria. It is not designed for other types of  microbes. </p>
-<p>Figure 7 provides some  concrete settings for an example analysis. In this example, we chose to  identify only those extracellular and outer membrane proteins. This analysis  results in 36 hits.  <strong> </strong><br />
-</p>
-<div>
-  <p align="center"><a href="{% static "tutorial/Fig7.jpg" %}"><img src="{% static "tutorial/Fig7.jpg" %}" width="500" /></a></p>
-  <p>&nbsp;</p>
-</div>
-<p><strong><u>Register and  Use a Vaxign Account for Predicted Result Storage and Sharing </u></strong><br />
-  <strong>Purpose of having a Vaxign  account.</strong> It is not required to open a Vaxign/VIOLIN account. However, it  provides some extra benefits for you: (1) It saves your dynamic analysis  results in the Vaxign system for your future reference and refinement. (2) It  promotes collaboration. You can share your Vaxign projects with your  colleagues, so the whole team can work on one Vaxign analysis project together. <strong></strong><br />
-  <strong>Set up a Vaxign account. </strong>Click “<strong>My Analysis</strong>” on the left side  navigation bar in the Vaxign system (Figure 8). If you have not register,  please click on “<strong>Register an account</strong>”  and register using a web form. <br />
-  <strong>Create a new project under  “My Analysis”.</strong> You can create a new project and follow the online  instruction. </p>
-<p align="center">  <a href="{% static "tutorial/Fig8.jpg" %}"><img src="{% static "tutorial/Fig8.jpg" %}" width="500" alt="Figure 8" /></a></p>
-<br clear="all" />
-<p><strong>Exit Vaxign.</strong> Once you complete your  exercises, you may log out of Vaxign if you generate your own account and log  in. To log out, navigate to the top of the window, and click on <strong>LOGOUT</strong>.</p>
-<p>&nbsp;</p>
-<p>------------------------</p>
-<p><strong>Note: </strong>Please see more information in our <a href="../docs/index.php"><strong>Vaxign Documentation</strong></a> page. </p>
-<p>&nbsp;</p>
-<p><strong>Provide  Comments.</strong> Once you complete your exercises, you may log out of Vaxign  if you generate your own account and log in. In an effort to improve the Vaxign  performance and provide better support for the vaccine development community, we  would appreciate any comments/suggestions you may have regarding the Vaxign  program.  To provide your comments, please email us or fill out a feedback online form in the Vaxign <a href="http://www.violinet.org/contact_us.php"><strong>Contact Us</strong></a> page. Thank you!! </p>
-<p>&nbsp;</p>(URL: <a href="http://www.violinet.org/vaxign/vaxitop">http://www.violinet.org/vaxign/vaxitop</a>).  Also, although the Vaxitop epitope prediction selection is not available in the  cover page, the Vaxitop epitope prediction method is available for any protein  you select after the initial screening. To predict MHC class I and II epitopes,  the Vaxitop method is based on prediction of position specific scoring matrices  (PSSM). Different from existing epitope prediction algorithms, Vaxitop relies  on statistical <em>P-</em>value (instead of a percentage or  top number) as the cutoff. A <em>P-</em>value of 0.05  provides a cutoff with high and balanced sensitivity and specificity. Under  this section, you can choose a<em> P-</em>value cutoff,  host species, MHC allele, and epitope length. It’s noted that the Vaxitop
+                <p>&nbsp;</p>
+                <p><strong><u>Notes: </u></strong></p>
+                <ul>
+                <li><strong>The following tutorial comes from the Vaxign2 Demo material prepared for the <a href="http://www.violinet.org/icovax2012">ICoVax 2012 Workshop. </a></strong></li>
+                <li><strong>This material was prepared by Allen Xiang and Oliver He for Vaxign2 on October 6, 2012, and last updated by Michael F Cooke on February 15, 2021 for Vaxign2.</strong></li>
+                </ul>
+                <p>&nbsp;</p>
+                <p><strong>Introduction:</strong> Vaxign2 is a web-based software program in VIOLIN that targets for vaccine design. Based on the reverse vaccinology strategy, Vaxign2 predicts vaccine targets by bioinformatics analysis of genome sequences. Genome sequences come from pathogenic strains, non-pathogenic strains (optional), and host species (human, mouse, or pig). Predicted features in the Vaxign2 pipeline include protein subcellular location, transmembrane helices, adhesin probability, conservation among pathogenic strains, sequence exclusion  from genomes of non-pathogenic strains, sequence similarity to host proteins, and epitope binding to MHC class I and class II. Vaxign2 contains precomputed predictions for over 398 genomes and also allows dynamic vaccine target prediction based on users’ input sequences.</p>
+                <p>
+                The following tutorial will provide step-by-step instructions on how to navigate through the Vaxign2 website (<a href="http://www.violinet.org/vaxign2">http://www.violinet.org/vaxign2</a>). Two use cases will be tested: (1) Human SARS coronavirus 2 (SARS-CoV-2) isolate Wuhan-Hu-1 vaccine target prediction; (2) Enterohemorrhagic <em>Escherichia coli</em> (EHEC) O157:H7 vaccine target prediction. The SARS-CoV-2 use case will primarily demonstrate Vaxign2 sequence conservation analyses and MHC class I epitope prediction techniques. The O157:H7 use case will primarily demonstrate general features for bacterial vaccine target prediction including prediction of secreted and outer membrane proteins and transmembrane helices. Both tutorials will use pre-computed results to demonstrate the feature and save time. This tutorial will also demonstrate how to set up your own VIOLIN account to save query results and facilitate collaborative analysis with others.</p>
+                <p>&nbsp;</p>
+
+                <p><strong><u>First use case: SARS-CoV-2 Vaccine Target Prediction</u></strong></p>
+                <p><strong>Visit the Vaxign2 job submission page.</strong> Visit <a href="http://www.violinet.org/vaxign2">http://www.violinet.org/vaxign2</a> in a modern web browser of your choice. Vaxign2 is freely available for public use without any requirement to sign a license or create an account; Creating a VIOLIN account to save your query results for later personal or collaborative use is completely optional. The Vaxign2 job submission page (Figure 1) allows you to submit Vaxign2 job by uploading or entering your own sequence input for <strong>Dynamic Analysis</strong>, or by choosing a genome that has been pre-processed using the <strong>Precompute Query</strong> tab (Figure 2).</p>
+
+                <div align="center">
+                    <figure>
+                        <a href="{% static "tutorial/figure1.png" %}"><img src="{% static "tutorial/figure1.png" %}" alt="Figure 1: Vaxign2 job submission page" width="800" /></a>
+                        <figcaption>Figure 1: Vaxign2 job submission page</figcaption>
+                    </figure>
+                    <figure>
+                        <a href="{% static "tutorial/figure2.png" %}"><img src="{% static "tutorial/figure2.png" %}" alt="Figure 2: Vaxign2 precomputed queries tab" width="800" /></a>
+                        <figcaption>Figure 2: Vaxign2 precomputed queries tab</figcaption>
+                    </figure>
+                </div>
+                <p>&nbsp;</p>
+
+                <p><strong>Select a Genome Group.</strong> In the Precompute Query tab, click the “Select a Genome Group” dropdown  list. Select the option “Coronavirus (8)”. The number “8” means that this group contains 8 genomes, which are from 8 herpesvirus strains. </p>
+
+                <p><strong>Select a Genome. </strong>From the drop down list, select “Human SARS coronavirus 2 (SARS-CoV-2) isolate Wuhan-Hu-1”.</p>
+
+                <p><strong>Ignore “Sequence  ID(s)”</strong> This is for querying one or a list of sequence IDs from the specified genome.  The IDs can be NCBI Protein Accession number, NCBI Protein GI, NCBI Gene ID, and  NCBI Locus Tag. </p>
+
+                <p><strong>Ignore “Keywords” line.</strong> This is for querying one or more proteins based on a specific database ID (e.g., NCBI Locus Tag), gene symbol, or protein description.</p>
+
+            <p><strong>Select Filter Options</strong> This allows you to set criteria to filter out proteins: </p>
+            <ul>
+                <li><strong>Select Subcellular Localization.</strong> This feature does not particularly fit in this virus use case. It is useful for bacterial vaccine target prediction. For bacterial vaccine development, it is often preferred to identify outer membrane or secreted proteins as vaccine targets.</li>
+                <br>
+                <li><strong>Maximum Number of Transmembrane Helices.</strong> It has been observed that a protein with more than one transmemebrane helix is hard to isolate from a recombinant <em>E. coli</em> strain. Therefore, this feature is useful if you consider using recombinant <em>E. coli</em> strains for protein isolation and purification.</li>
+                <br>
+                <li><strong>Minimum Adhesin Probability (0-1.0).</strong> An adhesin is a protein critical for helping a pathogen to enter a host cell. Neutralizing an adhesin is helpful for preventing a pathogen’s invasion. The default cutoff is 0.51.</li>
+                <br>
+                <li><strong>Have Orthologs in.</strong> This allows you to find conserved proteins among a selected list of strains. <strong>&nbsp;Tips:</strong> To select (or unselect) individual strains, press Ctrl (Cmd on Macs) and then select; For strain selection in continuous order, click a strain marking the beginning of your selection, then hold Shift while selecting the end of your selection.</li>
+                <br>
+                <li><strong>Exclude Proteins having Orthologs in Any of Selected  Genome(s).</strong> This is for excluding proteins that also also exist in a non-pathogenic strain(s). </li>
+                <br>
+                <li><strong>Similarity to Human Proteins.</strong> This determines whether vaccine targets that also exist in humans should be included, excluded, or not considered.</li>
+                <br>
+                <li><strong>Similarity to Mouse Proteins.</strong> This determines whether vaccine targets that also exist in mouse should be included, excluded, or not considered.</li>
+                <br>
+                <li><strong>Similarity to Pig Proteins.</strong> This determines whether vaccine targets that also exist in pigs should be included, excluded, or not considered.</li>
+            </ul>
             
+            <blockquote>
+            <p><strong>NOTE: MHC  Class I &amp; II Epitope Prediction by Vaxitop.</strong> This option has been removed from current version of Vaxign2  query cover page. However, you can use the separate Vaxitop program to run it  name  replaces previously defined “Vaxitope” in order to avoid a naming conflict. </p>
+            </blockquote>
+            <p>For the purposes of the tutorial, do not specify any filter options.</p>
+            <br>
+            <p>
+                <strong>Submit your query.</strong> Click the “<strong>Submit</strong>” button in the bottom of the Vaxign2 Query web interface.</p>
+            <p>
+            <br>
+
+            <p><strong>Query result examination.</strong> After Vaxign2 finishes running the job, you will be redirected to the result page for your query. Thet total number of proteins identified will be displayed above the results table (Figure 3) which displays 50 proteins per page by default. You may change how many entries are shown per page as well as navigate between result pages below the results table. Each row of the table represents a specific protein which includes: (1) Protein Accession number, (2) Protein Name, (3) Gene Accession Number, (4) Gene Symbol, (5) Locus Tag, (6) Vaxign-ML score, (7) Localization, (8) Adhesin Probability, (9) Trans-membrane helices, (10) Similarity to Human Proteins, (11) Similarity to Mouse Proteins, and (12) Similarity to Pig Proteins.</p>
+
+            <br>
+            <div align="center">
+                <figure>
+                    <a href="{% static "tutorial/figure3.png" %}"><img src="{% static "tutorial/figure3.png" %}" alt="Figure 3: Vaxign2 results" width="800" /></a>
+                    <figcaption>Figure 3: Vaxign2 results</figcaption>
+                </figure>
+            </div>
             
+            <p><strong>Conservations among human coronaviruses</strong> Click “<strong>Analysis</strong>“ above the results table and then click “<strong>Show Genome Group [Coronavirus] Orthologs</strong>“. This will take you to a page that will allow you to select other coronaviruses to include in an ortholog table. Select all human coronaviruses, and then click “<strong>Submit</strong>“. An ortholog table will appear (Figure 4) showing that 10 proteins are conserved between the coronavirus genome group.</p>
+
+            <div align="center">
+                <figure>
+                    <a href="{% static "tutorial/figure4.png" %}"><img src="{% static "tutorial/figure4.png" %}" alt="Figure 4: Vaxign2 ortholog results" width="800" /></a>
+                    <figcaption>Figure 4</figcaption>
+                </figure>
             </div>
 
+            <p><strong>Restriction of maximum number of Transmembrane Helices through filtering</strong> Back on the query result page, click “<strong>Filter Results</strong>“ above the results table. Once the filter frame appears, choose the “less than or equal to" (&lt;=) option in the dropdown field and enter “1“ in the text field to the right of the “Number of Transmembrane Helices“ label. This specifies a view of results for proteins with one or zero transmemebrane helices. To apply the filter, click the checkbox to the right of the quantity field and click “<strong>Submit</strong>“ at the top of the filter frame. The results will be updated, showing 19 proteins after filtering out 5 proteins that had more than one transmemebrane helix. Other filter rules may be applied in the filter frame.</p>
+
+            <br>
+
+            <p><strong>Sort results by Adhesin Probability.</strong> By default, Vaxign2 sorts results in descending order by Vaxign-ML Score. To change how the results are sorted, click the “<strong>Adhesin Probability</strong>“ column header once to sort the results by Adhesin Probability in ascending order, then once more for descending order.</p>
+
+            <p><strong>Checking detailed results for one protein.</strong> The SARS-CoV-2 S protein (NCBI protein ID QHD43416|S) is a commonly used vaccine antigen in current COVID-19 vaccine development. In this example of Vaxign2 predicting a high adhesin probability and Vaxign-ML predicting the same protein as a good vaccine antigen with a score of 97.6, we will investigate the single protein in detail. Click the protein “<strong>QHD43416|S</strong>“. This will take you to a page with detailed predictions for the protein (Figure 5).</p>
+
+            <div align="center">
+                <figure>
+                    <a href="{% static "tutorial/figure5.png" %}"><img src="{% static "tutorial/figure5.png" %}" alt="Figure 5: Vaxign2 detailed protein results" width="800" /></a>
+                    <figcaption>Figure 5: Vaxign2 detailed protein results</figcaption>
+                </figure>
+            </div>
+
+            <p><strong><u>SECOND USE  CASE: <em>E. COLI</em> O157:H7 VACCINE TARGET  PREDICTION</u></strong></p>
+            <p>We will not provide much detail for this use case here.<strong> </strong>The procedure to run this is similar  to what we explain above. One feature that is not demonstrated in the above  example is the Filter Option: </p>
+            <ul>
+            <li><strong>1. Select Subcellular Localization</strong>.  This option  allows you to select one or more subcellular locations. The options include: </li>
+            <ul>
+                <li>Any Localization </li>
+                <li>Cell wall </li>
+                <li>Cytoplasmic</li>
+                <li>Cytoplasmic Membrane</li>
+                <li>Excellular proteins</li>
+                <li>Outer Membrane</li>
+                <li>Periplasmic</li>
+                <li>Unknown. </li>
+            </ul>
+            </ul>
+            <p>It is noted that this filter  method is based on PSortb (<a href="http://www.psort.org/psortb/">http://www.psort.org/psortb/</a>),  which is specifically designed for prediction of subcellular localization of  proteins from Gram + or Gram – bacteria. It is not designed for other types of  microbes. </p>
+            <p>Figure 7 provides some  concrete settings for an example analysis. In this example, we chose to  identify only those extracellular and outer membrane proteins. This analysis  results in 45 hits.  <strong> </strong><br />
+            </p>
+            <div>
+                <div align="center">
+                    <figure>
+                        <a href="{% static "tutorial/figure6.png" %}"><img src="{% static "tutorial/figure6.png" %}" alt="Figure 6: Prediction of E. coli O157:H7 vaccine targets" width="800" /></a>
+                        <figcaption>Figure 6: Prediction of E. coli O157:H7 vaccine targets</figcaption>
+                    </figure>
+                </div>
+            <p>&nbsp;</p>
+            </div>
+            <p><strong><u>Register and  Use a Vaxign2 Account for Predicted Result Storage and Sharing </u></strong><br />
+            <strong>Purpose of having a Vaxign2  account.</strong> It is not required to open a Vaxign2/VIOLIN account. However, it  provides some extra benefits for you: (1) It saves your dynamic analysis  results in the Vaxign2 system for your future reference and refinement. (2) It  promotes collaboration. You can share your Vaxign2 projects with your  colleagues, so the whole team can work on one Vaxign2 analysis project together. <strong></strong><br />
+            <strong>Set up a Vaxign2 account. </strong>Click “<strong>My Analysis</strong>” on the left side  navigation bar in the Vaxign2 system (Figure 8). If you have not register,  please click on “<strong>Register an account</strong>”  and register using a web form. <br />
+            <strong>Create a new project under  “My Analysis”.</strong> You can create a new project and follow the online  instruction. </p>
+            <div align="center">
+                <figure>
+                    <a href="{% static "tutorial/figure7.png" %}"><img src="{% static "tutorial/figure7.png" %}" alt="Figure 7: Vaxign2 side navigation bar" width="150" /></a>
+                    <figcaption>Figure 6: Vaxign2 side navigation bar</figcaption>
+                </figure>
+            </div>
+            <br clear="all" />
+            <p><strong>Exit Vaxign2.</strong> Once you complete your  exercises, you may log out of Vaxign2 if you generate your own account and log  in. To log out, navigate to the top of the window, and click on <strong>LOGOUT</strong>.</p>
+            <p>&nbsp;</p>
+            <p>------------------------</p>
+            <p><strong>Note: </strong>Please see more information in our <a href="../docs/index.php"><strong>Vaxign2 Documentation</strong></a> page. </p>
+            <p>&nbsp;</p>
+            <p><strong>Provide  Comments.</strong> Once you complete your exercises, you may log out of Vaxign2  if you generate your own account and log in. In an effort to improve the Vaxign2  performance and provide better support for the vaccine development community, we  would appreciate any comments/suggestions you may have regarding the Vaxign2  program.  To provide your comments, please email us or fill out a feedback online form in the Vaxign2 <a href="http://www.violinet.org/contact_us.php"><strong>Contact Us</strong></a> page. Thank you!! </p>
+            <p>&nbsp;</p>(URL: <a href="http://www.violinet.org/vaxign2/vaxitop">http://www.violinet.org/vaxign2/vaxitop</a>).  Also, although the Vaxitop epitope prediction selection is not available in the  cover page, the Vaxitop epitope prediction method is available for any protein  you select after the initial screening. To predict MHC class I and II epitopes,  the Vaxitop method is based on prediction of position specific scoring matrices  (PSSM). Different from existing epitope prediction algorithms, Vaxitop relies  on statistical <em>P-</em>value (instead of a percentage or  top number) as the cutoff. A <em>P-</em>value of 0.05  provides a cutoff with high and balanced sensitivity and specificity. Under  this section, you can choose a<em> P-</em>value cutoff,  host species, MHC allele, and epitope length. It’s noted that the Vaxitop
+            
+            </div>
         </td>
-
     </tr>
-
 </table>
 
 {% include 'template_vaxign_bottom.html' %}
