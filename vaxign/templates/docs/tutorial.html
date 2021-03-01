@@ -109,7 +109,7 @@
             <div align="center">
                 <figure>
                     <a href="{% static "tutorial/figure4.png" %}"><img src="{% static "tutorial/figure4.png" %}" alt="Figure 4: Vaxign2 ortholog results" width="800" /></a>
-                    <figcaption>Figure 4</figcaption>
+                    <figcaption>Figure 4: Vaxign2 ortholog results</figcaption>
                 </figure>
             </div>
 
@@ -121,11 +121,76 @@
 
             <p><strong>Checking detailed results for one protein.</strong> The SARS-CoV-2 S protein (NCBI protein ID QHD43416|S) is a commonly used vaccine antigen in current COVID-19 vaccine development. In this example of Vaxign2 predicting a high adhesin probability and Vaxign-ML predicting the same protein as a good vaccine antigen with a score of 97.6, we will investigate the single protein in detail. Click the protein “<strong>QHD43416|S</strong>“. This will take you to a page with detailed predictions for the protein (Figure 5).</p>
 
+            <p>From here, you may use the subnavigation to the left of the analysis window to switch between analyses tools.</p>
+
             <div align="center">
                 <figure>
                     <a href="{% static "tutorial/figure5.png" %}"><img src="{% static "tutorial/figure5.png" %}" alt="Figure 5: Vaxign2 detailed protein results" width="800" /></a>
                     <figcaption>Figure 5: Vaxign2 detailed protein results</figcaption>
                 </figure>
+            </div>
+
+            <p><strong>Vaxitop epitope prediction.</strong> Alleles may be selected with options for host, MHC class, MHC allele, and epitope length by selecting desired options in their respective dropdown menus and clicking “<strong>Add Allele</strong>“. Frequently used alleles may be added with a single click in the “Frequently used alleles“ section.</p>
+            <p>Once the desired alleles have been selected, click “<strong>Show Vaxitop Results</strong>“ to populate the results table. Results may be filtered by p-value cutoff and a general search term for all fields in their respective text fields above the results table. Results may be copied to your clipboard or exported as a CSV, Excel file, or PDF file using the respective buttons directly above the results table.</strong></p>
+            <p>By default, the table will only show 25 entries per results page. You may change this by selecting an alternative number in the dropdown menu below the bottom-left corner of the results table. You may view the next number of results according to your desired display interval by clicking on the the page number links or “<strong>Previous</strong>“ and “<strong>Next</strong>“ links to view the results page behind or ahead the page currently being observed.</p>
+
+            <div align="center">
+              <figure>
+                  <a href="{% static "tutorial/figure6.png" %}"><img src="{% static "tutorial/figure6.png" %}" alt="Figure 6: Vaxitop prediction results" width="800" /></a>
+                  <figcaption>Figure 6: Vaxitop prediction results</figcaption>
+              </figure>
+            </div>
+
+            <p><strong>IEDB Epitopes.</strong> IEDB experimentally validated epitopes for B Cells or T Cells may be reviewed for a protein of interest. A results table will appear with information including IEDB ID, epitope, starting position, and ending location. Search, export, and results table navigation options behave the same as the Vaxitop prediction screen.</p>
+
+            <div align="center">
+              <figure>
+                  <a href="{% static "tutorial/figure7.png" %}"><img src="{% static "tutorial/figure7.png" %}" alt="Figure 7: IEDB epitope results" width="800" /></a>
+                  <figcaption>Figure 7: IEDB epitope results</figcaption>
+              </figure>
+            </div>
+
+            <p><strong>IEDB Population Coverage.</strong> Global population coverage for MHC-I, MHC-II, as well as MHC-I and MHC-II combined may be selected in the dropdown menu in the upper left corner of the analysis screen. Map navigational, selection, and image download tools will appear at the top right corner of the map after the cursor is hovered over the map. Countries may be hovered over with the cursor to see coverage corresponding to the selected MHC option.</p>
+
+            <div align="center">
+              <figure>
+                  <a href="{% static "tutorial/figure8.png" %}"><img src="{% static "tutorial/figure8.png" %}" alt="Figure 8: IEDB population coverage" width="800" /></a>
+                  <figcaption>Figure 8: IEDB population coverage</figcaption>
+              </figure>
+            </div>
+
+            <p><strong>EggNOG Functions.</strong> Functional annotations including Clusters of Orthologous Groups (COG) and Gene Ontology (GO) terms may be viewed on this analysis screen.</p>
+
+            <div align="center">
+              <figure>
+                  <a href="{% static "tutorial/figure9.png" %}"><img src="{% static "tutorial/figure9.png" %}" alt="Figure 9: EggNOG functions" width="400" /></a>
+                  <figcaption>Figure 9: EggNOG functions</figcaption>
+              </figure>
+            </div>
+
+            <p><strong>EggNOG Orthologs.</strong> This screen displays orthologous proteins predicted by the EggNOG database in a Table View that may be viewed, navigated, and matched against a search term in a similar fashion to previous analysis screens. You may switch from Table View to a taxonomic Tree View by selecting the desired option in the dropdown box to the right of "Orthologous Protein Prediction"</p>
+
+            <div align="center">
+              <figure>
+                  <a href="{% static "tutorial/figure10.png" %}"><img src="{% static "tutorial/figure10.png" %}" alt="Figure 10: EggNOG orthologs table view" width="400" /></a>
+                  <figcaption>Figure 10: EggNOG orthologs table view</figcaption>
+              </figure>
+            </div>
+
+            <div align="center">
+              <figure>
+                  <a href="{% static "tutorial/figure11.png" %}"><img src="{% static "tutorial/figure11.png" %}" alt="Figure 11: EggNOG orthologs tree view" width="600" /></a>
+                  <figcaption>Figure 11: EggNOG orthologs tree view</figcaption>
+              </figure>
+            </div>
+
+            <p><strong>Genome Group Ortholog Phylogeny.</strong> This screen displays a phylogenic tree for related organisms and orthologous proteins. A download feature appears in the top-right corner of the analysis screen after hovering the cursor over the tree. This feature is only available to logged in users.</p>
+
+            <div align="center">
+              <figure>
+                  <a href="{% static "tutorial/figure12.png" %}"><img src="{% static "tutorial/figure12.png" %}" alt="Figure 12: Genome group ortholog phylogeny" width="800" /></a>
+                  <figcaption>Figure 12: Genome group ortholog phylogeny</figcaption>
+              </figure>
             </div>
 
             <p><strong><u>SECOND USE  CASE: <em>E. COLI</em> O157:H7 VACCINE TARGET  PREDICTION</u></strong></p>
@@ -149,20 +214,20 @@
             <div>
                 <div align="center">
                     <figure>
-                        <a href="{% static "tutorial/figure6.png" %}"><img src="{% static "tutorial/figure6.png" %}" alt="Figure 6: Prediction of E. coli O157:H7 vaccine targets" width="800" /></a>
-                        <figcaption>Figure 6: Prediction of E. coli O157:H7 vaccine targets</figcaption>
+                        <a href="{% static "tutorial/figure13.png" %}"><img src="{% static "tutorial/figure13.png" %}" alt="Figure 13: Prediction of E. coli O157:H7 vaccine targets" width="800" /></a>
+                        <figcaption>Figure 13: Prediction of E. coli O157:H7 vaccine targets</figcaption>
                     </figure>
                 </div>
             <p>&nbsp;</p>
             </div>
-            <p><strong><u>Register and  Use a Vaxign2 Account for Predicted Result Storage and Sharing </u></strong><br />
-            <strong>Purpose of having a Vaxign2  account.</strong> It is not required to open a Vaxign2/VIOLIN account. However, it  provides some extra benefits for you: (1) It saves your dynamic analysis  results in the Vaxign2 system for your future reference and refinement. (2) It  promotes collaboration. You can share your Vaxign2 projects with your  colleagues, so the whole team can work on one Vaxign2 analysis project together. <strong></strong><br />
+            <p><strong><u>Register and Use a Vaxign2 Account for Predicted Result Storage and Sharing </u></strong><br />
+            <strong>Purpose of having a Vaxign2  account.</strong> It is not required to open a Vaxign2/VIOLIN account. However, it provides some extra benefits for you: (1) It saves your dynamic analysis  results in the Vaxign2 system for your future reference and refinement. (2) It  promotes collaboration. You can share your Vaxign2 projects with your  colleagues, so the whole team can work on one Vaxign2 analysis project together. <strong></strong><br />
             <strong>Set up a Vaxign2 account. </strong>Click “<strong>My Analysis</strong>” on the left side  navigation bar in the Vaxign2 system (Figure 8). If you have not register,  please click on “<strong>Register an account</strong>”  and register using a web form. <br />
             <strong>Create a new project under  “My Analysis”.</strong> You can create a new project and follow the online  instruction. </p>
             <div align="center">
                 <figure>
-                    <a href="{% static "tutorial/figure7.png" %}"><img src="{% static "tutorial/figure7.png" %}" alt="Figure 7: Vaxign2 side navigation bar" width="150" /></a>
-                    <figcaption>Figure 6: Vaxign2 side navigation bar</figcaption>
+                    <a href="{% static "tutorial/figure14.png" %}"><img src="{% static "tutorial/figure14.png" %}" alt="Figure 14: Vaxign2 side navigation bar" width="150" /></a>
+                    <figcaption>Figure 14: Vaxign2 side navigation bar</figcaption>
                 </figure>
             </div>
             <br clear="all" />
