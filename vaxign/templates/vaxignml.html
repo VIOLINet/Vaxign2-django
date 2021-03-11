@@ -32,11 +32,18 @@ $( document ).ready( function () {
 		}
 	} );
 	$("#id_organism").change(function() {
-        if ($(this).val()!='bacteria')
-            $("#id_bacteria_strain").hide();
-        else
-            $("#id_bacteria_strain").show();
-    });
+    switch ($(this).val()) {
+      case 'bacteria':
+        $("#id_bacteria_strain").show();
+        break;
+      case 'parasite':
+        $("#id_bacteria_strain").hide();
+        alert('The Vaxign-ML parasite model is trained only with bacterial and viral data. A dedicated parasite model is currently in development.');
+        break;
+      default:
+      $("#id_bacteria_strain").hide();
+    }
+	});
 } );
 </script>
 
