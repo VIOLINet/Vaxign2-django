@@ -399,7 +399,7 @@ $( document ).ready( function () {
 {% endif %}
                             
 {% if 'tmhmm' in query_detail.c_included_analyses %}
-                            <td>{{ record.c_tmhmm_predhel|default_if_none:"-" }}</td>
+                            <td style="background:{% if record.c_tmhmm_predhel %} #d6a5a5 {% else %} #add6a5 {% endif %}">{{ record.c_tmhmm_predhel|default_if_none:"0" }}</td>
 {% endif %}
 
 {% if 'blasth' in query_detail.c_included_analyses %}
