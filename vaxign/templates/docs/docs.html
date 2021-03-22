@@ -5,7 +5,7 @@
 
 <head>
 
-<title>Vaxign: Vaccine Design</title>
+<title>Vaxign 2: Vaccine Design</title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
@@ -13,6 +13,22 @@
 <link rel="shortcut icon" href="/favicon.ico"/>
 <link href="{% static "css/bmain.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/vaxign_home.css" %}" rel="stylesheet" type="text/css" />
+<style>
+  	.benchmark {
+		border:1px solid #C0C0C0;
+		border-collapse:collapse;
+		padding:5px;
+	}
+	.benchmark th {
+		border:1px solid #C0C0C0;
+		padding:5px;
+		background:#F0F0F0;
+	}
+	.benchmark td {
+		border:1px solid #C0C0C0;
+		padding:5px;
+	}
+</style>
 
 </head>
 
@@ -41,17 +57,18 @@
             <div class="home_container">
             
 
-    <h3 align="center">The Vaxign  Documentation</h3>
+    <h3 align="center">Vaxign 2 Documentation</h3>
     <p>&nbsp;</p>
     <p><strong><em>Note:</em></strong> Vaxign and Yongqun &quot;Oliver&quot; He have been cited in news: <strong> <a href="http://www.nature.com/nrd/journal/v11/n3/full/nrd3679.html">Reverse vaccinology on the cusp</a></strong> by Dan Jones. <em>Nat Rev Drug Discov</em>. 2012 Feb 10;11(3):175-6. doi: 10.1038/nrd3679. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22322255">22322255</a>. Please click  <a href="#paperscitingvaxign"><strong>HERE</strong></a> to find more papers that have cited Vaxign. </p>
     <p>In the post-genomic era, strategies of vaccine development have progressed dramatically from traditional Pasteur’s principles of isolating, inactivating and injecting the causative agent of an infectious disease, to reverse vaccinology that starts from bioinformatics analysis of the genome information. Vaxign is the first web-based vaccine design software program freely available for the purpose of facilitating reverse vaccinology. Here we provide some relevant documentation about Vaxign: </p>
     <p><strong>Table of Contents:</strong></p>
     <ol>
       <li><a href="#vaxignpublications">Vaxign Publications</a></li>
-      <li><a href="#pipeline">Vaxign Pipeline for Vaccine Target Prediction</a></li>
+      <li><a href="#pipeline">Vaxign 2 Pipeline for Vaccine Target Prediction</a></li>
       <li><a href="#vaxign-ml">Vaxign-ML Pipeline for machine learning-based Vaccine Target Prediction</a></li>
-      <li><a href="#usedprograms">Open-Source Software Programs/Databases used in Vaxign and their Licenses</a></li>
+      <li><a href="#usedprograms">Open-Source Software Programs/Databases used in Vaxign 2 and their Licenses</a></li>
       <li><a href="#parameters">Parameters/Options for Consideration and Filteration </a></li>
+      <li><a href="#benchmark">Vaxign & Vaxign-ML Benchmark</a></li>
       <li><a href="#vaxitop">Introduction of Vaxitop</a></li>
       <li><a href="#references">Selected Relevant References</a></li>
       <li><a href="#paperscitingvaxign">Selected  Papers that have Cited Vaxign</a></li>
@@ -68,8 +85,8 @@
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;McNamara L, He Y, Yang Z. Using epitope predictions to evaluate efficacy   and population coverage of the Mtb72f vaccine for tuberculosis. <em>BMC   Immunology</em>. 2010 Mar 30;11(1):18.  [PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20353587">20353587</a>] [<a href="http://www.biomedcentral.com/1471-2172/11/18/abstract">Journal   Link</a>]</p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ma J, He Y, Hu B, Luo ZQ. Genome sequence of an environmental isolate of the bacterial pathogen <em>Legionella pneumophila</em>. <em>Genome Announc</em>. 2013 Jun 27;1(3). PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/23792742">23792742</a>. PMCID: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3675512/">PMC3675512</a>.</p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>More papers that have cited Vaxign. Please check</em> <a href="#references">HERE</a>. </p>
-    <p class="style1"><span id="pipeline">Vaxign Pipeline for Vaccine Target  Prediction</span>:  </p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vaxign includes a pipeline of software programs to predict possible vaccine targets based on various vaccine design criteria using microbial genomic and protein sequences as input data. The predicted features in the Vaxign pipeline include antigen sublocation, adhesion, epitope binding to MHC class I and class II, and sequence similarities to human, mouse and/or pig proteins. This pipeline integrates both existing open source tools and an internally developed program (Vaxitope) with user-friendly web interfaces. Vaxign predicts vaccine  targets based on protein sequences at a genome level or using individual protein sequences. This pipeline includes the following steps:</p>
+    <p class="style1"><span id="pipeline">Vaxign 2 Pipeline for Vaccine Target  Prediction</span>:  </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vaxign 2 includes a pipeline of software programs to predict possible vaccine targets based on various vaccine design criteria using microbial genomic and protein sequences as input data. The predicted features in the Vaxign 2 pipeline include antigen sublocation, adhesion, epitope binding to MHC class I and class II, and sequence similarities to human, mouse and/or pig proteins. This pipeline integrates both existing open source tools and an internally developed program (Vaxitope) with user-friendly web interfaces. Vaxign 2 predicts vaccine  targets based on protein sequences at a genome level or using individual protein sequences. This pipeline includes the following steps:</p>
     <ol>
         <li>Subcellular  localization: Surface-exposed proteins such as  outer membrane proteins (esp. adhesins) and secreted proteins are usually ideal  targets for vaccine developments. Non-surface proteins such as  cytoplasmic/inner membrane proteins may not be good targets for vaccine development.   </li>
         <li>Topology and Transmembrane helices:    It is very difficult to clone, express, and purify proteins with more than one transmembrane spanning  region. Therefore, it might be better to ignore those proteins with multiple  transmembrane spaaning regions in the first place. </li>
@@ -85,15 +102,15 @@ INet/Vaxign-ML-docker">GitHub</a> </p>
       <p>Installation:</br>(Docker version >=1.13.1, API version >=1.26)</br></br>$ docker pull e4ong1031/vaxign-ml:v1.0</br>$ wget https://raw.githubusercontent.com/VIOLINet/Vaxign-ML-docker/master/VaxignML.sh</br>$ chmod a+x VaxignML.sh</br>$ ./VaxignML.sh [INPUT_FASTA] [OUTPUT_DIRECTORY] [ORGANISM_TYPE]</br></br>(You may need root privilege to run docker commands)</p>
 
 
-    <p class="style1" id="lic"><span id="usedprograms">Open-Source Software Programs/Databases used in Vaxign and their Licenses</span>:</p>
+    <p class="style1" id="lic"><span id="usedprograms">Open-Source Software Programs/Databases used in Vaxign 2 and their Licenses</span>:</p>
     <ol>
-      <li><a href="http://www.psort.org/psortb/">PSORTb</a>:  PSORTb (v.2.0) is probably the most precise bacterial localization prediction   tool. PSORTb is under             the <a href="http://www.gnu.org/licenses/gpl.txt" target="_blank">GNU General   Public             Licence</a> (GNU GPL). </li>
+      <li><a href="http://www.psort.org/psortb/">PSORTb</a>:  PSORTb (v.3.0.2) is probably the most precise bacterial localization prediction   tool. PSORTb is under             the <a href="http://www.gnu.org/licenses/gpl.txt" target="_blank">GNU General   Public             Licence</a> (GNU GPL). </li>
       <li><a href="http://www.cbs.dtu.dk/services/TMHMM-2.0/">TMHMM</a>: Prediction of transmembrane helices in proteins. TMHMM is uder <a href="http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?tmhmm">Academic Software License Agreement</a>.</li>
       <li><a href="http://www.ncbi.nlm.nih.gov/pubmed/15374866">SPAAN</a>: Prediction of adhesins and adhesin-like proteins. According to the <a href="http://www.ncbi.nlm.nih.gov/pubmed/15374866">SPAAN publication</a>, the SPAAN  program is freely available.</li>
       <li><a href="http://blast.ncbi.nlm.nih.gov/Blast.cgi">BLAST</a>: NCBI sequence similarity alignment and analysis program. BLAST is a <a href="http://www.ncbi.nlm.nih.gov/Ftp/">USA NCBI program </a> within the public domain. </li>
       <li><a href="http://www.immuneepitope.org/">IEDB: </a>The Immune Epitope Database and Analysis Resource. The immune epitope data obtained from IEDB is used for training Vaxitope, our epitope prediction program. Please check the IEDB <a href="http://www.immuneepitope.org/terms_of_use.php">Term of Use</a>. </li>
       <li><a href="https://xgboost.ai/">XGBoost</a>: An optimized distributed gradient boosting library implementing machine learning algorithms under the Gradient Boosting framework. XGBoost is licensed </li>  
-      </ol>
+    </ol>
     <p class="style1" id="parameters">Rationale, Parameters, and Options for Consideration and Filteration:</p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our automatic Vaxign 2 pipeline allows users to select and/or modify the following parameters:  </p>
     <ol>
@@ -104,6 +121,51 @@ INet/Vaxign-ML-docker">GitHub</a> </p>
       <li>No similarity to mouse proteins: Check this option if you wish to exclude any protein that shows any similarity to  a mouse protein.</li>
       <li>No similarity to pig proteins: Check this option if you wish to exclude any protein that shows any similarity to  a pig protein.</li>
       </ol>
+
+    <p class="style1" id="benchmark">Vaxign & Vaxign-ML Benchmark:</p>
+    
+<table class="benchmark">
+	  <caption>Benchmarking performance of Vaxign and Vaxign-ML comparing to other open-source reverse vaccinology tools</caption>
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Recall</th>
+        <th>Precision</th>
+        <th>WF1</th>
+        <th>MCC</th>
+	    </tr>
+	  </thead>
+    <tbody>
+    <tr>
+      <td>Vaxign-ML</td>
+      <td>0.81</td>
+      <td>0.75</td>
+      <td>0.76</td>
+      <td>0.51</td>
+    </tr>
+    <tr>
+      <td>Vaxign</td>
+      <td>0.32</td>
+      <td>0.79</td>
+      <td>0.56</td>
+      <td>0.27</td>
+    </tr>
+    <tr>
+      <td>VaxiJen3</td>
+      <td>0.78</td>
+      <td>0.71</td>
+      <td>0.71</td>
+      <td>0.42</td>
+    </tr>
+    <tr>
+      <td>Antigenic</td>
+      <td>0.5</td>
+      <td>0.52</td>
+      <td>0.49</td>
+      <td>-0.02</td>
+    </tr>
+    </tbody>
+</table>
 
     <p class="style1" id="vaxitop">Introduction of Vaxitop:  </p>
     
