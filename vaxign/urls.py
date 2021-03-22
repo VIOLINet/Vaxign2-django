@@ -32,6 +32,7 @@ urlpatterns = [
     path('query/<str:queryID>/ortholog', queries.ortholog),
     path('query/<str:queryID>/protein/<str:seqID>', queries.protein),
     path('query/<str:queryID>/protein/<str:seqID>/blast/<str:organism>', queries.blast),
+    path('query/<str:queryID>/slc_chart', queries.slc_chart),
     
     path('query/<str:queryID>/vaxitop', vaxitop.index),
     path('query/<str:queryID>/vaxitop/export/heatmap', vaxitop.heatmap),

@@ -295,6 +295,7 @@ $( document ).ready( function () {
 {% if query_detail.c_ortholog_computed and query_detail.c_ortholog_computed == 1 %}
 						    <li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/ortholog" target="_blank">Show Genome Group [{{ query_detail.c_species_short }}] Orthologs</a></li>
 {% endif %}
+<li><a href="/vaxign2/query/{{ query_detail.c_query_id }}/slc_chart" target="_blank">Show Subcellular Localization chart</a></li>
 						</ul>
 	                </div>
 	                

@@ -276,6 +276,38 @@ SELECT result_id, count(distinct genome) as no_genomes FROM violin.orthomcl_resu
     else:
         return render(request, 'queries/refresh.html', context)
 
+def slc_chart(request, queryID):
+    context = {
+      'query_id': queryID
+    }
+
+    # Initiate Q expression lists for model query
+    Qs = Q(c_query_id=queryID)
+
+    results = TVaxignAnalysisResults.objects.filter(Qs).only(
+        'c_final_localization'
+    ).values()
+
+    cellular_locations = [
+        'Cellwall',
+        'Cytoplasmic',
+        'CytoplasmicMembrane',
+        'Extracellular',
+        'OuterMembrane',
+        'Perisplasmic',
+        'Unknown',
+        'Total'
+    ]
+
+    cellular_localizations = {location: 0 for location in cellular_locations}
+    for sequence in results:
+        cellular_localizations[sequence['c_final_localization']] += 1
+        cellular_localizations['Total'] += 1
+
+    context['cellular_localizations'] = cellular_localizations
+
+    return render(request, 'queries/slc_chart.html', context)
+
 def ortholog(request, queryID):
     
     context = {
