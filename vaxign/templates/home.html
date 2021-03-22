@@ -78,14 +78,13 @@ $( document ).ready( function () {
 	
 	        <!-- header -->
 	
-				<h3 align="center">Welcome to Vaxign: Vaccine Design!</h3>
+				<h3 align="center">Welcome to Vaxign2: Vaccine Design!</h3>
 				
-				<h4 align="center">This is Vaxign version 2.0 beta. Please <a href="/contact_us.php">Contact Us</a> to report any bugs. Thank you!</h4>
 		        
-		        <p class="desc">Vaxign (Vaccine Design) is a  vaccine target prediction and analysis system based on the principle of reverse vaccinology. </br>
-		        Two methods in Vaxign are: </br>
-		        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1)  <strong>Dynamic Analysis</strong>:  allow sequence input and dynamic Vaxign execution and result  visualization.</br>
-		        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2)  <strong>Precompute Query</strong>: provide precomputed Vaxign results for users to explore</p>
+		        <p class="desc">Vaxign2 (Vaccine Design) is a vaccine target prediction and analysis system based on the principle of reverse vaccinology. </br>
+		        Two methods in Vaxign2 are: </br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1)  <strong>Dynamic Analysis</strong>:  allow sequence input and dynamic Vaxign2 execution and result  visualization.</br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2)  <strong>Precompute Query</strong>: provide precomputed Vaxign2 results for users to explore</p>
 		        
 		        <div class="htabs">
                 <div class="htab">
@@ -110,7 +109,7 @@ $( document ).ready( function () {
                 novalidate>
 {% csrf_token %}
                     <p class="desc">
-                    This program allows users to input a protein sequence(s) and set up parameters. The Vaxign web server will  dynamically calculate the possibilities of using the protein(s) as vaccine target(s) using the  automatic Vaxign pipeline. It is noted that lengthy  computational time may be expected.</br>
+                    This program allows users to input a protein sequence(s) and set up parameters. The Vaxign2 web server will  dynamically calculate the possibilities of using the protein(s) as vaccine target(s) using the  automatic Vaxign2 pipeline. It is noted that lengthy  computational time may be expected.</br>
                     </p>
             
                     <table>
@@ -275,7 +274,7 @@ $( document ).ready( function () {
 {% endif %}
                 novalidate>
 {% csrf_token %}
-                    <p class="desc">Query from <a href="vaxign2/stats">&gt; 350 genomes</a> precomputed Vaxign results.</br></br>
+                    <p class="desc">Query from <a href="vaxign2/stats">&gt; 350 genomes</a> precomputed Vaxign2 results.</br></br>
                     A user can either select a genome(s) for all possible vaccine targets based on desired parameters, or query a protein sequence(s) from a genome to find possible vaccine vaccine target(s).</br>
                     </p>
             
@@ -376,13 +375,18 @@ $( document ).ready( function () {
                                 <strong> Set up Filter (Optional) </strong>
                                 <img class="optional_hide" src="{% static "images/desc.gif" %}" alt="hide" height="10em" style="vertical-align:middle;"></img>
                                 <img class="optional_show" src="{% static "images/asc.gif" %}" alt="show" height="10em" style="vertical-align:middle;display:none;"></img>
+                                <div class="tooltip">
+                                  <a href="/vaxign2/docs#usedprograms"><img height="16em" src="{% static "images/question.png" %}">  </a>
+                                  <span class="tooltiptext" style="margin-left:-125px;">Vaxign2 uses multiple open-source software programs and databases for analysis.</br>
+                                  </br>For more information on these programs and their licenses, please click here to view the Vaxign2 docs.</span>
+                                </div>
                             </td>
                         </tr>
                         
                         <!-- choose subcellular localization -->    
                         <tr class="option2 optional_content">
                             <td class="left">
-                                1. Select Subcellular Localization
+                                1. Select Subcellular Localization (PSORTb)
                             </td>
                             
                             <td class="right">
@@ -392,7 +396,7 @@ $( document ).ready( function () {
                         
                         <!-- choose transmembrane helix -->    
                         <tr class="option2 optional_content">
-                            <td class="left"> 2.  Number of Transmembrane Helices</td>
+                            <td class="left"> 2.  Number of Transmembrane Helices (TMHMM)</td>
                             <td class="right">
 {{ form2.tmhmm_PredHel_opt }}
 {{ form2.tmhmm_PredHel_value }}
@@ -402,7 +406,7 @@ $( document ).ready( function () {
 
                         <!-- choose adhesin probability -->    
                         <tr class="option2 optional_content">
-                            <td class="left">3.  Adhesin Probability (0-1.0) </td>
+                            <td class="left">3.  Adhesin Probability (0-1.0) (SPAAN)</td>
                             <td class="right">
 {{ form2.spaan_score_opt }}
 {{ form2.spaan_score_value }}
@@ -444,7 +448,7 @@ $( document ).ready( function () {
                         
                         <!-- human similarity -->    
                         <tr class="option2 optional_content">
-                            <td class="left">6. Similarity to Human Proteins </td>
+                            <td class="left">6. Similarity to Human Proteins (BLAST)</td>
                             <td class="right">
 {{ form2.human_alignment }}
                             </td>
@@ -452,7 +456,7 @@ $( document ).ready( function () {
                         
                         <!-- mouse similarity -->   
                         <tr class="option2 optional_content">
-                            <td class="left">7.  Similarity to Mouse Proteins</td>
+                            <td class="left">7.  Similarity to Mouse Proteins (BLAST)</td>
                             <td class="right">
 {{ form2.mouse_alignment }}
                             </td>
@@ -460,7 +464,7 @@ $( document ).ready( function () {
                         
                         <!-- pig similarity -->   
                         <tr class="option2 optional_content">
-                            <td class="left">8.  Similarity to Pig Proteins</td>
+                            <td class="left">8.  Similarity to Pig Proteins (BLAST)</td>
                             <td class="right">
 {{ form2.pig_alignment }}
                         </tr>
