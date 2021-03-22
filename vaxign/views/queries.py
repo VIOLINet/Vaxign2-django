@@ -294,7 +294,7 @@ def slc_chart(request, queryID):
         'CytoplasmicMembrane',
         'Extracellular',
         'OuterMembrane',
-        'Perisplasmic',
+        'Periplasmic',
         'Unknown',
         'Total'
     ]
