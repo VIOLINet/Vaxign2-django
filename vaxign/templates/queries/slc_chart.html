@@ -110,7 +110,7 @@ $( document ).ready( function () {
         const cytoplasmicMembrane = parseFloat(document.getElementById('CytoplasmicMembrane').value)
         const extracellular = parseFloat(document.getElementById('Extracellular').value)
         const outerMembrane = parseFloat(document.getElementById('OuterMembrane').value)
-        const perisplasmic = parseFloat(document.getElementById('Perisplasmic').value)
+        const periplasmic = parseFloat(document.getElementById('Periplasmic').value)
         const unknown = parseFloat(document.getElementById('Unknown').value)
         const total = parseFloat(document.getElementById('Total').value)
 
@@ -120,7 +120,7 @@ $( document ).ready( function () {
             {y: cytoplasmicMembrane/total*100, label: 'Cytoplasmic Membrane', color: '#9BBB58'},
             {y: extracellular/total*100, label: 'Extracellular', color: '#C0504E'},
             {y: outerMembrane/total*100, label: 'Outer Membrane', color: '#4F81BC'},
-            {y: perisplasmic/total*100, label: 'Periplasmic', color: '#8064A1'},
+            {y: periplasmic/total*100, label: 'Periplasmic', color: '#8064A1'},
             {y: unknown/total*100, label: 'Unknown', color: '#808080'}
         ].filter(dataPoint => dataPoint.y !== 0)
 
