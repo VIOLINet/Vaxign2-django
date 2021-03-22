@@ -63,12 +63,12 @@ class RunsForm(forms.Form):
     
     basic_analysis = forms.MultipleChoiceField(
         choices=(
-            ('psort','Subcellular Localization'),
-            ('tmhmm','Transmembrane Helix'),
-            ('spaan','Adhesion Probability'),
-            ('blasth','Similarity to Human Proteins'),
-            ('blastm',' Similarity to Mouse Proteins'),
-            ('blastp',' Similarity to Pig Proteins'),
+            ('psort','Subcellular Localization (PSORTb)'),
+            ('tmhmm','Transmembrane Helix (TMHMM)'),
+            ('spaan','Adhesion Probability (SPAAN)'),
+            ('blasth','Similarity to Human Proteins (BLAST)'),
+            ('blastm',' Similarity to Mouse Proteins (BLAST)'),
+            ('blastp',' Similarity to Pig Proteins (BLAST)'),
         ),
         initial=['vaxign_ml','vaxitop','psort','tmhmm','spaan'],
         widget=forms.CheckboxSelectMultiple(attrs={

@@ -173,7 +173,7 @@ $( document ).ready( function () {
 		                        <!-- choose subcellular localization -->    
 		                        <tr class="option2 filter_content">
 		                            <td class="left">
-		                                1. Select Subcellular Localization
+		                                1. Select Subcellular Localization (PSORTb)
 		                            </td>
 		                            
 		                            <td class="right">
@@ -183,7 +183,7 @@ $( document ).ready( function () {
 		                        
 		                        <!-- choose transmembrane helix -->    
 		                        <tr class="option2 filter_content">
-		                            <td class="left"> 2.  Number of Transmembrane Helices</td>
+		                            <td class="left"> 2.  Number of Transmembrane Helices (TMHMM)</td>
 		                            <td class="right">
 {{ form.tmhmm_PredHel_opt }}
 {{ form.tmhmm_PredHel_value }}
@@ -193,7 +193,7 @@ $( document ).ready( function () {
 		
 		                        <!-- choose adhesin probability -->    
 		                        <tr class="option2 filter_content">
-		                            <td class="left">3.  Adhesin Probability (0-1.0) </td>
+		                            <td class="left">3.  Adhesin Probability (0-1.0) (SPAAN)</td>
 		                            <td class="right">
 {{ form.spaan_score_opt }}
 {{ form.spaan_score_value }}
@@ -251,7 +251,7 @@ $( document ).ready( function () {
 		                        
 		                        <!-- human similarity -->    
 		                        <tr class="option2 filter_content">
-		                            <td class="left">6. Similarity to Human Proteins </td>
+		                            <td class="left">6. Similarity to Human Proteins (BLAST)</td>
 		                            <td class="right">
 {{ form.human_alignment }}
 		                            </td>
@@ -259,7 +259,7 @@ $( document ).ready( function () {
 		                        
 		                        <!-- mouse similarity -->   
 		                        <tr class="option2 filter_content">
-		                            <td class="left">7.  Similarity to Mouse Proteins</td>
+		                            <td class="left">7.  Similarity to Mouse Proteins (BLAST)</td>
 		                            <td class="right">
 {{ form.mouse_alignment }}
 		                            </td>
@@ -267,7 +267,7 @@ $( document ).ready( function () {
 		                        
 		                        <!-- pig similarity -->   
 		                        <tr class="option2 filter_content">
-		                            <td class="left">8.  Similarity to Pig Proteins</td>
+		                            <td class="left">8.  Similarity to Pig Proteins (BLAST)</td>
 		                            <td class="right">
 {{ form.pig_alignment }}
 		                        </tr>
