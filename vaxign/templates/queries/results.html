@@ -377,7 +377,7 @@ $( document ).ready( function () {
                             
                             <td>{{ record.c_locus_tag|default_if_none:"-" }}</td>
 {% if 'vaxign_ml' in query_detail.c_included_analyses %}
-                            <td>{{ record.c_vaxign_ml_score|floatformat:1|default_if_none:"-" }}</td>
+                            <td style="background:{% if record.c_vaxign_ml_score|floatformat:1 >= 0.51 %} #add6a5 {% else %} #d6a5a5 {% endif %}">{{ record.c_vaxign_ml_score|floatformat:1|default_if_none:"-" }}</td>
 {% endif %}                            
                             
 {% if 'psort' in query_detail.c_included_analyses %}
@@ -396,7 +396,7 @@ $( document ).ready( function () {
 {% endif %}
                             
 {% if 'spaan' in query_detail.c_included_analyses %}
-                            <td>{{ record.c_spaan|floatformat:3|default_if_none:"-" }}</td>
+                            <td style="background:{% if record.c_spaan|floatformat:3 >= 0.51 %} #d6a5a5 {% else %} #add6a5 {% endif %}">{{ record.c_spaan|floatformat:3|default_if_none:"-" }}</td>
 {% endif %}
                             
 {% if 'tmhmm' in query_detail.c_included_analyses %}
@@ -404,15 +404,15 @@ $( document ).ready( function () {
 {% endif %}
 
 {% if 'blasth' in query_detail.c_included_analyses %}
-                            <td><a href="/vaxign2/query/{{ query_id }}/protein/{{ record.c_sequence_id }}/blast/human" target="_blank">{{ record.human_alignment|default_if_none:"-" }}</a></td>
+                            <td style="{% if record.human_alignment != None %}background: #d6a5a5 {% endif %}"><a href="/vaxign2/query/{{ query_id }}/protein/{{ record.c_sequence_id }}/blast/human" target="_blank">{{ record.human_alignment|default_if_none:"-" }}</a></td>
 {% endif %}
                             
 {% if 'blastm' in query_detail.c_included_analyses %}
-                            <td><a href="/vaxign2/query/{{ query_id }}/protein/{{ record.c_sequence_id }}/blast/mouse" target="_blank">{{ record.mouse_alignment|default_if_none:"-" }}</td>
+                            <td style="{% if record.mouse_alignment != None %}background: #d6a5a5 {% endif %}"><a href="/vaxign2/query/{{ query_id }}/protein/{{ record.c_sequence_id }}/blast/mouse" target="_blank">{{ record.mouse_alignment|default_if_none:"-" }}</td>
 {% endif %}
                             
 {% if 'blastp' in query_detail.c_included_analyses %}
-                            <td><a href="/vaxign2/query/{{ query_id }}/protein/{{ record.c_sequence_id }}/blast/pig" target="_blank">{{ record.pig_alignment|default_if_none:"-" }}</td>
+                            <td style="{% if record.pig_alignment != None %}background: #d6a5a5 {% endif %}"><a href="/vaxign2/query/{{ query_id }}/protein/{{ record.c_sequence_id }}/blast/pig" target="_blank">{{ record.pig_alignment|default_if_none:"-" }}</td>
 {% endif %}
                             
                         </tr>
