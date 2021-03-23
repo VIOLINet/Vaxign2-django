@@ -166,10 +166,26 @@ $( document ).ready( function () {
 
           <div>
             {% for location, value in cellular_localizations.items %}
-              <input id="{{ location }}" type="hidden" value="{{ value }}">
+                <input id="{{ location }}" type="hidden" value="{{ value }}">
             {% endfor %}
             <h1>Subcellular Localization Chart for {{ query_id }}</h1>
             <div id="slc_container"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Subcellular Localization</td>
+                        <td>Protein Count</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for location, value in cellular_localizations.items %}
+                    <tr>
+                        <td>{{ location }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
           </div>
 
         </td>
