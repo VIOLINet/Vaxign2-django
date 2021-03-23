@@ -188,17 +188,26 @@ $( document ).ready( function () {
             <table class="slc_table">
                 <thead>
                     <tr>
-                        <td>Subcellular Localization</td>
-                        <td>Protein Count</td>
+                        <th>Subcellular Localization</th>
+                        <th>Protein Count</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for location, value in cellular_localizations.items %}
                     <tr>
-                        <td>{{ location }}</td>
-                        <td>{{ value }}</td>
+                        {% if location != "Total" and location != "Unknown" %}
+                            <td>{{ location }}</td>
+                            <td>{{ value }}</td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
+                    <tr>
+                        <td>Unknown</td>
+                        <td>{{ cellular_localizations.Unknown }}</td>
+                    </tr>
+                        <td>Total</td>
+                        <td>{{ cellular_localizations.Total }}</td>
+                    </tr>
                 </tbody>
             </table>
             <div id="slc_container"></div>
