@@ -396,7 +396,7 @@ $( document ).ready( function () {
 {% endif %}
                             
 {% if 'spaan' in query_detail.c_included_analyses %}
-                            <td style="background:{% if record.c_spaan|floatformat:3 >= 0.51 %} #d6a5a5 {% else %} #add6a5 {% endif %}">{{ record.c_spaan|floatformat:3|default_if_none:"-" }}</td>
+                            <td style="background:{% if record.c_spaan >= 0.51 %} #d6a5a5 {% else %} #add6a5 {% endif %}">{{ record.c_spaan|floatformat:3|default_if_none:"-" }}</td>
 {% endif %}
                             
 {% if 'tmhmm' in query_detail.c_included_analyses %}
