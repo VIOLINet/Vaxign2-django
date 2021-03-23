@@ -377,7 +377,7 @@ $( document ).ready( function () {
                             
                             <td>{{ record.c_locus_tag|default_if_none:"-" }}</td>
 {% if 'vaxign_ml' in query_detail.c_included_analyses %}
-                            <td style="background:{% if record.c_vaxign_ml_score|floatformat:1 >= 0.51 %} #add6a5 {% else %} #d6a5a5 {% endif %}">{{ record.c_vaxign_ml_score|floatformat:1|default_if_none:"-" }}</td>
+                            <td style="background:{% if record.c_vaxign_ml_score|floatformat:1 >= 51 %} #add6a5 {% else %} #d6a5a5 {% endif %}">{{ record.c_vaxign_ml_score|floatformat:1|default_if_none:"-" }}</td>
 {% endif %}                            
                             
 {% if 'psort' in query_detail.c_included_analyses %}
