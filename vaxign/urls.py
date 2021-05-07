@@ -29,6 +29,7 @@ urlpatterns = [
     
     path('query/<str:queryID>', queries.results),
     path('query/<str:queryID>/results', queries.results),
+    path('query/<str:queryID>/results/embed', queries.results_embed),
     path('query/<str:queryID>/ortholog', queries.ortholog),
     path('query/<str:queryID>/protein/<str:seqID>', queries.protein),
     path('query/<str:queryID>/protein/<str:seqID>/blast/<str:organism>', queries.blast),
