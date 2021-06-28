@@ -138,9 +138,9 @@ def index(request, name):
                 tree3 = ET.fromstring(file3.read().decode())
                 organism = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Name').text
                 strain = tree3.find('DocumentSummarySet').find('DocumentSummary').find('Organism_Strain').text
-                if tmpData['group_name'] == '':
+                if 'group_name' not in tmpData:
                     tmpData['group_name'] = organism
-                if tmpData['genome_name'] == '':
+                if 'genome_name' not in tmpData:
                     tmpData['genome_name'] = str.format('{} {}', organism, strain)
         # Sequence input type: NCBI Nucleotide ID
         if tmpData['sequence_type'] == 'nuccore_id':
