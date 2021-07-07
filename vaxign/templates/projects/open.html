@@ -239,12 +239,12 @@ $( document ).ready( function () {
                             <td style="width:3%;">
                                 <select id="query_public" onChange="changeQueryPublic('{{ query.c_query_id }}')">
                                     <option value="0" 
-{% if query.c_is_public == '0' %}
+{% if query.c_is_public == 0 %}
                                     selected
 {% endif %}
                                     >No</option>
                                     <option value="1"
-{% if query.c_is_public == '1' %}
+{% if query.c_is_public == 1 %}
                                     selected
 {% endif %}                                    
                                     >Yes</option>
