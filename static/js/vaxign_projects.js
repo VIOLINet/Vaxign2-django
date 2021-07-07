@@ -4,7 +4,7 @@ function changeQueryPublic(queryID) {
 	var url;
 	if (document.getElementById('query_public').value=='1') {
 		if (document.getElementById('project_public').innerText=='Yes') flag = true;
-		else if (confirm("The current project is flagged as private.</br>Do you want to make this query public?")) flag = true;
+		else if (confirm("The current project is flagged as private. Are you sure you want to make this query public?")) flag = true;
 		url = '/vaxign2/project/' + projectID + '/query/' + queryID + '/public';
 	} else url = '/vaxign2/project/' + projectID + '/query/' + queryID + '/private';
 	dojo.xhrGet({
